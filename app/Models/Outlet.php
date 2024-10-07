@@ -9,6 +9,8 @@ class Outlet extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['name', 'address', 'image'];
+
     public function scopeFilter($query)
     {
         $columns = ['name', 'address'];

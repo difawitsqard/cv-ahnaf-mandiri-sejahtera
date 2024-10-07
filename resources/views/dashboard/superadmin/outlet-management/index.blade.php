@@ -40,7 +40,7 @@
             <form action="{{ request()->fullUrlWithoutQuery(['page']) }}" class="position-relative" method="GET">
                 <div class="input-group">
                     <input type="text" class="form-control" name="search" placeholder="Cari..."
-                        {{ !empty(request()->search) ? 'value=' . request()->search . '' : '' }}>
+                        value="{{ request()->get('search', '') }}">
                     <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i></button>
                 </div>
             </form>
@@ -69,9 +69,9 @@
                                         <a type="button" class="btn btn-outline-primary d-flex"><i
                                                 class="material-icons-outlined">home</i>
                                         </a>
-                                        <button type="button" class="btn btn-outline-primary d-flex edit-button" data-bs-toggle="modal"
-                                            data-bs-target="#MyModal" data-id="{{ $outlet->id }}"><i
-                                                class="material-icons-outlined">edit</i>
+                                        <button type="button" class="btn btn-outline-primary d-flex edit-button"
+                                            data-bs-toggle="modal" data-bs-target="#MyModal"
+                                            data-id="{{ $outlet->id }}"><i class="material-icons-outlined">edit</i>
                                         </button>
                                         <button type="button" class="btn btn-outline-danger d-flex"><i
                                                 class="material-icons-outlined">delete</i>
@@ -93,7 +93,7 @@
 @push('modals')
     <div class="modal fade" id="MyModal" tabindex="-1" aria-labelledby="MyModalLabel" aria-hidden="true"
         data-bs-backdrop="static" data-bs-keyboard="false">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-md">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="MyModalLabel">Tambah</h5>

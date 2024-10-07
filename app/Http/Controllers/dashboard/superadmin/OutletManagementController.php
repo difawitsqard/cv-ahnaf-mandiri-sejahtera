@@ -1,12 +1,16 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\dashboard\superadmin;
 
 use App\Models\Outlet;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\dashboard\superadmin\OutletManagementRequest;
 
 class OutletManagementController extends Controller
 {
+    public function __construct(private readonly Outlet $outlet) {}
+
     /**
      * Display a listing of the resource.
      */
@@ -22,15 +26,17 @@ class OutletManagementController extends Controller
         }
         $Outlets->appends(['perPage' => $perPage]);
 
-        return view('dashboard.outlet-management.index', compact('Outlets'));
+        return view('dashboard.superadmin.outlet-management.index', compact('Outlets'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(OutletManagementRequest $request)
     {
-        //
+        $this->outlet->create($request->validated());
+
+        return redirect()->route('outlet.index');
     }
 
     /**
