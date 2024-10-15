@@ -3,6 +3,7 @@
 /public/build
 /public/hot
 /public/storage
+/public/uploads
 /storage/*.key
 /vendor
 .env
@@ -18,4 +19,6 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
-/resource/views/demo
+/resources/views/demo
+/resources/images/demo
+/resources/views/layouts/sidebar-demo.blade.php
