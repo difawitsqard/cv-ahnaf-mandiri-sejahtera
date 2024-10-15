@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('outlets', function (Blueprint $table) {
             $table->id();
+            $table->string('slug')->unique();
             $table->string('name'); // Nama outlet
             $table->string('address'); // Alamat outlet
             $table->string('image_path')->nullable(); // Path gambar outlet

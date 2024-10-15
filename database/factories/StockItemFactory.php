@@ -19,10 +19,13 @@ class StockItemFactory extends Factory
     public function definition(): array
     {
         return [
-            'item_name' => fake()->word,
-            'outlet_id' => Outlet::factory(),
+            'name' => fake()->word,
             'price' => fake()->numberBetween(1000, 100000),
-            'quantity' => fake()->numberBetween(1, 100),
+            'stock' => fake()->numberBetween(1, 100),
+            'min_stock' => fake()->numberBetween(1, 20),
+            'image_path' => fake()->imageUrl(),
+            'description' => fake()->sentence,
+            'outlet_id' => Outlet::factory(),
             'unit_id' => Unit::factory(),
         ];
     }

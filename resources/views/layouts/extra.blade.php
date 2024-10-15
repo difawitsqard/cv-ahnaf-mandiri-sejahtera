@@ -1,6 +1,6 @@
   <!--start switcher-->
   <button class="btn btn-grd btn-grd-info position-fixed bottom-0 end-0 m-3 d-flex align-items-center gap-2"
-      type="button" data-bs-toggle="offcanvas" data-bs-target="#staticBackdrop">
+      type="button" data-bs-toggle="offcanvas" data-bs-target="#staticBackdrop" style="position: relative; z-index: 9999;">
       <i class="material-icons-outlined">tune</i>Customize
   </button>
 
@@ -20,7 +20,7 @@
 
               <div class="row g-3">
                   <div class="col-12 col-xl-6">
-                      <input type="radio" class="btn-check" name="theme-options" id="BlueTheme" checked>
+                      <input type="radio" class="btn-check" name="theme-options" id="BlueTheme">
                       <label
                           class="btn btn-outline-secondary d-flex flex-column gap-1 align-items-center justify-content-center p-4"
                           for="BlueTheme">
@@ -47,7 +47,7 @@
                       </label>
                   </div>
                   <div class="col-12 col-xl-6">
-                      <input type="radio" class="btn-check" name="theme-options" id="SemiDarkTheme">
+                      <input type="radio" class="btn-check" name="theme-options" id="SemiDarkTheme" checked>
                       <label
                           class="btn btn-outline-secondary d-flex flex-column gap-1 align-items-center justify-content-center p-4"
                           for="SemiDarkTheme">

@@ -1,33 +1,47 @@
 @extends('layouts.app')
 @section('title')
-    {{ __('Stock') }}
+    {{ __('Unit') }}
 @endsection
 @push('css')
     <link href="{{ URL::asset('build/plugins/datatable/css/dataTables.bootstrap5.min.css') }}" rel="stylesheet" />
 @endpush
 
 @section('content')
-    <x-page-title title="Stock" subtitle="Manajemen Stock" />
+    <x-page-title title="Unit" subtitle="Manajemen Unit" />
 
     <div class="card mb-3">
         <div class="card-body">
-            <div
-                class="d-flex flex-lg-row flex-column align-items-start align-items-lg-center justify-content-between gap-3">
-                <div class="d-flex align-items-start gap-3">
-                    <div class="detail-icon fs-2">
-                        <i class="bi bi-house-door-fill"></i>
-                    </div>
-                    <div class="detail-info">
-                        <h4 class="fw-bold mb-1">{{ $outlet->name }}</h4>
-                        <p class="mb-0">{{ $outlet->address }}</p>
+            <div class="row g-3">
+                <div class="col-auto flex-grow-1 overflow-auto">
+                    <div class="col-auto flex-grow-1 overflow-auto">
+                        <div class="btn-group position-static">
+                            <div class="btn-group position-static">
+                                <button type="button" class="btn btn-outline-secondary" id="table-stock-item-excel">
+                                    Excel
+                                </button>
+                            </div>
+                            <div class="btn-group position-static">
+                                <button type="button" class="btn btn-outline-secondary" id="table-stock-item-pdf">
+                                    PDF
+                                </button>
+                            </div>
+                            <div class="btn-group position-static">
+                                <button type="button" class="btn btn-outline-secondary" id="table-stock-item-print">
+                                    Print
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="overflow-auto">
-                    <a class="btn btn-primary px-4 add-button"
-                        href="{{ route('outlet.stock-item.create', ['outlet' => $outlet->slug]) }}"><i
-                            class="bi bi-plus-lg me-2"></i>Item baru</a>
+                <div class="col-auto">
+                    <div class="d-flex align-items-center gap-2 justify-content-lg-end">
+                        <button class="btn btn-primary px-4 add-button" data-bs-toggle="modal" data-bs-target="#MyModal"
+                            data-add-url="{{ route('unit.store') }}"><i class="bi bi-plus-lg me-2"></i>Satuan
+                            Baru</button>
+                    </div>
                 </div>
             </div>
+
         </div>
     </div>
 
@@ -35,18 +49,18 @@
         <x-alert-message type="success" :messages="session('success')" />
     @endif
 
-
     @if ($errors->any())
         <x-alert-message type="danger" :messages="$errors->all()" />
     @endif
 
     <div class="card">
         <div class="card-body">
+
             <div class="row g-3">
                 <div class="col-auto">
                     <div class="input-group mb-3">
                         <select class="form-select" id="table-stock-item-length">
-                            <option value="10" selected>10</option>
+                            <option value="10" selected="">10</option>
                             <option value="25">25</option>
                             <option value="50">50</option>
                             <option value="100">100</option>
@@ -56,23 +70,7 @@
                     </div>
                 </div>
                 <div class="col-auto flex-grow-1 overflow-auto">
-                    <div class="btn-group position-static">
-                        <div class="btn-group position-static">
-                            <button type="button" class="btn btn-outline-secondary" id="table-stock-item-excel">
-                                Excel
-                            </button>
-                        </div>
-                        <div class="btn-group position-static">
-                            <button type="button" class="btn btn-outline-secondary" id="table-stock-item-pdf">
-                                PDF
-                            </button>
-                        </div>
-                        <div class="btn-group position-static">
-                            <button type="button" class="btn btn-outline-secondary" id="table-stock-item-print">
-                                Print
-                            </button>
-                        </div>
-                    </div>
+
                 </div>
                 <div class="col-auto">
                     <div class="position-relative mb-3">
@@ -88,88 +86,37 @@
                     <table class="table align-middle" id="table-stock-item">
                         <thead class="table-light">
                             <tr>
-                                <th width="2%">#</th>
-                                <th>Nama</th>
-                                <th>Deskripsi</th>
-                                <th>Stok</th>
-                                <th>Satuan</th>
-                                <th>Harga</th>
+                                <th width="5%">#</th>
+                                <th width="85%">Nama</th>
                                 <th class="no-export">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($stockItems as $num => $stockItem)
-                                <tr {!! $stockItem['stock'] < $stockItem['min_stock']
-                                    ? 'data-bs-toggle="tooltip"  data-bs-placement="top" title="Stok saat ini kurang dari ' .
-                                        $stockItem['min_stock'] .
-                                        '"'
-                                    : '' !!}>
+                            @foreach ($units as $num => $unit)
+                                <tr>
                                     <td class="text-center fw-bold" width="2%">{{ $num + 1 }}</td>
-                                    <td>
-                                        <div class="d-flex align-items-center gap-3">
-                                            <div class="product-box">
-                                                <img src="{{ $stockItem['image_url'] }}"
-                                                    style="width: 70px; height: 53px; object-fit: cover;" class="rounded-3"
-                                                    alt="">
-                                            </div>
-                                            <div class="product-info">
-                                                <span class="product-title">{{ $stockItem['name'] }}</span>
-                                                <p class="mb-0 product-category no-export"><b>{{ $stockItem['stock'] }}</b>
-                                                    {{ $stockItem['unit']->name }}</p>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>{{ $stockItem['description'] }}</td>
-                                    <td>
-                                        @if ($stockItem['stock'] < $stockItem['min_stock'])
-                                            <b class="text-danger">
-                                                {{ $stockItem['stock'] }}
-                                                <i class="bi bi-arrow-down"></i>
-                                            </b>
-                                        @else
-                                            {{ $stockItem['stock'] }}
-                                        @endif
-                                    </td>
-                                    <td>{{ $stockItem['unit']->name }}</td>
-                                    <td>{{ formatRupiah($stockItem['price']) }}</td>
+                                    <td>{{ $unit['name'] }}</td>
                                     <td class="no-export">
                                         <div class="dropdown">
                                             <button class="btn btn-sm btn-filter dropdown-toggle dropdown-toggle-nocaret"
                                                 type="button" data-bs-toggle="dropdown">
                                                 <i class="bi bi-three-dots"></i>
                                             </button>
-                                            <ul class="dropdown-menu">
-                                                <li>
-                                                    <button type="button" class="dropdown-item" data-bs-toggle="modal"
-                                                        data-bs-target="#restockItemModal"
-                                                        data-outlet-id="{{ $outlet->slug }}"
-                                                        data-item-id="{{ $stockItem->id }}">
-                                                        Restock
-                                                    </button>
-                                                </li>
-                                                <li>
-                                                    <a type="button" class="dropdown-item"
-                                                        href="{{ route('outlet.stock-item.show', ['outlet' => $outlet->slug, 'stock_item' => $stockItem->id]) }}">
-                                                        Detail
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a type="button" class="dropdown-item edit-button"
-                                                        href="{{ route('outlet.stock-item.edit', ['outlet' => $outlet->slug, 'stock_item' => $stockItem->id]) }}">
-                                                        Edit
-                                                    </a>
-                                                </li>
+                                            <ul class="dropdown-menu"
+                                                style="position: absolute; top: 100%; right: 0; z-index: 1000;">
+                                                <li><button class="dropdown-item edit-button" data-bs-toggle="modal"
+                                                        data-bs-target="#MyModal" data-add-url="{{ route('unit.store') }}"
+                                                        data-id="{{ $unit->id }}">Edit</button></li>
                                                 <hr class="dropdown-divider">
                                                 <li>
-                                                    <form id="delete-form-{{ $stockItem['id'] }}"
-                                                        action="{{ route('outlet.stock-item.destroy', ['outlet' => $outlet->slug, 'stock_item' => $stockItem->id]) }}"
+                                                    <form id="delete-form-{{ $unit->id }}"
+                                                        action="{{ route('unit.destroy', ['unit' => $unit->id]) }}"
                                                         method="POST" style="display: none;">
                                                         @csrf
                                                         @method('DELETE')
                                                     </form>
                                                     <button type="button" class="dropdown-item text-danger"
-                                                        data-id="{{ $stockItem['id'] }}"
-                                                        data-msg="{{ $stockItem['name'] }}"
+                                                        data-id="{{ $unit->id }}" data-msg="{{ $unit->name }}"
                                                         onclick="confirmDelete(this)">Hapus</button>
                                                 </li>
                                             </ul>
@@ -186,21 +133,33 @@
 @endsection
 
 @push('modals')
-    <div class="modal fade" id="restockItemModal" tabindex="-1" aria-labelledby="restockItemModalLabel"
-        aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-        <div class="modal-dialog modal-lg">
+    <div class="modal fade" id="MyModal" tabindex="-1" aria-labelledby="MyModalLabel" aria-hidden="true"
+        data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-md">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">reStock</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 class="modal-title" id="MyModalLabel">Tambah</h5>
+                    <button type="button" class="btn-close" data-add-url="{{ route('unit.store') }}"
+                        data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    <x-restock-item-section />
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
+                <form action="{{ route('unit.store') }}" method="POST">
+                    <div class="modal-body">
+                        @csrf
+                        @method('POST')
+                        <input type="hidden" id="itemId" name="id">
 
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Nama Satuan <span
+                                    class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="name" name="name" placeholder="..."
+                                required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -279,6 +238,70 @@
 
             $('#table-stock-item-print').on('click', function() {
                 table.button('.buttons-print').trigger();
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var Modal = document.querySelector('#MyModal');
+            var modalForm = Modal.querySelector('form');
+            var inputs = modalForm.querySelectorAll('input, textarea');
+            var methodInput = modalForm.querySelector('input[name="_method"]');
+            var itemIdInput = modalForm.querySelector('input[name="id"]');
+            var nameInput = modalForm.querySelector('input[name="name"]');
+            var submitButton = modalForm.querySelector('button[type="submit"]');
+
+            // Function to set all fields to read-only & Disabled
+            function setFieldsReadOnly(isReadOnly) {
+                inputs.forEach(function(input) {
+                    input.readOnly = isReadOnly;
+                    input.disabled = isReadOnly;
+                });
+            }
+
+            document.querySelectorAll('.add-button').forEach(function(button) {
+                button.addEventListener('click', function() {
+                    submitButton.style.display = 'block';
+                    setFieldsReadOnly(false);
+                    methodInput.value = 'POST';
+                    Modal.querySelector('#MyModalLabel').textContent = 'Tambah Satuan';
+                    modalForm.action = button.getAttribute('data-add-url');
+                    modalForm.reset();
+                    itemIdInput.value = '';
+                });
+            });
+
+            document.querySelectorAll('.edit-button').forEach(function(button) {
+                button.addEventListener('click', function() {
+                    var isEdit = button.classList.contains('edit-button');
+                    var itemId = button.getAttribute('data-id');
+
+                    if (isEdit) {
+                        modalForm.action =
+                            `{{ route('unit.index') }}/${itemId}`;
+                        methodInput.value = 'PUT';
+                        submitButton.style.display = 'block';
+                        setFieldsReadOnly(false);
+                    } else {
+                        methodInput.value = '';
+                        modalForm.action = '';
+                        submitButton.style.display = 'none';
+                        setFieldsReadOnly(true);
+                    }
+
+                    Modal.querySelector('#MyModalLabel').textContent = isEdit ? 'Edit Satuan' :
+                        'Detail';
+
+                    fetch(`/unit/${itemId}/fetch`)
+                        .then(response => response.json())
+                        .then(response => {
+                            if (response.status) {
+                                nameInput.value = response.data.name;
+                            } else {
+                                console.error('Error:', 'Gagal memuat data.');
+                            }
+                        });
+
+                });
             });
         });
 

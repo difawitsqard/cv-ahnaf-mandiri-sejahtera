@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('menu_items', function (Blueprint $table) {
             $table->id();
             $table->string('name'); // Nama menu
-            $table->foreignId('outlet_id')->constrained('outlets')->onDelete('cascade'); // Foreign key ke tabel outlets
             $table->bigInteger('price'); // Harga menu
-            $table->foreignId('stock_item_id')->constrained('stock_items')->onDelete('cascade'); // Foreign key ke tabel stock_items
+            $table->foreignId('stock_item_id')->constrained('stock_items')->onDelete('restrict'); // Foreign key ke tabel stock_items
+            $table->foreignId('outlet_id')->constrained('outlets')->onDelete('restrict'); // Foreign key ke tabel outlets
             $table->timestamps();
         });
     }

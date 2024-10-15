@@ -32,7 +32,7 @@ class HomeController extends Controller
 
     private function dashboardSuperadmin()
     {
-        return redirect()->route('dashboard.outlet-management.index');
+        return redirect()->route('outlet.index');
     }
 
     public function root($any)
