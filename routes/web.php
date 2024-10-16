@@ -24,6 +24,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('outlet/{id}/fetch', [OutletManagementController::class, 'fetch'])->name('outlet.fetch');
     Route::get('outlet/{outlet:slug}', [DashboardController::class, 'index'])->name('outlet.dashboard');
     Route::prefix('outlet/{outlet:slug}')->name('outlet.')->group(function () {
+      Route::resource('unit', UnitManagementController::class)->only(['index', 'store', 'update', 'destroy']);
       Route::resource('stock-item', StockItemManagementController::class);
       Route::get('stock-item/{id}/fetch', [StockItemManagementController::class, 'fetch'])->name('stock-item.fetch');
       Route::put('stock-item/{id}/restock', [StockItemManagementController::class, 'restock'])->name('stock-item.restock');

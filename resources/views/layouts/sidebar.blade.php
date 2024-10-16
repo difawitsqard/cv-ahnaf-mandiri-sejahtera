@@ -81,7 +81,11 @@
                    @endif
                @endhasrole
                <li>
+                @if (request()->route('outlet'))
+                <a href="{{ route('outlet.unit.index', ['outlet' => request()->route('outlet')]) }}">
+                @else
                    <a href="{{ route('unit.index') }}">
+                @endif
                        <div class="parent-icon"><i class="material-icons-outlined">calculate</i>
                        </div>
                        <div class="menu-title">Satuan / Unit</div>

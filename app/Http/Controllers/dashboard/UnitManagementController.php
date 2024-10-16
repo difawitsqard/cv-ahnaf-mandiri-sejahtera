@@ -28,7 +28,7 @@ class UnitManagementController extends Controller
         $unit = Unit::create($validatedData);
 
         return redirect()
-            ->route('unit.index')
+            ->back()
             ->with('success', 'Unit ' . $unit->name . ' berhasil ditambahkan.');
     }
 
@@ -61,7 +61,7 @@ class UnitManagementController extends Controller
         $unit->update($validatedData);
 
         return redirect()
-            ->route('unit.index')
+            ->back()
             ->with('success', 'Unit ' . $unit->name . ' berhasil diubah.');
     }
 
