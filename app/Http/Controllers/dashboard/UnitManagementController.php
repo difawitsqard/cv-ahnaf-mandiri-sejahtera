@@ -70,11 +70,20 @@ class UnitManagementController extends Controller
      */
     public function destroy(string $id)
     {
-        $unit = Unit::findOrFail($id);
-        $unit->delete();
+        $unitName = '';
 
-        return redirect()
-            ->route('unit.index')
-            ->with('success', 'Unit ' . $unit->name . ' berhasil dihapus.');
+        try {
+            $unit = Unit::findOrFail($id);
+            $unitName = $unit->name; // Tangkap nama unit sebelum menghapus
+            $unit->delete();
+
+            return redirect()
+                ->back()
+                ->with('success', 'Unit ' . $unitName . ' berhasil dihapus.');
+        } catch (\Illuminate\Database\QueryException $e) {
+            return redirect()
+                ->back()
+                ->withErrors(['error' => 'Gagal melakukan operasi hapus pada unit ' . $unitName . ' karena terkait dengan data lain.']);
+        }
     }
 }

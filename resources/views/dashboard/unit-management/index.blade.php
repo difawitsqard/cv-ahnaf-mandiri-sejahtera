@@ -311,7 +311,7 @@
 
             Swal.fire({
                 title: 'Apa kamu yakin?',
-                html: `Ingin menghapus item <b>${stockItemMsg}</b>`,
+                html: `Ingin menghapus satuan <b>${stockItemMsg}</b>`,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#0d6efd',
