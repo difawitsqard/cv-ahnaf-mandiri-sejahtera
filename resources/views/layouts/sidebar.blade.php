@@ -1,16 +1,20 @@
    <!--start sidebar-->
    <aside class="sidebar-wrapper" data-simplebar="true">
-       <div class="sidebar-header">
-           <div class="logo-icon">
-               <img src="{{ URL::asset('build/images/logo.png') }}" class="logo-img" alt="{{ config('app.name') }}">
-           </div>
-           <div class="logo-name flex-grow-1">
-               <h5 class="mb-0 text-uppercase">{{ config('app.name') }}</h5>
-           </div>
-           <div class="sidebar-close">
-               <span class="material-icons-outlined">close</span>
-           </div>
-       </div>
+    <div class="sidebar-header d-flex align-items-center justify-content-center">
+        <div class="d-flex align-items-center">
+            <div class="logo-icon">
+                <img src="{{ URL::asset('build/images/logo.png') }}" class="logo-img p-2" alt="{{ config('app.name') }}">
+            </div>
+            <div class="logo-name ms-2 pe-4">
+                <h5 class="mb-0" style="white-space: nowrap; overflow: hidden;max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                    {{ config('app.name') }}
+                </h5>
+            </div>
+        </div>
+        <div class="sidebar-close position-absolute" style="right: 10px;">
+            <span class="material-icons-outlined">close</span>
+        </div>
+    </div>
        <div class="sidebar-nav">
            <!--navigation-->
            <ul class="metismenu" id="sidenav">
@@ -32,7 +36,7 @@
                        <li>
                            <a href="javascript:;" class="has-arrow">
                                <div class="parent-icon">
-                                   <i class="material-icons-outlined">inventory_2</i>
+                                   <i class="material-icons-outlined">local_mall</i>
                                </div>
                                <div class="menu-title">Manajemen Stok</div>
                            </a>
