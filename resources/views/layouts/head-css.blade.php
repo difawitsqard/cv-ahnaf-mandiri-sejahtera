@@ -11,8 +11,8 @@
 
 <!--bootstrap css-->
 <link href="{{ URL::asset('build/css/bootstrap.min.css') }}" rel="stylesheet">
+<link href="{{ URL::asset('build/plugins/material-icons/css/material-icons.css') }}" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css?family=Material+Icons+Outlined" rel="stylesheet">
 
 <!--swetalert2-->
 <link href="{{ URL::asset('build/plugins/sweetalert2/css/sweetalert2.min.css') }}" rel="stylesheet">
