@@ -2,8 +2,9 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\File;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Validator;
 
 class ImageUploadService
 {
@@ -16,6 +17,16 @@ class ImageUploadService
    */
   public function uploadImage(UploadedFile $image, $directory = '')
   {
+    // Validate the image
+    $validator = Validator::make(
+      ['image' => $image],
+      ['image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048']
+    );
+
+    if ($validator->fails()) {
+      throw new \Exception($validator->errors()->first('image'));
+    }
+
     $baseDirectory = 'uploads/images/';
     $fullDirectory = $baseDirectory . $directory;
 
