@@ -22,3 +22,4 @@ yarn-error.log
 /resources/views/demo
 /resources/images/demo
 /resources/views/layouts/sidebar-demo.blade.php
+**/_ignore*/
