@@ -11,8 +11,9 @@ class DashboardController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Outlet $outlet)
+    public function index(Request $request)
     {
+        $outlet = $request->outlet;
         return view('demo.index', compact('outlet'));
     }
 

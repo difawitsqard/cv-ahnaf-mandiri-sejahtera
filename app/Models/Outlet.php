@@ -27,6 +27,14 @@ class Outlet extends Model
         'image_url',
     ];
 
+    /**
+     * Get the route key for the model.
+     */
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
+
     public function getImageUrlAttribute()
     {
         if ($this->image_path) {

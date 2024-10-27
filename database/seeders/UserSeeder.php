@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Models\Outlet;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 
@@ -18,7 +19,9 @@ class UserSeeder extends Seeder
 
         foreach ($roles as $roleName) {
             // Buat user untuk setiap role
-            $user = User::factory()->create([
+            $user = User::factory()->recycle([
+                Outlet::all(),
+            ])->create([
                 'name' => ucfirst($roleName),
                 'email' => strtolower($roleName) . '@example.com',
             ]);

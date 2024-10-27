@@ -70,6 +70,7 @@
                 function loadStockData() {
                     setFieldsReadOnly(true);
                     textMessageElement.textContent = '';
+                    const url = `{!! auth()->user()->getRoleNames()->first() == 'superadmin' ? '/outlet/${outletId}/stock-item/${itemId}/fetch' : '/stock-item/${itemId}/fetch' !!}`;
 
                     if (!outletId || !itemId) {
                         console.error('Error:', 'Outlet ID atau Item ID tidak ditemukan.');
@@ -77,7 +78,7 @@
                         return;
                     }
 
-                    fetch(`/outlet/${outletId}/stock-item/${itemId}/fetch`)
+                    fetch(url)
                         .then(response => response.json())
                         .then(data => {
                             if (data.status) {
@@ -115,7 +116,7 @@
 
                     textMessageElement.textContent = '';
 
-                    fetch(`/outlet/${outletId}/stock-item/${itemId}/restock`, {
+                    fetch(`{!! auth()->user()->getRoleNames()->first() == 'superadmin' ? '/outlet/${outletId}/stock-item/${itemId}/restock' : '/stock-item/${itemId}/restock' !!}`, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
