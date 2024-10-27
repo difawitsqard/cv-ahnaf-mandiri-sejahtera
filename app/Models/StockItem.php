@@ -34,6 +34,11 @@ class StockItem extends Model
         return $this->belongsTo(Unit::class, 'unit_id', 'id');
     }
 
+    public function menus()
+    {
+        return $this->belongsToMany(Menu::class, 'menu_stock_item')->withPivot('quantity');
+    }
+
     public function getImageUrlAttribute()
     {
         if ($this->image_path) {
