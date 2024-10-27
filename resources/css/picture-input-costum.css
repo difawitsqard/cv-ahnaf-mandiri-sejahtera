@@ -1,0 +1,68 @@
+.picture__input {
+    display: none;
+}
+
+.picture-input-costum {
+    width: 400px;
+    height: 400px;
+    /* Tambahkan tinggi agar gambar sesuai dengan kontainer */
+    border-radius: 8px;
+    background: #fff;
+    align-items: center;
+    justify-content: center;
+    color: #dbdee2;
+    border: 2px dashed #dbdee2;
+    cursor: pointer;
+    transition: color 300ms ease-in-out, background 300ms ease-in-out,
+        border-color 300ms ease-in-out;
+    outline: none;
+    overflow: hidden;
+    position: relative;
+}
+
+.picture-input-costum:hover {
+    border-color: #0066ff;
+    color: #0066ff;
+}
+
+.picture__img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    /* Ubah object-fit menjadi contain agar gambar sesuai dengan kontainer */
+}
+
+.picture__text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.5em;
+    color: #aaa;
+    transition: color 300ms ease-in-out;
+}
+
+.picture-input-costum:hover .picture__text {
+    color: #0066ff;
+}
+
+.picture__buttons {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    display: none;
+    gap: 5px;
+}
+
+.picture__buttons button[type="button"] {
+    background-color: rgba(255, 255, 255, 0.8);
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: background-color 300ms ease-in-out;
+}
+
+.picture__buttons button[type="button"]:hover {
+    background-color: rgba(255, 255, 255, 1);
+}
