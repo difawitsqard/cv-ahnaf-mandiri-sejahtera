@@ -23,7 +23,7 @@ class StockItemFactory extends Factory
             'price' => fake()->numberBetween(1000, 100000),
             'stock' => fake()->numberBetween(1, 100),
             'min_stock' => fake()->numberBetween(1, 20),
-            'image_path' => fake()->imageUrl(),
+            'image_path' => null,
             'description' => fake()->sentence,
             'outlet_id' => Outlet::factory(),
             'unit_id' => Unit::factory(),

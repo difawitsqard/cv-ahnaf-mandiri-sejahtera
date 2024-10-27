@@ -1,17 +1,37 @@
 <?php
 
-namespace App\Http\Controllers\dashboard\superadmin;
+namespace App\Http\Controllers\dashboard;
 
-use Illuminate\Support\Facades\File;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\dashboard\superadmin\StockItemManagementRequest;
+use App\Models\Unit;
 use App\Models\Outlet;
 use App\Models\StockItem;
-use App\Models\Unit;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Services\ImageUploadService;
+use Illuminate\Support\Facades\File;
+use App\Http\Requests\dashboard\superadmin\StockItemManagementRequest;
 
 class StockItemManagementController extends Controller
 {
+    protected $imageUploadService;
+
+    public function __construct(private readonly Outlet $outlet, ImageUploadService $imageUploadService)
+    {
+        $this->imageUploadService = $imageUploadService;
+    }
+
+    /**
+     * Process parameters to determine the order.
+     */
+    protected function processParameters($param1, $param2 = null)
+    {
+        if ($param1 instanceof Outlet) {
+            return [$param1, $param2];
+        }
+
+        return [$param2, $param1];
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -47,7 +67,7 @@ class StockItemManagementController extends Controller
             ->values();
         $units = Unit::all();
 
-        return view('dashboard.superadmin.stock-item-management.index', compact('stockItems', 'units', 'outlet'));
+        return view('dashboard.stock-item-management.index', compact('stockItems', 'units', 'outlet'));
     }
 
     /**
@@ -62,69 +82,68 @@ class StockItemManagementController extends Controller
         $validatedData['unit_id'] = $unit->id;
 
         if ($request->hasFile('image')) {
-            // //upload stroage 'php artisan storage:link'
-            // $imagePath = $request->file('image')->store('images', 'public');
-            // $gallery->image_path = $imagePath;
-
-            //upload public
-            $image = $validatedData['image'];
-            $imageName = md5(time() . '_' . $image->getClientOriginalName()) . '.' . $image->getClientOriginalExtension();
-            $destinationPath = public_path('uploads/images');
-
-            // Periksa apakah folder tujuan ada, jika tidak buat foldernya
-            if (!File::exists($destinationPath)) {
-                File::makeDirectory($destinationPath, 0755, true);
-            }
-
-            $image->move($destinationPath, $imageName);
-            $validatedData['image_path'] = 'images/' . $imageName;
+            $validatedData['image_path'] = $this->imageUploadService->uploadImage($validatedData['image'], "{$outlet->slug}/stock-items");
         }
 
         $stockItems = StockItem::create($validatedData);
 
         return redirect()
-            ->route('outlet.stock-item.index', ['outlet' => $outlet->slug])
+            ->to(roleBasedRoute('stock-item.index', ['outlet' => $outlet->slug]))
             ->with('success', 'Item ' . $stockItems->name . ' berhasil ditambahkan.');
     }
 
     public function create(Outlet $outlet)
     {
         $units = Unit::all();
-        return view('dashboard.superadmin.stock-item-management.create', compact('units', 'outlet'));
+        return view('dashboard.stock-item-management.create', compact('units', 'outlet'));
     }
 
     /**
-     * Display the specified resource.
+     * Show the specified resource.
      */
-    public function show(Outlet $outlet, string $id)
+    public function show($param1, $param2 = null)
     {
+        list($outlet, $id) = $this->processParameters($param1, $param2);
+
         $stockItem = StockItem::where('id', $id)
             ->where('outlet_id', $outlet->id)
             ->firstOrFail();
         $stockItem->load('unit', 'outlet');
 
-        return view('dashboard.superadmin.stock-item-management.show', compact('stockItem', 'outlet'));
+        return view('dashboard.stock-item-management.show', compact('stockItem', 'outlet'));
     }
 
-    public function fetch(Outlet $outlet, string $id)
+    public function fetch($param1, $param2 = null)
     {
+        list($outlet, $id) = $this->processParameters($param1, $param2);
+
         $stockItem = StockItem::where('id', $id)
             ->where('outlet_id', $outlet->id)
             ->firstOrFail();
         $stockItem->load('unit', 'outlet');
 
-        return response()->json([
-            'status' => true,
-            'code' => 200,
-            'data' => $stockItem,
-        ]);
+        if ($stockItem) {
+            return response()->json([
+                'status' => true,
+                'code' => 200,
+                'data' => $stockItem,
+            ]);
+        } else {
+            return response()->json([
+                'status' => false,
+                'code' => 404,
+            ], 404);
+        }
     }
+
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(StockItemManagementRequest $request, Outlet $outlet, string $id)
+    public function update(StockItemManagementRequest $request, $param1, $param2 = null)
     {
+        list($outlet, $id) = $this->processParameters($param1, $param2);
+
         $validatedData = $request->validated();
         $stockItem = StockItem::where('id', $id)
             ->where('outlet_id', $outlet->id)
@@ -133,25 +152,21 @@ class StockItemManagementController extends Controller
         $unit = Unit::findOrCreate($validatedData['unit_id']);
         $validatedData['unit_id'] = $unit->id;
 
+        if (!isset($validatedData['delete_image'])) {
+            $validatedData['delete_image'] = [];
+        }
+        foreach ($validatedData['delete_image'] as $imageId) {
+            $image = StockItem::where('id', $imageId)->firstOrFail();
+            $this->imageUploadService->deleteImage($image->image_path);
+            $image->image_path = null;
+            $image->save();
+        }
+
         if ($request->hasFile('image')) {
             if ($stockItem->image_path) {
-                $imagePath = public_path('uploads/' . $stockItem->image_path);
-                if (File::exists($imagePath)) {
-                    File::delete($imagePath);
-                }
+                $this->imageUploadService->deleteImage($stockItem->image_path);
             }
-
-            $image = $validatedData['image'];
-            $imageName = md5(time() . '_' . $image->getClientOriginalName()) . '.' . $image->getClientOriginalExtension();
-            $destinationPath = public_path('uploads/images');
-
-            // Periksa apakah folder tujuan ada, jika tidak buat foldernya
-            if (!File::exists($destinationPath)) {
-                File::makeDirectory($destinationPath, 0755, true);
-            }
-
-            $image->move($destinationPath, $imageName);
-            $validatedData['image_path'] = 'images/' . $imageName;
+            $validatedData['image_path'] = $this->imageUploadService->uploadImage($validatedData['image'], "{$outlet->slug}/stock-items");
         } else {
             $validatedData['image_path'] = $stockItem->image_path;
         }
@@ -159,23 +174,27 @@ class StockItemManagementController extends Controller
         $stockItem->update($validatedData);
 
         return redirect()
-            ->route('outlet.stock-item.index', ['outlet' => $outlet->slug])
+            ->to(roleBasedRoute('stock-item.index', ['outlet' => $outlet->slug]))
             ->with('success', 'Item ' . $stockItem->name . ' berhasil diubah.');
     }
 
-    public function edit(Outlet $outlet, string $id)
+    public function edit($param1, $param2 = null)
     {
+        list($outlet, $id) = $this->processParameters($param1, $param2);
+
         $stockItem = StockItem::where('id', $id)
             ->where('outlet_id', $outlet->id)
             ->firstOrFail();
         $stockItem->load('unit', 'outlet');
         $units = Unit::all();
 
-        return view('dashboard.superadmin.stock-item-management.edit', compact('stockItem', 'units', 'outlet'));
+        return view('dashboard.stock-item-management.edit', compact('stockItem', 'units', 'outlet'));
     }
 
-    public function restock(Request $request, Outlet $outlet, string $id)
+    public function restock(Request $request, $param1, $param2 = null)
     {
+        list($outlet, $id) = $this->processParameters($param1, $param2);
+
         $request->validate([
             'qty' => 'required|numeric',
         ]);
@@ -197,8 +216,10 @@ class StockItemManagementController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Outlet $outlet, string $id)
+    public function destroy($param1, $param2 = null)
     {
+        list($outlet, $id) = $this->processParameters($param1, $param2);
+
         // Retrieve the specific service instance
         $stockItems = StockItem::findOrFail($id);
         if ($stockItems->image_path) {

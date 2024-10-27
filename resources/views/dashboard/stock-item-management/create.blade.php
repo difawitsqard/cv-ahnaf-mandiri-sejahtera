@@ -4,19 +4,20 @@
 @endsection
 
 @push('css')
-
+    <link href="{{ URL::asset('build/plugins/cropperjs/css/cropper.min.css') }}" rel="stylesheet">
+    <link href="{{ URL::asset('build/css/picture-input-costum.css') }}" rel="stylesheet">
 @endpush
 
 @section('content')
-    <x-page-title title="Stock" subtitle="Manajemen Stock" />
+    <x-page-title title="Stock" subtitle="Tambah Item" />
 
-    <form action="{{ route('outlet.stock-item.store', ['outlet' => $outlet->slug]) }}" method="POST"
+    <form action="{{ roleBasedRoute('stock-item.store', ['outlet' => $outlet->slug]) }}" method="POST"
         enctype="multipart/form-data">
 
         @csrf
         @method('POST')
 
-        <div class="card mb-3">
+        <div class="card rounded-4 mb-3">
             <div class="card-body">
                 <div
                     class="d-flex flex-lg-row flex-column align-items-start align-items-lg-center justify-content-between gap-3">
@@ -29,7 +30,7 @@
                             <p class="mb-0">{{ $outlet->address }}</p>
                         </div>
                     </div>
-                    <div class="overflow-auto">
+                    <div class="ms-auto">
                         <div class="btn-group position-static">
                             <div class="btn-group position-static">
                                 <button type="reset" class="btn btn-outline-primary">
@@ -62,24 +63,21 @@
             <div class="col-12 col-lg-3">
 
                 <div class="card">
-                    <img src="{{ asset('build/images/placeholder-image.webp') }}"
-                        style="width: 100%; height: 179px; object-fit: cover;" class="card-img-top" id="image-preview"
-                        alt="">
                     <div class="card-body">
-                        <h6 class="mb-3">Gambar</h6>
-                        <input type="file" class="form-control form-control-sm" id="image" name="image"
-                            accept="image/*">
+                        <h6 class="mb-2">Gambar Item</h6>
+                        <label class="picture-input-costum" for="image" style="width: 100%; height: 190px;">
+                            <span class="picture__image"></span>
+                            <span class="picture__text"><span
+                                    class="material-icons-outlined">add_photo_alternate</span></span>
+                            <div class="picture__buttons">
+                                <button type="button" class="btn btn-light btn-sm d-flex crop-btn"><span
+                                        class="material-icons-outlined">crop</span></button>
+                                <button type="button" class="btn btn-light btn-sm d-flex delete-btn"><span
+                                        class="material-icons-outlined">delete</span></button>
+                            </div>
+                        </label>
+                        <input type="file" name="image" class="picture__input" id="image">
                     </div>
-                    <script>
-                        document.getElementById('image').addEventListener('change', function(e) {
-                            var file = e.target.files[0];
-                            var reader = new FileReader();
-                            reader.onloadend = function() {
-                                document.getElementById('image-preview').src = reader.result;
-                            }
-                            reader.readAsDataURL(file);
-                        });
-                    </script>
                 </div>
 
             </div>
@@ -160,9 +158,12 @@
 
 <!-- Modal -->
 @push('modals')
+
 @endpush
 
 @push('script')
+    <script src="{{ URL::asset('build/plugins/cropperjs/js/cropper.min.js') }}"></script>
+    <script src="{{ URL::asset('build/js/picture-input-costum.js?v=') . md5(time()) }}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const priceInput = document.getElementById('price');
@@ -173,6 +174,12 @@
             // Tambahkan event listener untuk memformat saat input berubah
             priceInput.addEventListener('input', function(e) {
                 formatRupiahElement(e.target);
+            });
+
+            new ImageUploader({
+                imageWidth: 400,
+                imageHeight: 225,
+                cropRatio: 16 / 9,
             });
         });
     </script>

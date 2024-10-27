@@ -44,6 +44,7 @@ class StockItemManagementRequest extends FormRequest
         } elseif ($this->isMethod('put') || $this->isMethod('patch')) {
             // Aturan validasi untuk update
             $rules['image'] = 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:1024';
+            $rules['delete_image.*'] = 'nullable|exists:stock_items,id';
         }
 
         return $rules;

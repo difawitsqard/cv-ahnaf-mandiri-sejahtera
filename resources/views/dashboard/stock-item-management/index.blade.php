@@ -7,9 +7,9 @@
 @endpush
 
 @section('content')
-    <x-page-title title="Stock" subtitle="Manajemen Stock" />
+    <x-page-title title="Stock" subtitle="Daftar Item" />
 
-    <div class="card mb-3">
+    <div class="card rounded-4 mb-3">
         <div class="card-body">
             <div
                 class="d-flex flex-lg-row flex-column align-items-start align-items-lg-center justify-content-between gap-3">
@@ -22,9 +22,9 @@
                         <p class="mb-0">{{ $outlet->address }}</p>
                     </div>
                 </div>
-                <div class="overflow-auto">
+                <div class="ms-auto">
                     <a class="btn btn-primary px-4 add-button"
-                        href="{{ route('outlet.stock-item.create', ['outlet' => $outlet->slug]) }}"><i
+                        href="{{ roleBasedRoute('stock-item.create', ['outlet' => $outlet->slug]) }}"><i
                             class="bi bi-plus-lg me-2"></i>Item baru</a>
                 </div>
             </div>
@@ -149,20 +149,20 @@
                                                 </li>
                                                 <li>
                                                     <a type="button" class="dropdown-item"
-                                                        href="{{ route('outlet.stock-item.show', ['outlet' => $outlet->slug, 'stock_item' => $stockItem->id]) }}">
+                                                        href="{{ roleBasedRoute('stock-item.show', ['outlet' => $outlet->slug, 'stock_item' => $stockItem->id]) }}">
                                                         Detail
                                                     </a>
                                                 </li>
                                                 <li>
                                                     <a type="button" class="dropdown-item edit-button"
-                                                        href="{{ route('outlet.stock-item.edit', ['outlet' => $outlet->slug, 'stock_item' => $stockItem->id]) }}">
+                                                        href="{{ roleBasedRoute('stock-item.edit', ['outlet' => $outlet->slug, 'stock_item' => $stockItem->id]) }}">
                                                         Edit
                                                     </a>
                                                 </li>
                                                 <hr class="dropdown-divider">
                                                 <li>
                                                     <form id="delete-form-{{ $stockItem['id'] }}"
-                                                        action="{{ route('outlet.stock-item.destroy', ['outlet' => $outlet->slug, 'stock_item' => $stockItem->id]) }}"
+                                                        action="{{ roleBasedRoute('stock-item.destroy', ['outlet' => $outlet->slug, 'stock_item' => $stockItem->id]) }}"
                                                         method="POST" style="display: none;">
                                                         @csrf
                                                         @method('DELETE')
