@@ -14,7 +14,7 @@ class DashboardController extends Controller
     public function index(Request $request)
     {
         $outlet = $request->outlet;
-        return view('demo.index', compact('outlet'));
+        return view('dashboard.index', compact('outlet'));
     }
 
     /**
