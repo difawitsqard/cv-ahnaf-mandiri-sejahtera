@@ -4,6 +4,7 @@
 @endsection
 
 @push('css')
+    <link href="{{ URL::asset('build/plugins/quill/quill.bubble.css') }}" rel="stylesheet" />
     <link href="{{ URL::asset('build/plugins/cropperjs/css/cropper.min.css') }}" rel="stylesheet">
     <link href="{{ URL::asset('build/css/picture-input-costum.css') }}" rel="stylesheet">
 @endpush
@@ -76,11 +77,9 @@
                                         class="material-icons-outlined">delete</span></button>
                             </div>
                         </label>
-                        <input type="file" name="image" class="picture__input" id="image" 
-                        @if ($stockItem->image_path)
-                            data-image-src="{{ $stockItem->image_url }}" 
-                            data-image-id="{{ $stockItem->id }}"
-                        @endif>
+                        <input type="file" name="image" class="picture__input" id="image"
+                            @if ($stockItem->image_path) data-image-src="{{ $stockItem->image_url }}" 
+                            data-image-id="{{ $stockItem->id }}" @endif>
                     </div>
                 </div>
 
@@ -98,7 +97,10 @@
                                 </div>
                                 <div class="mb-3">
                                     <h6 class="mb-2">Deskripsi Item</h6>
-                                    <textarea class="form-control" id="description" name="description" cols="4" rows="3" placeholder="...">{{ $stockItem->description }}</textarea>
+                                    <div class="quill-description bg-light rounded-2" data-placeholder="...">
+                                        {!! old('description') ?? ($stockItem->description ?? '') !!}
+                                    </div>
+                                    <input type="hidden" name="description" id="description">
                                 </div>
                                 <div class="mb-3">
                                     <h6 class="mb-2">Minimal Stok
@@ -149,6 +151,7 @@
 
 
 @push('script')
+    <script src="{{ URL::asset('build/plugins/quill/quill.js') }}"></script>
     <script src="{{ URL::asset('build/plugins/cropperjs/js/cropper.min.js') }}"></script>
     <script src="{{ URL::asset('build/js/picture-input-costum.js?v=') . md5(time()) }}"></script>
 
@@ -168,6 +171,34 @@
                 imageWidth: 400,
                 imageHeight: 225,
                 cropRatio: 16 / 9,
+            });
+
+            //quill editor
+            var quill = new Quill('.quill-description', {
+                theme: 'bubble',
+                placeholder: $('.quill-description').data('placeholder'),
+                modules: {
+                    toolbar: [
+                        // [{ 'header': [1, 2, false] }],
+                        [{
+                            'header': 1
+                        }, {
+                            'header': 2
+                        }],
+                        ['bold', 'italic', 'underline', 'strike'],
+                        [{
+                            'list': 'ordered'
+                        }, {
+                            'list': 'bullet'
+                        }],
+                        ['blockquote'],
+                        ['link']
+                    ]
+                },
+            });
+            $('.quill-description .ql-editor').css('min-height', '100px');
+            $('form').on('submit', function() {
+                $('[name="description"]').val(quill.root.innerHTML);
             });
         });
     </script>

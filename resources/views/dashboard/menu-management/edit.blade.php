@@ -4,7 +4,7 @@
 @endsection
 
 @push('css')
-    <link href="{{ URL::asset('build/plugins/quill/quill.snow.css') }}" rel="stylesheet" />
+    {{-- <link href="{{ URL::asset('build/plugins/quill/quill.snow.css') }}" rel="stylesheet" /> --}}
     <link href="{{ URL::asset('build/plugins/quill/quill.bubble.css') }}" rel="stylesheet" />
     <link href="{{ URL::asset('build/plugins/datatable/css/dataTables.bootstrap5.min.css') }}" rel="stylesheet" />
     <link href="{{ URL::asset('build/plugins/cropperjs/css/cropper.min.css') }}" rel="stylesheet">
@@ -127,19 +127,19 @@
                                 </div>
                             </div>
                             <div class="col-12 col-lg-7">
-                                <div class="mb-3">
+                                <div class="mb-4">
                                     <h6 class="mb-2">Nama Menu <span class="text-danger">*</span></h6>
                                     <input type="text" class="form-control" id="name" name="name"
                                         value="{{ $menu->name }}" placeholder="..." required>
                                 </div>
-                                <div class="mb-3">
+                                <div class="mb-4">
                                     <h6 class="mb-2">Deskripsi Menu</h6>
-                                    <div class="quill-description bg-light">
+                                    <div class="quill-description bg-light rounded-2" data-placeholder="...">
                                         {!! old('description') ?? ($menu->description ?? '') !!}
                                     </div>
                                     <input type="hidden" name="description" id="description">
                                 </div>
-                                <div class="mb-3">
+                                <div class="mb-4">
                                     <h6 class="mb-2">Harga</h6>
                                     <div class="input-group">
                                         <span class="input-group-text">IDR</span>
@@ -259,9 +259,28 @@
 
             //quill editor
             var quill = new Quill('.quill-description', {
-                theme: 'snow'
+                theme: 'bubble',
+                placeholder: $('.quill-description').data('placeholder'),
+                modules: {
+                    toolbar: [
+                        // [{ 'header': [1, 2, false] }],
+                        [{
+                            'header': 1
+                        }, {
+                            'header': 2
+                        }],
+                        ['bold', 'italic', 'underline', 'strike'],
+                        [{
+                            'list': 'ordered'
+                        }, {
+                            'list': 'bullet'
+                        }],
+                        ['blockquote'],
+                        ['link']
+                    ]
+                },
             });
-            $('.quill-description .ql-editor').css('min-height', '125px');
+            $('.quill-description .ql-editor').css('min-height', '155px');
             $('form').on('submit', function() {
                 $('[name="description"]').val(quill.root.innerHTML);
             });

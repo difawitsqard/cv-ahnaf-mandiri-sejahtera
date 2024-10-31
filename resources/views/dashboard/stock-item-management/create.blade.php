@@ -4,6 +4,7 @@
 @endsection
 
 @push('css')
+    <link href="{{ URL::asset('build/plugins/quill/quill.bubble.css') }}" rel="stylesheet" />
     <link href="{{ URL::asset('build/plugins/cropperjs/css/cropper.min.css') }}" rel="stylesheet">
     <link href="{{ URL::asset('build/css/picture-input-costum.css') }}" rel="stylesheet">
 @endpush
@@ -86,7 +87,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-12 col-lg-4 mb-3">
+                            <div class="col-12 col-lg-4">
                                 <div class="mb-3">
                                     <h6 class="mb-2">Nama Item <span class="text-danger">*</span></h6>
                                     <input type="text" class="form-control" id="name" name="name"
@@ -94,13 +95,16 @@
                                 </div>
                                 <div class="mb-3">
                                     <h6 class="mb-2">Deskripsi Item</h6>
-                                    <textarea class="form-control" id="description" name="description" cols="4" rows="3" placeholder="...">{{ old('description') }}</textarea>
+                                    <div class="quill-description bg-light rounded-2" data-placeholder="...">
+                                        {!! old('description') ?? ($menu->description ?? '') !!}
+                                    </div>
+                                    <input type="hidden" name="description" id="description">
                                 </div>
                             </div>
 
-                            <div class="col-12 col-lg-8 mb-3">
+                            <div class="col-12 col-lg-8">
 
-                                <div class="row g-3">
+                                <div class="row g-4">
                                     <div class="col-12 col-lg-6">
                                         <h6 class="mb-2">Stok Awal</h6>
                                         <input class="form-control" type="number" id="stock" name="stock"
@@ -158,10 +162,10 @@
 
 <!-- Modal -->
 @push('modals')
-
 @endpush
 
 @push('script')
+    <script src="{{ URL::asset('build/plugins/quill/quill.js') }}"></script>
     <script src="{{ URL::asset('build/plugins/cropperjs/js/cropper.min.js') }}"></script>
     <script src="{{ URL::asset('build/js/picture-input-costum.js?v=') . md5(time()) }}"></script>
     <script>
@@ -180,6 +184,34 @@
                 imageWidth: 400,
                 imageHeight: 225,
                 cropRatio: 16 / 9,
+            });
+
+            //quill editor
+            var quill = new Quill('.quill-description', {
+                theme: 'bubble',
+                placeholder: $('.quill-description').data('placeholder'),
+                modules: {
+                    toolbar: [
+                        // [{ 'header': [1, 2, false] }],
+                        [{
+                            'header': 1
+                        }, {
+                            'header': 2
+                        }],
+                        ['bold', 'italic', 'underline', 'strike'],
+                        [{
+                            'list': 'ordered'
+                        }, {
+                            'list': 'bullet'
+                        }],
+                        ['blockquote'],
+                        ['link']
+                    ]
+                },
+            });
+            $('.quill-description .ql-editor').css('min-height', '100px');
+            $('form').on('submit', function() {
+                $('[name="description"]').val(quill.root.innerHTML);
             });
         });
     </script>
