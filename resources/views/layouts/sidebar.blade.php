@@ -34,8 +34,31 @@
                                <div class="menu-title">Dashboard</div>
                            </a>
                        </li>
+                       <li class="menu-label">Menu</li>
                        <li>
-                           <a href="javascript:;" class="has-arrow">
+                        <a href="#" class="has-arrow">
+                            <div class="parent-icon">
+                                <i class="material-icons-outlined">group</i>
+                            </div>
+                            <div class="menu-title" title="Manajemen Pengguna">Manajemen Pengguna</div>
+                        </a>
+                        <ul>
+                            <li>
+                                <a href="{{ route('outlet.user.create', ['outlet' => $outletSlug]) }}">
+                                    <i class="material-icons-outlined">arrow_right</i>
+                                    Tambah Pengguna
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('outlet.user.index', ['outlet' => $outletSlug]) }}">
+                                    <i class="material-icons-outlined">arrow_right</i>
+                                    Daftar Pengguna
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                       <li>
+                           <a href="#" class="has-arrow">
                                <div class="parent-icon">
                                    <i class="material-icons-outlined">menu_book</i>
                                </div>
@@ -57,7 +80,7 @@
                            </ul>
                        </li>
                        <li>
-                           <a href="javascript:;" class="has-arrow">
+                           <a href="#" class="has-arrow">
                                <div class="parent-icon">
                                    <i class="material-icons-outlined">local_mall</i>
                                </div>
@@ -98,7 +121,7 @@
                        </a>
                    </li>
                    <li>
-                       <a href="javascript:;" class="has-arrow">
+                       <a href="#" class="has-arrow">
                            <div class="parent-icon">
                                <i class="material-icons-outlined">menu_book</i>
                            </div>
@@ -120,7 +143,7 @@
                        </ul>
                    </li>
                    <li>
-                       <a href="javascript:;" class="has-arrow">
+                       <a href="#" class="has-arrow">
                            <div class="parent-icon">
                                <i class="material-icons-outlined">local_mall</i>
                            </div>
