@@ -2,13 +2,13 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use App\Http\Middleware\CheckUserRole;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\dashboard\DashboardController;
 use App\Http\Controllers\dashboard\MenuManagementController;
 use App\Http\Controllers\dashboard\UnitManagementController;
-use App\Http\Controllers\dashboard\superadmin\OutletManagementController;
+use App\Http\Controllers\dashboard\UserManagementController;
 use App\Http\Controllers\dashboard\StockItemManagementController;
+use App\Http\Controllers\dashboard\superadmin\OutletManagementController;
 
 Auth::routes();
 
@@ -31,6 +31,9 @@ Route::middleware(['auth', 'set_outlet_role'])->group(function () {
       Route::get('stock-item/{id}/fetch', [StockItemManagementController::class, 'fetch'])->name('stock-item.fetch');
       Route::put('stock-item/{id}/restock', [StockItemManagementController::class, 'restock'])->name('stock-item.restock');
 
+      // user management
+      Route::resource('user', UserManagementController::class);
+
       // menu management
       Route::resource('menu', MenuManagementController::class);
     });
@@ -45,6 +48,9 @@ Route::middleware(['auth', 'set_outlet_role'])->group(function () {
       Route::resource('stock-item', StockItemManagementController::class);
       Route::get('stock-item/{id}/fetch', [StockItemManagementController::class, 'fetch'])->name('stock-item.fetch');
       Route::put('stock-item/{id}/restock', [StockItemManagementController::class, 'restock'])->name('stock-item.restock');
+
+      // user management
+      Route::resource('user', UserManagementController::class);
 
       // menu management
       Route::resource('menu', MenuManagementController::class);
