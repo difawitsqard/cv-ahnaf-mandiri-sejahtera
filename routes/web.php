@@ -3,16 +3,22 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\SetPasswordController;
+use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\dashboard\DashboardController;
 use App\Http\Controllers\dashboard\MenuManagementController;
 use App\Http\Controllers\dashboard\UnitManagementController;
 use App\Http\Controllers\dashboard\UserManagementController;
 use App\Http\Controllers\dashboard\StockItemManagementController;
+use App\Http\Controllers\dashboard\superadmin\CompanyInfoController;
 use App\Http\Controllers\dashboard\superadmin\OutletManagementController;
 
-Auth::routes();
+Auth::routes(['verify' => true, 'register' => false]);
 
-Route::middleware(['auth', 'set_outlet_role'])->group(function () {
+Route::middleware(['auth', 'verified', 'check_password_set', 'set_outlet_role'])->group(function () {
+  Route::get('/set-password', [SetPasswordController::class, 'setPasswordForm'])->name('set-password');
+  Route::post('/set-password', [SetPasswordController::class, 'setPassword'])->name('set-password.set');
+
   Route::get('/', [HomeController::class, 'index'])->name('home');
   Route::get('demo/{any}', [HomeController::class, 'root'])->where('any', '.*');
 
@@ -24,6 +30,9 @@ Route::middleware(['auth', 'set_outlet_role'])->group(function () {
     Route::get('outlet/{outlet:slug}', [DashboardController::class, 'index'])->name('outlet.dashboard');
 
     Route::prefix('outlet/{outlet:slug}')->name('outlet.')->group(function () {
+      Route::put('company-info/create_or_update', [CompanyInfoController::class, 'CreateOrUpdate'])->name('company-info.create_or_update');
+      Route::resource('company-info', CompanyInfoController::class)->only(['index']);
+
       Route::resource('unit', UnitManagementController::class)->only(['index', 'store', 'update', 'destroy']);
 
       // stock item management
@@ -37,6 +46,11 @@ Route::middleware(['auth', 'set_outlet_role'])->group(function () {
       // menu management
       Route::resource('menu', MenuManagementController::class);
     });
+
+    Route::put('company-info/create_or_update', [CompanyInfoController::class, 'CreateOrUpdate'])
+      ->name('company-info.create_or_update');
+    Route::resource('company-info', CompanyInfoController::class)
+      ->only(['index']);
   });
 
   // Admin
@@ -62,5 +76,12 @@ Route::middleware(['auth', 'set_outlet_role'])->group(function () {
     // unit management
     Route::resource('unit', UnitManagementController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::get('unit/{id}/fetch', [UnitManagementController::class, 'fetch'])->name('unit.fetch');
+  });
+
+  // Staff
+  Route::group(['middleware' => ['role:staff']], function () {
+    Route::name('staff.')->group(function () {
+      Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    });
   });
 });
