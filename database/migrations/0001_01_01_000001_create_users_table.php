@@ -15,8 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
+            $table->unsignedBigInteger('mobile_phone_number')->nullable();
+            $table->string('address')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->boolean('is_password_set')->default(false);
             $table->unsignedBigInteger('outlet_id')->nullable();
             $table->rememberToken();
             $table->timestamps();
