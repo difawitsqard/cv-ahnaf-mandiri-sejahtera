@@ -32,7 +32,7 @@ body {
     background-color: #eff1f3;
 }
 
-// @import "node_modules/bootstrap-icons/font/bootstrap-icons.css";
+@import "~bootstrap-icons/font/bootstrap-icons.css";
 
 $headingColor: #474747;
 $headerbg: #ffffff;
@@ -1718,4 +1718,10 @@ form select.error:focus {
         right: 2rem;
     }
     position: relative;
+}
+
+.table-responsive .dropdown,
+.table-responsive .btn-group,
+.table-responsive .btn-group-vertical {
+    position: static;
 }
