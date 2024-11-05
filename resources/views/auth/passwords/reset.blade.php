@@ -1,33 +1,20 @@
 @extends('layouts.guest')
 @section('title')
-    Reset Password
+    Atur Ulang Kata Sandi
 @endsection
 @section('content')
-    <div class="section-authentication-cover">
-        <div class="">
-            <div class="row g-0">
-
-                <div
-                    class="col-12 col-xl-7 col-xxl-8 auth-cover-left align-items-center justify-content-center d-none d-xl-flex border-end bg-transparent">
-
-                    <div class="card rounded-0 mb-0 border-0 shadow-none bg-transparent bg-none">
-                        <div class="card-body">
-                            <img src="{{ URL::asset('build/images/auth/forgot-password1.png') }}"
-                                class="img-fluid auth-img-cover-login" width="550" alt="">
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="col-12 col-xl-5 col-xxl-4 auth-cover-right align-items-center justify-content-center">
-                    <div class="card rounded-0 m-3 mb-0 border-0 shadow-none bg-none">
+    <!--authentication-->
+    <div class="auth-basic-wrapper d-flex align-items-center justify-content-center vh-100">
+        <div class="container my-5 my-lg-0">
+            <div class="row">
+                <div class="col-12 col-md-8 col-lg-6 col-xl-5 col-xxl-4 mx-auto">
+                    <div class="card rounded-bottom-4 rounded-top-0 mb-0 border-top border-4 border-secondary">
                         <div class="card-body p-5">
-                            <img src="{{ URL::asset('build/images/logo1.png') }}" class="mb-4" width="145"
-                                alt="">
-                            <h4 class="fw-bold">Genrate New Password</h4>
-                            <p class="mb-0">We received your reset password request. Please enter your new password!</p>
+                            <h4 class="fw-bold">Buat Kata Sandi Baru</h4>
+                            <p class="mb-0">Kami telah menerima permintaan pengaturan ulang kata sandi Anda. Silakan masukkan kata sandi baru Anda!</p>
                             <div class="form-body mt-4">
-                                <form method="POST" action="{{ route('password.update') }}" class="row g-3">
+                                <form method="POST" class="row g-4"
+                                    action="{{ route('password.update') }}">
                                     @csrf
 
                                     <input type="hidden" name="token" value="{{ $token }}">
@@ -37,7 +24,7 @@
                                                 class="text-danger">*</span></label>
                                         <input id="email" type="email"
                                             class="form-control @error('email') is-invalid @enderror" name="email"
-                                            value="{{ $email ?? old('email') }}" required autocomplete="email" autofocus>
+                                            value="{{ $email ?? old('email') }}" readonly>
 
                                         @error('email')
                                             <span class="invalid-feedback" role="alert">
@@ -45,30 +32,35 @@
                                             </span>
                                         @enderror
                                     </div>
-
                                     <div class="col-12">
-                                        <label class="form-label" for="password">Password</label>
-                                        <input id="password" type="password"
-                                            class="form-control @error('password') is-invalid @enderror" name="password"
-                                            required autocomplete="new-password">
+                                        <label class="form-label" for="password">Kata Sandi</label>
+                                        <div class="input-group show_hide_password">
+                                            <input type="password"
+                                                class="form-control @error('password') is-invalid @enderror" name="password"
+                                                required placeholder="Masukan kata sandi" autofocus>
+                                            <button type="button" class="input-group-text bg-transparent toggle-password"><i
+                                                    class="bi bi-eye-slash-fill"></i></button>
 
-                                        @error('password')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
+                                            @error('password')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                        </div>
                                     </div>
-
                                     <div class="col-12">
-                                        <label class="form-label" for="password-confirm">Confirm Password</label>
-                                        <input id="password-confirm" type="password" class="form-control"
-                                            name="password_confirmation" required autocomplete="new-password">
+                                        <label class="form-label" for="password_confirmation">Kata Sandi</label>
+                                        <div class="input-group show_hide_password">
+                                            <input type="password" class="form-control" id="password_confirmation"
+                                                name="password_confirmation" placeholder="Masukan kata sandi" required>
+                                            <button type="button"
+                                                class="input-group-text bg-transparent toggle-password"><i
+                                                    class="bi bi-eye-slash-fill"></i></button>
+                                        </div>
                                     </div>
-
                                     <div class="col-12">
                                         <div class="d-grid gap-2">
-                                            <button type="submit" class="btn btn-grd-branding">Change Password</button>
-                                            <a href="{{ route('login') }}" class="btn btn-grd-royal">Back to Login</a>
+                                            <button type="submit" class="btn btn-dark">Ubah Password</button>
                                         </div>
                                     </div>
                                 </form>
@@ -77,25 +69,34 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div><!--end row-->
         </div>
     </div>
+    <!--authentication-->
 @endsection
 @push('script')
+    <!--plugins-->
+    <script src="{{ URL::asset('build/js/jquery.min.js') }}"></script>
+
     <script>
         $(document).ready(function() {
-            $("#show_hide_password a").on('click', function(event) {
+            $(".show_hide_password .toggle-password").on('click', function(event) {
                 event.preventDefault();
-                if ($('#show_hide_password input').attr("type") == "text") {
-                    $('#show_hide_password input').attr('type', 'password');
-                    $('#show_hide_password i').addClass("bi-eye-slash-fill");
-                    $('#show_hide_password i').removeClass("bi-eye-fill");
-                } else if ($('#show_hide_password input').attr("type") == "password") {
-                    $('#show_hide_password input').attr('type', 'text');
-                    $('#show_hide_password i').removeClass("bi-eye-slash-fill");
-                    $('#show_hide_password i').addClass("bi-eye-fill");
+
+                var input = $(this).closest('.input-group').find('input');
+                var icon = $(this).find('i');
+
+                if (input.attr("type") == "text") {
+                    input.attr('type', 'password');
+                    icon.addClass("bi-eye-slash-fill");
+                    icon.removeClass("bi-eye-fill");
+                } else {
+                    input.attr('type', 'text');
+                    icon.removeClass("bi-eye-slash-fill");
+                    icon.addClass("bi-eye-fill");
                 }
             });
         });
     </script>
 @endpush
+

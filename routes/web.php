@@ -56,7 +56,7 @@ Route::middleware(['auth', 'verified', 'check_password_set', 'set_outlet_role'])
   // Admin
   Route::group(['middleware' => ['role:admin']], function () {
     Route::name('admin.')->group(function () {
-      Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+      Route::get('admin-dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
       // stock item management
       Route::resource('stock-item', StockItemManagementController::class);
@@ -81,7 +81,7 @@ Route::middleware(['auth', 'verified', 'check_password_set', 'set_outlet_role'])
   // Staff
   Route::group(['middleware' => ['role:staff']], function () {
     Route::name('staff.')->group(function () {
-      Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+      Route::get('staff-dashboard', [DashboardController::class, 'index'])->name('dashboard');
     });
   });
 });

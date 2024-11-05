@@ -11,10 +11,16 @@
                     <div class="card rounded-bottom-4 rounded-top-0 mb-0 border-top border-4 border-secondary">
                         <div class="card-body p-5">
                             <h3 class="fw-bolder">
-                                {{ (getCompanyInfo()->name ?? config('app.name')) }}</h3>
+                                {{ getCompanyInfo()->name ?? config('app.name') }}</h3>
                             <p class="mb-0">Masukan email dan password anda untuk login</p>
-
                             <div class="form-body my-5">
+                                @if (session('success'))
+                                    <x-alert-message type="success" :messages="session('success')" />
+                                @endif
+
+                                @if ($errors->any())
+                                    <x-alert-message type="danger" :messages="$errors->all()" />
+                                @endif
                                 <form method="POST" action="{{ route('login') }}" class="row g-3">
                                     @csrf
 
@@ -22,8 +28,8 @@
                                         <label for="email" class="form-label">Email <span
                                                 class="text-danger">*</span></label>
                                         <input type="email" class="form-control @error('email') is-invalid @enderror"
-                                            id="email" name="email" placeholder="Masukan email" value="{{ old('email') }}"
-                                            required autocomplete="email" autofocus>
+                                            id="email" name="email" placeholder="Masukan email"
+                                            value="{{ old('email') }}" required autocomplete="email" autofocus>
                                         @error('email')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -36,7 +42,8 @@
                                         <div class="input-group show_hide_password">
                                             <input type="password" class="form-control" id="password" name="password"
                                                 placeholder="Masukan kata sandi" required>
-                                            <button type="button" class="input-group-text bg-transparent toggle-password"><i
+                                            <button type="button"
+                                                class="input-group-text bg-transparent toggle-password"><i
                                                     class="bi bi-eye-slash-fill"></i></button>
                                             @error('password')
                                                 <span class="invalid-feedback" role="alert">

@@ -39,6 +39,6 @@ class SetPasswordController extends Controller
 
         Auth::logout($user);
 
-        return redirect()->route('login')->with('status', 'Password berhasil diatur.');
+        return redirect()->route('login');
     }
 }
