@@ -30,6 +30,8 @@ class setOutletRole
             $outlet = Outlet::where('slug', $slug)->firstOrFail();
         } else if ($user?->hasRole('admin') && $user?->outlet_id) {
             $outlet = Outlet::where('id', $user->outlet_id)->firstOrFail();
+        } else if ($user?->hasRole('staff') && $user?->outlet_id) {
+            $outlet = Outlet::where('id', $user->outlet_id)->firstOrFail();
         } else {
             return abort(403, 'Unauthorized');
         }
