@@ -1,9 +1,19 @@
 <?php
 
+use App\Models\CompanyInfo;
+
 if (!function_exists('formatRupiah')) {
   function formatRupiah($amount)
   {
     return number_format($amount, 0, ',', '.');
+  }
+}
+
+if (!function_exists('getCompanyInfo')) {
+  function getCompanyInfo()
+  {
+    $companyInfo = CompanyInfo::first();
+    return $companyInfo;
   }
 }
 

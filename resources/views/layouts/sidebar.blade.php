@@ -4,12 +4,12 @@
            <div class="d-flex align-items-center">
                <div class="logo-icon">
                    <img src="{{ URL::asset('build/images/logo.png') }}" class="logo-img p-2"
-                       alt="{{ config('app.name') }}">
+                       alt="{{ getCompanyInfo()->name ?? 'This Company' }}">
                </div>
                <div class="logo-name ms-2 pe-4">
                    <h5 class="mb-0"
                        style="white-space: nowrap; overflow: hidden;max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                       {{ config('app.name') }}
+                       {{ getCompanyInfo()->short_name ?? (getCompanyInfo()->name ?? 'This Company') }}
                    </h5>
                </div>
            </div>
@@ -36,27 +36,13 @@
                        </li>
                        <li class="menu-label">Menu</li>
                        <li>
-                        <a href="#" class="has-arrow">
-                            <div class="parent-icon">
-                                <i class="material-icons-outlined">group</i>
-                            </div>
-                            <div class="menu-title" title="Manajemen Pengguna">Manajemen Pengguna</div>
-                        </a>
-                        <ul>
-                            <li>
-                                <a href="{{ route('outlet.user.create', ['outlet' => $outletSlug]) }}">
-                                    <i class="material-icons-outlined">arrow_right</i>
-                                    Tambah Pengguna
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('outlet.user.index', ['outlet' => $outletSlug]) }}">
-                                    <i class="material-icons-outlined">arrow_right</i>
-                                    Daftar Pengguna
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
+                           <a href="{{ route('outlet.user.index', ['outlet' => $outletSlug]) }}">
+                               <div class="parent-icon">
+                                   <i class="material-icons-outlined">group</i>
+                               </div>
+                               <div class="menu-title" title="Manajemen Pengguna">Manajemen Pengguna</div>
+                           </a>
+                       </li>
                        <li>
                            <a href="#" class="has-arrow">
                                <div class="parent-icon">
@@ -120,6 +106,15 @@
                            <div class="menu-title">Dashboard</div>
                        </a>
                    </li>
+                   <li class="menu-label">Menu</li>
+                   <li>
+                       <a href="{{ route('admin.user.index') }}">
+                           <div class="parent-icon">
+                               <i class="material-icons-outlined">group</i>
+                           </div>
+                           <div class="menu-title" title="Manajemen Pengguna">Manajemen Pengguna</div>
+                       </a>
+                   </li>
                    <li>
                        <a href="#" class="has-arrow">
                            <div class="parent-icon">
@@ -181,14 +176,27 @@
                <li>
                    @if (request()->route('outlet') && auth()->user()->hasRole('superadmin'))
                        <a href="{{ route('outlet.unit.index', ['outlet' => request()->route('outlet')]) }}">
-                    @else
-                        <a href="{{ route('unit.index') }}">
+                       @else
+                           <a href="{{ route('unit.index') }}">
                    @endif
                    <div class="parent-icon"><i class="material-icons-outlined">calculate</i>
                    </div>
                    <div class="menu-title">Satuan / Unit</div>
                    </a>
                </li>
+               @hasrole('superadmin')
+               <li>
+                   @if (request()->route('outlet') && auth()->user()->hasRole('superadmin'))
+                       <a href="{{ route('outlet.company-info.index', ['outlet' => request()->route('outlet')]) }}">
+                       @else
+                           <a href="{{ route('company-info.index') }}">
+                   @endif
+                   <div class="parent-icon"><i class="material-icons-outlined">apartment</i>
+                   </div>
+                   <div class="menu-title">Info Perusahaan</div>
+                   </a>
+               </li>
+               @endhasrole
            </ul>
            <!--end navigation-->
        </div>

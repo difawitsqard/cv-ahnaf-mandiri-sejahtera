@@ -28,6 +28,8 @@ class HomeController extends Controller
             return $this->dashboardSuperadmin();
         } else if (auth()->user()?->hasRole(['admin'])) {
             return $this->dashboardAdmin();
+        } else if (auth()->user()?->hasRole(['staff'])) {
+            return $this->dashboardStaff();
         }
         return abort(403);
     }
@@ -40,6 +42,11 @@ class HomeController extends Controller
     private function dashboardAdmin()
     {
         return redirect()->route('admin.dashboard');
+    }
+
+    private function dashboardStaff()
+    {
+        return redirect()->route('staff.dashboard');
     }
 
     public function root($any)

@@ -88,7 +88,8 @@
             <div class="text-center">
               <img src="{{ URL::asset('build/images/default-avatar.jpg') }}" class="rounded-circle p-1 shadow mb-3" width="90" height="90"
                 alt="{{ Auth::user()->name }}">
-              <h5 class="user-name mb-0 fw-bold">Hello, {{ Auth::user()->name }}</h5>
+              <h5 class="user-name mb-0 fw-bold">{{ Auth::user()->name }}</h5>
+              <p class="user-role mb-0">{{ Auth::user()->roles[0]->name }}</p>
             </div>
           </a>
           <hr class="dropdown-divider">
