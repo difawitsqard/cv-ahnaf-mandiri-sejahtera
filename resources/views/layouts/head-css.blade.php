@@ -20,7 +20,7 @@
 
 <!--main css-->
 <link href="{{ URL::asset('build/css/bootstrap-extended.css') }}" rel="stylesheet">
-<link href="{{ URL::asset('build/css/main.css') }}" rel="stylesheet">
+<link href="{{ URL::asset('build/css/main.css') }}?qq={{ md5(time()) }}" rel="stylesheet">
 <link href="{{ URL::asset('build/css/dark-theme.css') }}" rel="stylesheet">
 <link href="{{ URL::asset('build/css/blue-theme.css') }}" rel="stylesheet">
 <link href="{{ URL::asset('build/css/semi-dark.css') }}" rel="stylesheet">
