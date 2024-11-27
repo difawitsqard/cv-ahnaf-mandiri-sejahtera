@@ -22,6 +22,8 @@
 
     @yield('content')
 
+    @include('layouts.extra')
+
     @include('layouts.common-scripts')
 </body>
 

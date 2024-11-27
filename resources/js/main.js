@@ -3,9 +3,13 @@ $(function () {
 
     /* scrollar */
 
-    new PerfectScrollbar(".notify-list");
+    if ($(".notify-list").length) {
+        new PerfectScrollbar(".notify-list");
+    }
 
-    new PerfectScrollbar(".search-content");
+    if ($(".search-content").length) {
+        new PerfectScrollbar(".search-content");
+    }
 
     // new PerfectScrollbar(".mega-menu-widgets")
 
@@ -50,8 +54,43 @@ $(function () {
         });
     });
 
-    /* sticky header */
+    $(document).ready(function () {
+        // Muat tema dari localStorage saat halaman dimuat
+        const savedTheme = localStorage.getItem("theme");
+        if (savedTheme) {
+            $("html").attr("data-bs-theme", savedTheme);
+            $(`#${savedTheme}`).prop("checked", true);
+        }
 
+        // Fungsi untuk mengubah tema dan menyimpannya ke localStorage
+        function setTheme(theme) {
+            $("html").attr("data-bs-theme", theme);
+            localStorage.setItem("theme", theme);
+            $(`#${theme}`).prop("checked", true);
+        }
+
+        $("#blue-theme").on("click", function () {
+            setTheme("blue-theme");
+        });
+
+        $("#light").on("click", function () {
+            setTheme("light");
+        });
+
+        $("#dark").on("click", function () {
+            setTheme("dark");
+        });
+
+        $("#semi-dark").on("click", function () {
+            setTheme("semi-dark");
+        });
+
+        $("#bodered-theme").on("click", function () {
+            setTheme("bodered-theme");
+        });
+    });
+
+    /* sticky header */
     $(document).ready(function () {
         $(window).on("scroll", function () {
             if ($(this).scrollTop() > 60) {
@@ -86,28 +125,12 @@ $(function () {
         }),
         /* switcher */
 
-        $("#BlueTheme").on("click", function () {
-            $("html").attr("data-bs-theme", "blue-theme");
-        }),
-        $("#LightTheme").on("click", function () {
-            $("html").attr("data-bs-theme", "light");
-        }),
-        $("#DarkTheme").on("click", function () {
-            $("html").attr("data-bs-theme", "dark");
-        }),
-        $("#SemiDarkTheme").on("click", function () {
-            $("html").attr("data-bs-theme", "semi-dark");
-        }),
-        $("#BoderedTheme").on("click", function () {
-            $("html").attr("data-bs-theme", "bodered-theme");
+        /* search control */
+
+        $(".search-control").click(function () {
+            $(".search-popup").addClass("d-block");
+            $(".search-close").addClass("d-block");
         });
-
-    /* search control */
-
-    $(".search-control").click(function () {
-        $(".search-popup").addClass("d-block");
-        $(".search-close").addClass("d-block");
-    });
 
     $(".search-close").click(function () {
         $(".search-popup").removeClass("d-block");
