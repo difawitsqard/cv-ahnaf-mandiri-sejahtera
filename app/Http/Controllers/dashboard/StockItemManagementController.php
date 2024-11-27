@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Services\ImageUploadService;
 use Illuminate\Support\Facades\File;
+use Spatie\Activitylog\Models\Activity;
 use App\Http\Requests\dashboard\superadmin\StockItemManagementRequest;
 
 class StockItemManagementController extends Controller
@@ -77,6 +78,7 @@ class StockItemManagementController extends Controller
     {
         $validatedData = $request->validated();
         $validatedData['outlet_id'] = $outlet->id;
+        $validatedData['total_stock'] = $validatedData['stock'];
 
         $unit = Unit::findOrCreate($validatedData['unit_id']);
         $validatedData['unit_id'] = $unit->id;
@@ -121,6 +123,15 @@ class StockItemManagementController extends Controller
             ->where('outlet_id', $outlet->id)
             ->firstOrFail();
         $stockItem->load('unit', 'outlet');
+
+        $lastRestock = Activity::inLog('stock_item_log')
+            ->where('subject_type', StockItem::class)
+            ->where('subject_id', $stockItem->id)
+            ->whereIn('event', ['restocked', 'created'])
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+        $stockItem['last_restock'] = $lastRestock ? $lastRestock->created_at->format('d M Y H:i') : null;
 
         if ($stockItem) {
             return response()->json([
@@ -199,11 +210,7 @@ class StockItemManagementController extends Controller
             'qty' => 'required|numeric',
         ]);
 
-        $stockItem = StockItem::where('id', $id)
-            ->where('outlet_id', $outlet->id)
-            ->firstOrFail();
-        $stockItem->stock += $request->qty;
-        $stockItem->save();
+        $stockItem = StockItem::restock($id, $outlet->id, $request->qty);
 
         return response()->json([
             'status' => true,

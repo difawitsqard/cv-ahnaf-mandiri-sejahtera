@@ -17,6 +17,10 @@ class Menu extends Model
         'description',
     ];
 
+    protected $appends = [
+        'max_order_quantity',
+    ];
+
     public function menuImages()
     {
         return $this->hasMany(MenuImage::class);
@@ -25,5 +29,26 @@ class Menu extends Model
     public function stockItems()
     {
         return $this->belongsToMany(StockItem::class, 'menu_stock_items')->withPivot('quantity');
+    }
+
+    /**
+     * Calculate the maximum order quantity based on available stock items.
+     *
+     * @return int
+     */
+    public function getMaxOrderQuantityAttribute()
+    {
+        $maxOrderQuantity = PHP_INT_MAX;
+
+        foreach ($this->stockItems as $stockItem) {
+            $availableStock = $stockItem->stock;
+            $requiredQuantity = $stockItem->pivot->quantity;
+
+            if ($requiredQuantity > 0) {
+                $maxOrderQuantity = min($maxOrderQuantity, intdiv($availableStock, $requiredQuantity));
+            }
+        }
+
+        return $maxOrderQuantity;
     }
 }

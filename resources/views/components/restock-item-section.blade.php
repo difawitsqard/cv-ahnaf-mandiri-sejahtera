@@ -87,8 +87,8 @@
                                     .textContent = data.data.name;
 
                                 stockNowElement.textContent = `${data.data.stock} ${data.data.unit.name}`;
-                                lastRestockElement.textContent = data.data.last_restock || 'belum';
-                                stockLifetimeElement.textContent = data.data.lifetime_stock || 'belum';
+                                lastRestockElement.textContent = data.data.last_restock || '-';
+                                stockLifetimeElement.textContent = `${data.data.total_stock} ${data.data.unit.name}` || '-';
 
                             } else {
                                 console.error('Error:', 'Gagal memuat data stok.');
@@ -100,6 +100,9 @@
                         });
                 }
 
+                reloadSubmitButton.addEventListener('click', function() {
+                    loadStockData();
+                });
 
                 restockSubmitButton.addEventListener('click', function() {
                     setFieldsReadOnly(true);

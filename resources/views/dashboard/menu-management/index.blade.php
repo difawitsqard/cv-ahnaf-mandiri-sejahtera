@@ -90,8 +90,10 @@
                             <tr>
                                 <th width="2%">#</th>
                                 <th>Nama</th>
-                                {{-- <th>Deskripsi</th> --}}
+                                <th>Deskripsi</th>
                                 <th>Harga</th>
+                                {{-- <th>Deskripsi</th> --}}
+                                <th>status</th>
                                 <th class="no-export">Aksi</th>
                             </tr>
                         </thead>
@@ -111,8 +113,9 @@
                                             </div>
                                         </div>
                                     </td>
-                                    {{-- <td>{{ $menu['description'] }}</td> --}}
+                                    <td>{{ Str::limit(strip_tags($menu['description']), 32) }}</td>
                                     <td>{{ formatRupiah($menu['price']) }}</td>
+                                    <td>{!! $menu->max_order_quantity < 1 ? '<span class="badge bg-danger">Stock Habis</span>' : '<span class="badge bg-success">Tersedia</span>' !!}</td>
                                     <td class="no-export">
                                         <div class="dropdown">
                                             <button class="btn btn-sm btn-filter dropdown-toggle dropdown-toggle-nocaret"

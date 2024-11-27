@@ -18,11 +18,13 @@ class StockItemFactory extends Factory
      */
     public function definition(): array
     {
+        $stock = fake()->numberBetween(1, 100);
         return [
             'name' => fake()->word,
             'price' => fake()->numberBetween(1000, 100000),
-            'stock' => fake()->numberBetween(1, 100),
+            'stock' =>  $stock,
             'min_stock' => fake()->numberBetween(1, 20),
+            'total_stock' =>  $stock,
             'image_path' => null,
             'description' => fake()->sentence,
             'outlet_id' => Outlet::factory(),

@@ -119,7 +119,7 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <td>{{ $stockItem['description'] }}</td>
+                                    <td>{{ Str::limit(strip_tags($stockItem['description']), 32) }}</td>
                                     <td>
                                         @if ($stockItem['stock'] < $stockItem['min_stock'])
                                             <b class="text-danger">

@@ -188,7 +188,7 @@
                     </ul>
                 </div>
                 <form action="{{ roleBasedRoute('user.store', ['outlet' => $outlet->slug]) }}" method="POST">
-                    <div class="modal-body bg-white">
+                    <div class="modal-body ">
                         <div class="row g-3">
                             @csrf
                             @method('POST')

@@ -34,6 +34,14 @@
                                <div class="menu-title">Dashboard</div>
                            </a>
                        </li>
+                       <li>
+                           <a href="{{ route('outlet.order.index', ['outlet' => $outletSlug]) }}">
+                               <div class="parent-icon">
+                                   <i class="material-icons-outlined">shopping_cart</i>
+                               </div>
+                               <div class="menu-title" title="Pemesanan Menu">Pemesanan Menu</div>
+                           </a>
+                       </li>
                        <li class="menu-label">Menu</li>
                        <li>
                            <a href="{{ route('outlet.user.index', ['outlet' => $outletSlug]) }}">
@@ -104,6 +112,14 @@
                            <div class="parent-icon"><i class="material-icons-outlined">home</i>
                            </div>
                            <div class="menu-title">Dashboard</div>
+                       </a>
+                   </li>
+                   <li>
+                       <a href="{{ route('admin.order.index') }}">
+                           <div class="parent-icon">
+                               <i class="material-icons-outlined">shopping_cart</i>
+                           </div>
+                           <div class="menu-title" title="Pemesanan Menu">Pemesanan Menu</div>
                        </a>
                    </li>
                    <li class="menu-label">Menu</li>
@@ -185,17 +201,17 @@
                    </a>
                </li>
                @hasrole('superadmin')
-               <li>
-                   @if (request()->route('outlet') && auth()->user()->hasRole('superadmin'))
-                       <a href="{{ route('outlet.company-info.index', ['outlet' => request()->route('outlet')]) }}">
-                       @else
-                           <a href="{{ route('company-info.index') }}">
-                   @endif
-                   <div class="parent-icon"><i class="material-icons-outlined">apartment</i>
-                   </div>
-                   <div class="menu-title">Info Perusahaan</div>
-                   </a>
-               </li>
+                   <li>
+                       @if (request()->route('outlet') && auth()->user()->hasRole('superadmin'))
+                           <a href="{{ route('outlet.company-info.index', ['outlet' => request()->route('outlet')]) }}">
+                           @else
+                               <a href="{{ route('company-info.index') }}">
+                       @endif
+                       <div class="parent-icon"><i class="material-icons-outlined">apartment</i>
+                       </div>
+                       <div class="menu-title">Info Perusahaan</div>
+                       </a>
+                   </li>
                @endhasrole
            </ul>
            <!--end navigation-->

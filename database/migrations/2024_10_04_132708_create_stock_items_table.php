@@ -17,6 +17,7 @@ return new class extends Migration
             $table->text('description')->nullable(); // Deskripsi item
             $table->bigInteger('stock'); // Jumlah item yang tersedia
             $table->bigInteger('min_stock')->default(0); // Jumlah minimum item yang harus tersedia
+            $table->bigInteger('total_stock')->default(0); // Jumlah total item yang pernah ada
             $table->bigInteger('price')->default(0); // Harga item
             $table->string('image_path')->nullable(); // Path gambar item
             $table->foreignId('outlet_id')->constrained('outlets')->onDelete('restrict'); // Foreign key ke tabel outlets

@@ -2,23 +2,35 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class StockItem extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
 
     protected $fillable = [
         'name',
         'description',
         'unit_id',
         'stock',
+        'total_stock',
         'min_stock',
         'image_path',
         'price',
         'outlet_id',
     ];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->useLogName('stock_item_log')
+            ->dontLogIfAttributesChangedOnly(['stock', 'total_stock', 'updated_at'])
+            ->logFillable();
+        // Chain fluent methods for configuration options
+    }
 
     protected $appends = [
         'image_url',
@@ -37,6 +49,67 @@ class StockItem extends Model
     public function menus()
     {
         return $this->belongsToMany(Menu::class, 'menu_stock_item')->withPivot('quantity');
+    }
+
+    public static function restock($id, $outletId, $quantity)
+    {
+        $stockItem = self::where('id', $id)
+            ->where('outlet_id', $outletId)
+            ->firstOrFail();
+
+        $oldStock = $stockItem->stock;
+        $stockItem->stock += $quantity;
+        $stockItem->total_stock = $quantity > 0 ? $stockItem->total_stock + $quantity : $stockItem->total_stock;
+        $stockItem->save();
+
+        activity()
+            ->useLog('stock_item_log')
+            ->event('restocked')
+            ->performedOn($stockItem)
+            ->withProperties([
+                'qty' => $quantity,
+                'old' => [
+                    'stock' => $oldStock,
+                ],
+                'attributes' => [
+                    'stock' => $stockItem->stock,
+                ],
+            ])
+            ->log("restocked");
+
+        return $stockItem;
+    }
+
+    public static function deductStock($id, $outletId, $quantity)
+    {
+        $stockItem = self::where('id', $id)
+            ->where('outlet_id', $outletId)
+            ->firstOrFail();
+
+        $oldStock = $stockItem->stock;
+        $stockItem->stock -= $quantity;
+
+        if ($stockItem->stock < 0) {
+            $stockItem->stock = 0;
+        }
+        $stockItem->save();
+
+        activity()
+            ->useLog('stock_item_log')
+            ->event('deducted')
+            ->performedOn($stockItem)
+            ->withProperties([
+                'qty' => -$quantity,
+                'old' => [
+                    'stock' => $oldStock,
+                ],
+                'attributes' => [
+                    'stock' => $stockItem->stock,
+                ],
+            ])
+            ->log("deducted");
+
+        return $stockItem;
     }
 
     public function getImageUrlAttribute()

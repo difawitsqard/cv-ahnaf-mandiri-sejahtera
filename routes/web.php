@@ -7,6 +7,7 @@ use App\Http\Controllers\SetPasswordController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\dashboard\DashboardController;
 use App\Http\Controllers\dashboard\MenuManagementController;
+use App\Http\Controllers\dashboard\OrderController;
 use App\Http\Controllers\dashboard\UnitManagementController;
 use App\Http\Controllers\dashboard\UserManagementController;
 use App\Http\Controllers\dashboard\StockItemManagementController;
@@ -40,6 +41,8 @@ Route::middleware(['auth', 'verified', 'check_password_set', 'set_outlet_role'])
       Route::get('stock-item/{id}/fetch', [StockItemManagementController::class, 'fetch'])->name('stock-item.fetch');
       Route::put('stock-item/{id}/restock', [StockItemManagementController::class, 'restock'])->name('stock-item.restock');
 
+      Route::resource('order', OrderController::class);
+
       // user management
       Route::resource('user', UserManagementController::class);
 
@@ -57,6 +60,8 @@ Route::middleware(['auth', 'verified', 'check_password_set', 'set_outlet_role'])
   Route::group(['middleware' => ['role:admin']], function () {
     Route::name('admin.')->group(function () {
       Route::get('admin-dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+      Route::resource('order', OrderController::class);
 
       // stock item management
       Route::resource('stock-item', StockItemManagementController::class);
