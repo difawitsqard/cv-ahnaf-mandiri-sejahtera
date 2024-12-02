@@ -18,7 +18,7 @@
 @endpush
 
 @section('content')
-    <x-page-title title="Pesan" subtitle="Pesan Menu" />
+    <x-page-title title="Pesanan" subtitle="Buat Pesanan" />
 
     <div class="card rounded-4 mb-3">
         <div class="card-body">
@@ -73,12 +73,12 @@
                         </div>
                     </div>
                     <div class="bs-stepper-line"></div>
-                    <div class="step">
-                        <div class="step-trigger" role="tab">
+                    <div class="step" data-target="#test-l-3">
+                        <div class="step-trigger" role="tab" id="stepper1trigger3" aria-controls="test-l-3">
                             <div class="bs-stepper-circle">3</div>
                             <div class="">
-                                <h5 class="mb-0 steper-title fw-bold">Selesai</h5>
-                                <p class="mb-0 steper-sub-title"></p>
+                                <h5 class="mb-0 steper-title">Pembayaran</h5>
+                                <p class="mb-0 steper-sub-title">Selesaikan Pesanan</p>
                             </div>
                         </div>
                     </div>
@@ -109,16 +109,18 @@
                                                 </div>
                                                 <div class="col-8 h-100">
                                                     <div class="card-body d-flex flex-column justify-content-between">
-                                                        <h5 class="card-title">{{ $menu['name'] }}</h5>
-                                                        <p class="card-text" style="min-height: 42px;">
-                                                            {{ str()->limit(strip_tags($menu['description']), 50, '...') }}
+                                                        <h5 class="card-title fw-bold">{{ $menu['name'] }}</h5>
+                                                        <p class="card-text fw-lighter" style="min-height: 42px;">
+                                                            <small>
+                                                                {{ str()->limit(strip_tags($menu['description']), 50, '...') }}
+                                                            </small>
                                                         </p>
                                                         <h6 class="fw-bold menu-price">
                                                             {{ $menu['price'] == 0 ? 'Gratis' : formatRupiah($menu['price']) }}
                                                         </h6>
                                                         <div class="mt-auto d-flex align-items-center justify-content-end">
                                                             <button type="button"
-                                                                class="btn btn-primary btn-circle raised rounded-circle d-flex gap-2 wh-48 add-button"
+                                                                class="btn btn-primary raised d-flex gap-2 add-button mt-2"
                                                                 {{ $menu->max_order_quantity < 1 ? 'disabled' : '' }}>
                                                                 <i class="bi bi-plus-lg"></i>
                                                             </button>
@@ -139,7 +141,7 @@
 
                             <div class="col-12 d-flex justify-content-end">
                                 <button class="btn btn-primary px-4 next-button" style="display: none;"
-                                    onclick="stepper1.next()">Selanjutnya
+                                    onclick="stepper1.next()">Berikutnya
                                     <i class="bi bi-arrow-right"></i>
                                 </button>
                             </div>
@@ -149,15 +151,17 @@
                         <div id="test-l-2" role="tabpanel" class="bs-stepper-pane" aria-labelledby="stepper1trigger2">
 
                             <div class="row g-3">
-                                <div class="col-12 col-lg-6">
-                                    <div class="card w-100">
+                                <div class="col-12 col-lg-7">
+                                    <div class="card w-100 mb-0">
                                         <div class="card-body p-0">
 
                                             <div class="d-flex justify-content-between p-3">
                                                 <h5 class="mb-3 fw-bold">Rangkuman Pesanan</h5>
-                                                <a href="#" onclick="stepper1.previous()"
-                                                    class="fw-semi-bold">Tambah
-                                                    Pesanan</a>
+                                                <a href="javascript;"
+                                                    onclick="event.preventDefault(); stepper1.previous()"
+                                                    class="fw-semi-bold text-right">
+                                                    Tambah Pesanan
+                                                </a>
                                             </div>
                                             <ul class="list-group list-group-flush p-0">
                                                 <!-- Item 1 -->
@@ -175,194 +179,257 @@
                                                         <p>32.000</p>
                                                     </div>
                                                 </li>
-                                                <!-- Item 2 -->
-                                                <li class="list-group-item d-flex align-items-start">
-                                                    <div class="me-3">
-                                                        <span class="badge text-success fs-6">1x</span>
-                                                    </div>
-                                                    <div class="flex-grow-1">
-                                                        <h6 class="fw-bold mb-1">Mie Kocok Komplit (Loci, Daging)</h6>
-                                                        {{-- <p class="mb-1 small">Satukan Kuah</p> --}}
-                                                        <a href="#" class="text-primary small">Edit</a>
-                                                    </div>
-                                                    <div class="ms-4">
-                                                        <p>16.000</p>
-                                                    </div>
-                                                </li>
                                             </ul>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-12 col-lg-6">
+                                <div class="col-12 col-lg-5">
                                     <div class="card">
                                         <div class="card-body">
                                             <div class="row pb-3 border-bottom mb-3">
                                                 <label for="name" class="col-sm-3 col-form-label fw-bold">Nama <span
-                                                        class="fw-light">( Opsional )</span></label>
+                                                        class="fw-light"></span></label>
                                                 <div class="col-sm-9">
                                                     <input type="text" class="form-control" id="name"
-                                                        name="name" placeholder="Nama pelanggan">
+                                                        name="name" placeholder="Nama Order (Opsional)">
                                                 </div>
                                             </div>
                                             <div>
-                                                <div class="d-flex justify-content-between">
-                                                    <p class="fw-semi-bold">Subtotal :</p>
-                                                    <p class="fw-semi-bold subtotal-value">0</p>
-                                                </div>
-                                                <div class="d-flex justify-content-between">
-                                                    <p class="fw-semi-bold">Discount :</p>
-                                                    <p class="text-danger fw-semi-bold discount-value">-0</p>
-                                                </div>
-                                                <div class="d-flex justify-content-between">
-                                                    <p class="fw-semi-bold">Tax :</p>
-                                                    <p class="fw-semi-bold tax-value">0</p>
-                                                </div>
-                                                <div class="d-flex justify-content-between border-top pt-4">
+                                                <div class="summary p-0"></div>
+                                                <div class="d-flex justify-content-between border-top pt-3">
                                                     <h5 class="mb-0 fw-bold">Total :</h5>
                                                     <h5 class="mb-0 fw-bold total-value">0</h5>
                                                 </div>
                                             </div>
                                         </div>
-
                                     </div>
-                                </div>
-                                <div class="col-12 d-flex justify-content-end">
-                                    <div class="d-flex align-items-center gap-3">
-                                        <button class="btn btn-secondary px-4" onclick="stepper1.previous()"><i
-                                                class="bi bi-arrow-left me-2"></i> Pilih Menu</button>
-                                        <button class="btn btn-primary px-4 submit-button">Pesan</button>
-                                    </div>
-                                </div>
-                            </div><!---end row-->
 
+                                </div>
+
+                            </div>
+                            <div class="col-12 d-flex justify-content-end gap-3">
+                                <button class="btn btn-secondary px-4" onclick="stepper1.previous()"><i
+                                        class="bi bi-arrow-left me-2"></i> Menu</button>
+                                <button class="btn btn-primary px-4"onclick="stepper1.next()">Berikutnya
+                                    <i class="bi bi-arrow-right ms-2"></i>
+                                </button>
+                            </div>
                         </div>
-                    </form>
+                        <!---end row-->
+
                 </div>
 
+                <div id="test-l-3" role="tabpanel" class="bs-stepper-pane" aria-labelledby="stepper1trigger3">
+                    <div class="row g-3">
+
+                        <div class="col-12 col-lg-7">
+                            <div class="card w-100 mb-0">
+                                <div class="card-body">
+                                    <h5 class="mb-3 fw-bold">Rincian Pesanan</h5>
+                                    <div class="product-table">
+                                        <table class="table table-striped">
+                                            <tbody class="table-summary"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-5">
+                            <div class="card mb-0">
+                                <div class="card-body">
+                                    <h5 class="card-title mb-3 fw-bold">Pembayaran</h5>
+                                    <label class="form-label">Jumlah Pembayaran Diterima</label>
+                                    <input type="text" name="paid_amount" class="form-control mb-3"
+                                        placeholder="...">
+                                    <label class="form-label">Metode Pembayaran</label>
+                                    <select class="form-select mb-3" name="payment_method" id="payment_method"
+                                        required="">
+                                        <option value="cash">Tunai</option>
+                                        <option value="credit_card">Kartu Kredit</option>
+                                        <option value="bank_transfer">Transfer Bank</option>
+                                        <option value="other">Lainnya</option>
+                                    </select>
+                                    <label class="form-label">Jumlah Kembalian</label>
+                                    <input type="text" name="change_amount" class="form-control" placeholder="..."
+                                        value="0" readonly disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 d-flex justify-content-end gap-3">
+                            <button class="btn btn-secondary px-4" onclick="stepper1.previous()"><i
+                                    class="bi bi-arrow-left me-2"></i> Kembali</button>
+                            </button>
+                            <button class="btn btn-primary px-4 submit-button">Pesan <i
+                                    class="bi bi-arrow-right ms-2"></i></button>
+                        </div>
+                    </div><!---end row-->
+
+                </div>
+                </form>
             </div>
+
         </div>
+    </div>
     </div>
 @endsection
 
-@push('modals')
-    <div class="modal fade" id="MyModal" tabindex="-1" aria-labelledby="MyModalLabel" aria-hidden="true"
-        data-bs-backdrop="static" data-bs-keyboard="false">
-        <div class="modal-dialog modal-md">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="MyModalLabel">Tambah</h5>
-                    <button type="button" class="btn-close" data-add-url="{{ route('unit.store') }}"
-                        data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form action="{{ route('unit.store') }}" method="POST">
-                    <div class="modal-body">
-                        @csrf
-                        @method('POST')
-                        <input type="hidden" id="itemId" name="id">
-
-                        <div class="mb-3">
-                            <label for="name" class="form-label">Nama Satuan <span
-                                    class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="name" name="name" placeholder="..."
-                                required>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-@endpush
-
 @push('script')
     <script src="{{ URL::asset('build/plugins/bs-stepper/js/bs-stepper.min.js') }}"></script>
-    <script src="{{ URL::asset('build/plugins/bs-stepper/js/main.js') }}"></script>
 
     <script>
+        var stepper1;
+
         $(document).ready(function() {
-            // Array untuk menyimpan data keranjang
-            let cart = [];
-            let discountRate = 0.0; 
-            let taxRate = 0.0; 
+            stepper1 = new Stepper(document.querySelector('#stepper1'), {
+                animation: true
+            });
+
+            var cart = [];
+            const discountRate = {{ $outlet->discount / 100 }};
+            const taxRate = {{ $outlet->tax / 100 }};
+            const $summaryList = $(".list-group");
+            const $tableSummary = $(".table-summary");
+            const $nextButton = $(".next-button");
+
+            function saveCart() {
+                localStorage.setItem('cart', JSON.stringify(cart));
+            }
+
+            function loadCart() {
+                const savedCart = localStorage.getItem('cart');
+                if (savedCart) {
+                    cart.push(...JSON.parse(savedCart));
+                    cart.forEach(item => {
+                        const maxOrder = $(`[data-menu-id="${item.id}"]`).data('max-order');
+                        const menuName = $(`[data-menu-id="${item.id}"]`).find(
+                                '.card-title').text() ||
+                            "Nama Menu Tidak Diketahui";
+                        const menuPrice = parseInt($(`[data-menu-id="${item.id}"]`).find(
+                            '.menu-price').text().replace(
+                            /\./g, '')) || 0;
+
+                        if ($(`[data-menu-id="${item.id}"]`).length === 0) {
+                            cart = cart.filter(cartItem => cartItem.id !== item.id);
+                            return;
+                        }
+
+                        item.maxOrder = maxOrder;
+                        item.name = menuName;
+                        item.price = menuPrice;
+                        item.quantity = Math.min(item.quantity, maxOrder);
+                        const inputGroupHtml = createInputGroupHtml(item.id, item.quantity);
+                        $(`[data-menu-id="${item.id}"]`).find('.add-button').replaceWith(inputGroupHtml);
+                    });
+                    if (cart.length > 0) stepper1.to(2);
+                    updateCartSummary();
+                    updateNextButton();
+                }
+            }
+
+            function createInputGroupHtml(menuId, quantity) {
+                return $(`
+            <div class="input-group w-auto d-inline-flex mt-2">
+                <button class="btn btn-outline-secondary decrement-button" data-menu-id="${menuId}"><i class="bi bi-dash-lg"></i></button>
+                <input type="text" class="form-control text-center quantity-input shadow-none" value="${quantity}" style="max-width: 60px; border: 1px solid #6c757d; padding: 0.375rem 0.75rem;" readonly>
+                <button class="btn btn-outline-secondary increment-button" data-menu-id="${menuId}"><i class="bi bi-plus-lg"></i></button>
+            </div>
+        `);
+            }
 
             function updateNextButton() {
                 const hasItems = cart.some(item => item.quantity > 0);
                 if (hasItems) {
-                    $(".next-button").show(400); 
-                    $(".next-button").html(
-                        `<span class="badge rounded-pill bg-light text-primary me-2">${cart.length}</span> Selanjutnya <i class="bi bi-arrow-right"></i>`
-                    );
+                    $nextButton.show(400).html(`
+                <span class="badge rounded-pill bg-light text-primary me-2">${cart.reduce((acc, item) => acc + item.quantity, 0)}</span> Berikutnya <i class="bi bi-arrow-right ms-2"></i>
+            `);
                 } else {
-                    $(".next-button").hide(400); 
+                    $nextButton.hide(400);
                 }
+                saveCart();
             }
 
             function calculateTotals() {
-                // Hitung subtotal
-                let subtotal = cart.reduce((acc, item) => {
-                    const price = parseFloat(item.price) || 0; 
-                    const quantity = parseInt(item.quantity) || 0; 
-                    return acc + (price * quantity);
-                }, 0);
+                const subtotal = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+                const discount = parseInt(subtotal * discountRate);
+                const tax = parseInt((subtotal - discount) * taxRate);
+                const total = (subtotal - discount) + tax;
 
-    
-                let discount = Math.floor(subtotal * discountRate);
+                const itemSummary = (label, val) => $(`
+            <div class="d-flex justify-content-between">
+                <p class="fw-semi-bold">${label} :</p>
+                <p class="fw-semi-bold">${val}</p>
+            </div>
+        `);
 
-                let tax = Math.floor((subtotal - discount) * taxRate);
+                const itemTable = (label, val) => $(`
+            <tr>
+                <td width="200">${label}</td>
+                <td width="10">:</td>
+                <td>${val}</td>
+            </tr>
+        `);
 
-                // Hitung total
-                let total = subtotal - discount + tax;
+                $tableSummary.empty()
+                    .append(itemTable('Jumlah Produk',
+                        `<span class="badge rounded-pill bg-primary">${cart.reduce((acc, item) => acc + item.quantity, 0)}</span>`
+                    ));
 
-                // // Bulatkan hasil ke dua desimal
-                // subtotal = parseFloat(subtotal.toFixed(2));
-                // discount = parseFloat(discount.toFixed(2));
-                // tax = parseFloat(tax.toFixed(2));
-                // total = parseFloat(total.toFixed(2));
-
-                // Log hasil perhitungan untuk debugging
-                // console.log("Cart Data:", cart);
-                // console.log("Subtotal:", subtotal);
-                // console.log("Discount:", discount);
-                // console.log("Tax:", tax);
-                // console.log("Total:", total);
-
-                // Update elemen HTML
-                $(".subtotal-value").text(subtotal.toLocaleString());
-                $(".discount-value").text(`-${discount.toLocaleString()}`);
-                $(".tax-value").text(tax.toLocaleString());
+                $('.summary').empty().append(itemSummary('Subtotal', subtotal.toLocaleString()));
+                if (discount > 0) {
+                    $('.summary').append(itemSummary('Diskon',
+                        `-${discount.toLocaleString()} (${discountRate * 100}%)`));
+                    $tableSummary.append(itemTable('Diskon',
+                        `-${discount.toLocaleString()} (${discountRate * 100}%)`));
+                }
+                if (tax > 0) {
+                    $('.summary').append(itemSummary('Pajak', `${tax.toLocaleString()} (${taxRate * 100}%)`));
+                    $tableSummary.append(itemTable('Pajak', `${tax.toLocaleString()} (${taxRate * 100}%)`));
+                }
+                $tableSummary.append(itemTable('<b>Total Keseluruhan</b>', `<b>${total.toLocaleString()}</b>`));
                 $(".total-value").text(total.toLocaleString());
+                $('input[name="paid_amount"]').val(formatRupiahText(total));
             }
 
-
             function updateCartSummary() {
-                const summaryList = $(".list-group");
-                summaryList.empty();
-
+                $summaryList.empty();
                 cart.forEach(item => {
                     const total = item.price * item.quantity;
-                    const itemHtml = `
-                <li class="list-group-item d-flex align-items-start p-3">
+                    const itemHtml = $(`
+                <li class="list-group-item d-flex align-items-start p-3" data-menu-id="${item.id}">
                     <div class="me-3">
                         <span class="badge text-primary fs-6 border">${item.quantity}x</span>
                     </div>
                     <div class="flex-grow-1">
                         <h6 class="fw-bold mb-1">${item.name}</h6>
-                        <a href="#" class="text-primary small">Edit</a>
+                        <span class="add-note"></span>
                     </div>
                     <div class="ms-4">
                         <p>${total.toLocaleString()}</p>
                     </div>
-                </li>`;
-                    summaryList.append(itemHtml);
-                });
+                </li>
+            `);
 
+                    const inputNote = $('<input>')
+                        .addClass('form-control form-control-sm border-0 rounded-0 shadow-none p-0')
+                        .attr('type', 'text')
+                        .attr('maxlength', 200)
+                        .attr('placeholder', 'Tambah catatan')
+                        .val(item.note);
+
+                    inputNote.on('change', function() {
+                        const menuId = $(this).closest('[data-menu-id]').data('menu-id');
+                        const item = cart.find(item => item.id === menuId);
+                        if (item) item.note = $(this).val();
+                        saveCart();
+                    });
+
+                    itemHtml.find(".add-note").replaceWith(inputNote);
+                    $summaryList.append(itemHtml);
+                });
                 calculateTotals();
             }
 
-            // Handle "add-button" click
             $(document).on("click", ".add-button", function() {
                 const menuId = $(this).closest('[data-menu-id]').data('menu-id');
                 const menuName = $(this).closest('.card').find('.card-title').text() ||
@@ -371,33 +438,23 @@
                 const menuPrice = parseInt($(this).closest('.card').find('.menu-price').text().replace(
                     /\./g, '')) || 0;
 
-                // Tambahkan item ke keranjang jika belum ada
-                if (!cart.some(item => item.menuId === menuId)) {
+                if (!cart.some(item => item.id === menuId)) {
                     cart.push({
                         id: menuId,
                         name: menuName,
                         maxOrder: maxOrderQuantity,
+                        note: null,
                         price: menuPrice,
                         quantity: 1
                     });
                 }
 
-                // Replace button with input group
-                const inputGroupHtml = $(`
-                    <div class="input-group w-auto d-inline-flex">
-                        <button class="btn btn-outline-secondary decrement-button" data-menu-id="${menuId}">-</button>
-                        <input type="text" class="form-control text-center quantity-input" value="1" style="max-width: 60px;" readonly>
-                        <button class="btn btn-outline-secondary increment-button" data-menu-id="${menuId}">+</button>
-                    </div>
-                `);
+                const inputGroupHtml = createInputGroupHtml(menuId, 1);
                 $(this).parent().html(inputGroupHtml);
-
-                // Update tombol "Selanjutnya"
                 updateCartSummary();
                 updateNextButton();
             });
 
-            // Handle decrement button
             $(document).on("click", ".decrement-button", function() {
                 const menuId = $(this).data("menu-id");
                 const inputField = $(this).siblings(".quantity-input");
@@ -406,49 +463,72 @@
                 if (quantity > 1) {
                     quantity--;
                     inputField.val(quantity);
-
-                    // Update quantity in cart
                     const item = cart.find(item => item.id === menuId);
                     if (item) item.quantity = quantity;
                 } else {
-                    // Remove item from cart if quantity reaches 0
                     cart = cart.filter(item => item.id !== menuId);
-                    $(this).parent().parent().html(`<button type="button" class="btn btn-primary btn-circle raised rounded-circle d-flex gap-2 wh-48 add-button">
-                            <i class="bi bi-plus-lg"></i>
-                        </button>`);
+                    $(this).parent().parent().html(`<button type="button" class="btn btn-primary raised d-flex gap-2 mt-2 add-button">
+                <i class="bi bi-plus-lg"></i>
+            </button>`);
                 }
-
-                // Update tombol "Selanjutnya"
                 updateCartSummary();
                 updateNextButton();
             });
 
-            // Handle increment button
             $(document).on("click", ".increment-button", function() {
                 const menuId = $(this).data("menu-id");
                 const inputField = $(this).siblings(".quantity-input");
                 let quantity = parseInt(inputField.val());
-
                 const item = cart.find(item => item.id === menuId);
 
-                if (item && quantity <= (item.maxOrder - 1)) {
+                if (item && quantity < item.maxOrder) {
                     quantity++;
                     inputField.val(quantity);
-
-                    if (item) item.quantity = quantity;
-
+                    item.quantity = quantity;
                     updateCartSummary();
                     updateNextButton();
                 }
             });
 
-            let csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+            $(document).on("change", "input[name='name']", function() {
+                if ($.trim($(this).val()) !== "") {
+                    $('.table-summary').prepend(`<tr class="detail-order-name">
+                <td width="200">Nama Order</td>
+                <td width="10">:</td>
+                <td>${$(this).val()}</td>
+            </tr>`);
+                } else {
+                    $('.detail-order-name').remove();
+                }
+            });
+
+            $(document).on("input", `input[name="paid_amount"]`, function(e) {
+                formatRupiahElement(e.target);
+                const total = parseInt($(".total-value").text().replace(/[^\d]/g, '')) || 0;
+                const paidAmount = parseInt($(this).val().replace(/[^\d]/g, '')) || 0;
+                const change = paidAmount - total;
+
+                if (change >= 0) {
+                    $(`input[name="change_amount"]`).val(change.toLocaleString('id-ID'));
+                } else {
+                    $(`input[name="change_amount"]`).val(0);
+                }
+
+                if (paidAmount >= total) {
+                    $(this).removeClass("is-invalid");
+                } else {
+                    $(this).addClass("is-invalid");
+                }
+            });
 
             $(document).on("click", ".submit-button", function() {
-
+                let csrfToken = document.querySelector('meta[name="csrf-token"]').content;
                 Swal.fire({
-                    title: 'Apa kamu yakin?',
-                    html: `Ingin memesan menu ini?`,
+                    title: 'Apa kamu yakin',
+                    html: `Ingin menyelesaikan pesanan ini ?`,
+                    input: "checkbox",
+                    inputValue: 1,
+                    inputPlaceholder: `Cetak resi pesanan`,
                     icon: 'question',
                     showCancelButton: true,
                     confirmButtonColor: '#0d6efd',
@@ -457,34 +537,54 @@
                     cancelButtonText: 'Batal',
                 }).then((result) => {
                     if (result.isConfirmed) {
+                        const printReceipt = result.value;
                         $.ajax({
-                            url: "{{ route('admin.order.store') }}",
+                            url: "{{ roleBasedRoute('order.store', ['outlet' => $outlet->slug]) }}",
                             type: "POST",
-                            //contentType: "application/json",
                             data: {
                                 name: $("input[name='name']").val() ?? null,
+                                paid: parseInt($("input[name='paid_amount']").val()
+                                    .replace(/[^\d]/g, '')) || 0,
+                                payment_method: $("select[name='payment_method']").val(),
                                 cart: cart,
+                                print_receipt: printReceipt,
                             },
                             headers: {
-                                'X-CSRF-TOKEN': csrfToken 
+                                'X-CSRF-TOKEN': csrfToken
                             },
                             success: function(response) {
                                 if (response.status) {
+                                    cart = [];
+                                    saveCart();
                                     window.location.href =
-                                        `{{ route('admin.order.index') }}/${response.data.order_id}`;
+                                        `{{ roleBasedRoute('order.index', ['outlet' => $outlet->slug]) }}/${response.data.order_id}`;
                                 }
                             },
                             error: function(xhr, status, error) {
-                                // Gagal mengirim data
-                                console.error("Error mengirim pesanan:", error);
-                                alert("Gagal mengirim pesanan. Silakan coba lagi.");
+                                if (xhr.responseJSON.errors) {
+                                    let errorMessages = Object.values(xhr.responseJSON
+                                        .errors)[0];
+                                    Swal.fire({
+                                        title: 'Upps!',
+                                        confirmButtonColor: '#0d6efd',
+                                        html: errorMessages,
+                                        icon: 'error',
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        title: 'Upps!',
+                                        text: 'Terjadi kesalahan saat mengirim pesanan.',
+                                        confirmButtonColor: '#0d6efd',
+                                        icon: 'error',
+                                    });
+                                }
                             }
                         });
                     }
-                })
-
+                });
             });
 
+            loadCart();
         });
     </script>
 @endpush

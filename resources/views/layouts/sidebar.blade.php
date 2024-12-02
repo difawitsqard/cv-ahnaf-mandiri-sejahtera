@@ -39,7 +39,7 @@
                                <div class="parent-icon">
                                    <i class="material-icons-outlined">shopping_cart</i>
                                </div>
-                               <div class="menu-title" title="Pemesanan Menu">Pemesanan Menu</div>
+                               <div class="menu-title" title="Buat Pesanan">Buat Pesanan</div>
                            </a>
                        </li>
                        <li class="menu-label">Menu</li>
@@ -119,7 +119,7 @@
                            <div class="parent-icon">
                                <i class="material-icons-outlined">shopping_cart</i>
                            </div>
-                           <div class="menu-title" title="Pemesanan Menu">Pemesanan Menu</div>
+                           <div class="menu-title" title="Buat Pesanan">Buat Pesanan</div>
                        </a>
                    </li>
                    <li class="menu-label">Menu</li>
@@ -177,6 +177,27 @@
                    </li>
                @endhasrole
 
+
+               @hasrole('staff')
+                   <li>
+                       <a href="{{ route('staff.dashboard') }}">
+                           <div class="parent-icon"><i class="material-icons-outlined">home</i>
+                           </div>
+                           <div class="menu-title">Dashboard</div>
+                       </a>
+                   </li>
+                   <li>
+                       <a href="{{ route('staff.order.index') }}">
+                           <div class="parent-icon">
+                               <i class="material-icons-outlined">shopping_cart</i>
+                           </div>
+                           <div class="menu-title" title="Buat Pesanan">Buat Pesanan</div>
+                       </a>
+                   </li>
+                   <li class="menu-label">Menu</li>
+               @endhasrole
+
+
                <li class="menu-label">Pengaturan</li>
                @hasrole('superadmin')
                    @if (request()->route('outlet'))
@@ -189,17 +210,21 @@
                        </li>
                    @endif
                @endhasrole
-               <li>
-                   @if (request()->route('outlet') && auth()->user()->hasRole('superadmin'))
-                       <a href="{{ route('outlet.unit.index', ['outlet' => request()->route('outlet')]) }}">
-                       @else
-                           <a href="{{ route('unit.index') }}">
-                   @endif
-                   <div class="parent-icon"><i class="material-icons-outlined">calculate</i>
-                   </div>
-                   <div class="menu-title">Satuan / Unit</div>
-                   </a>
-               </li>
+
+               @hasrole('superadmin|admin')
+                   <li>
+                       @if (request()->route('outlet') && auth()->user()->hasRole('superadmin'))
+                           <a href="{{ route('outlet.unit.index', ['outlet' => request()->route('outlet')]) }}">
+                           @else
+                               <a href="{{ route('unit.index') }}">
+                       @endif
+                       <div class="parent-icon"><i class="material-icons-outlined">calculate</i>
+                       </div>
+                       <div class="menu-title">Satuan / Unit</div>
+                       </a>
+                   </li>
+               @endhasrole
+
                @hasrole('superadmin')
                    <li>
                        @if (request()->route('outlet') && auth()->user()->hasRole('superadmin'))

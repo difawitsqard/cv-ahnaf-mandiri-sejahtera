@@ -18,7 +18,7 @@ return new class extends Migration
             $table->integer('quantity'); // Jumlah menu yang dipesan
             $table->bigInteger('price'); // Harga menu
             $table->bigInteger('subtotal'); // Total harga pesanan
-            $table->text('note')->nullable(); // Catatan tambahan
+            $table->string('note')->nullable(); // Catatan tambahan
             $table->timestamps();
         });
     }

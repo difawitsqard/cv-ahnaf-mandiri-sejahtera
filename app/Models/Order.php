@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Order extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
 
     public $incrementing = false;
     protected $keyType = 'string';
@@ -15,9 +17,17 @@ class Order extends Model
     protected $fillable = [
         'name',
         'outlet_id',
+        'sub_total',
+        'discount',
+        'tax',
         'total',
+        'payment_method',
+        'paid',
+        'change',
+        'status',
+        'user_id',
+        'batch_uuid',
     ];
-
 
     protected static function boot()
     {
@@ -29,6 +39,15 @@ class Order extends Model
 
             $model->id = $id;
         });
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->useLogName('order_log')
+            // ->dontLogIfAttributesChangedOnly(['stock', 'total_stock', 'updated_at'])
+            ->logFillable();
+        // Chain fluent methods for configuration options
     }
 
     public static function generateCustomId($outletId)
@@ -48,5 +67,10 @@ class Order extends Model
     public function items()
     {
         return $this->hasMany(OrderItem::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

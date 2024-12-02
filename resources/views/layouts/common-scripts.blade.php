@@ -12,7 +12,7 @@
 <script src="{{ URL::asset('build/js/main.js') }}?qq={{ md5(time()) }}"></script>
 
 <!--costum js-->
-<script src="{{ URL::asset('build/js/costum.js') }}"></script>
+<script src="{{ URL::asset('build/js/costum.js') }}?qq={{ md5(time()) }}"></script>
 
 <script>
     $(function() {
