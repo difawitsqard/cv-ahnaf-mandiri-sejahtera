@@ -342,7 +342,9 @@
 
             // Auto print if session exists
             @if (session('print_receipt'))
-                $('.print').trigger('click');
+                setTimeout(() => {
+                    receiptPrint("{{ url()->current() }}/print");
+                }, 1000);
             @endif
         });
     </script>
