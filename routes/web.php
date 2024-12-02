@@ -30,50 +30,54 @@ Route::middleware(['auth', 'verified', 'check_password_set', 'set_outlet_role'])
     Route::get('outlet/{id}/fetch', [OutletManagementController::class, 'fetch'])->name('outlet.fetch');
     Route::get('outlet/{outlet:slug}', [DashboardController::class, 'index'])->name('outlet.dashboard');
 
-    Route::prefix('outlet/{outlet:slug}')->name('outlet.')->group(function () {
-      Route::put('company-info/create_or_update', [CompanyInfoController::class, 'CreateOrUpdate'])->name('company-info.create_or_update');
-      Route::resource('company-info', CompanyInfoController::class)->only(['index']);
+    Route::prefix('outlet/{outlet:slug}')
+      ->name('outlet.')
+      ->group(function () {
+        Route::put('company-info/create_or_update', [CompanyInfoController::class, 'CreateOrUpdate'])->name('company-info.create_or_update');
+        Route::resource('company-info', CompanyInfoController::class)->only(['index']);
 
-      Route::resource('unit', UnitManagementController::class)->only(['index', 'store', 'update', 'destroy']);
+        Route::resource('unit', UnitManagementController::class)->only(['index', 'store', 'update', 'destroy']);
 
-      // stock item management
-      Route::resource('stock-item', StockItemManagementController::class);
-      Route::get('stock-item/{id}/fetch', [StockItemManagementController::class, 'fetch'])->name('stock-item.fetch');
-      Route::put('stock-item/{id}/restock', [StockItemManagementController::class, 'restock'])->name('stock-item.restock');
+        // stock item management
+        Route::resource('stock-item', StockItemManagementController::class);
+        Route::get('stock-item/{id}/fetch', [StockItemManagementController::class, 'fetch'])->name('stock-item.fetch');
+        Route::put('stock-item/{id}/restock', [StockItemManagementController::class, 'restock'])->name('stock-item.restock');
 
-      Route::resource('order', OrderController::class);
+        Route::resource('order', OrderController::class);
+        Route::get('order/{order}/print', [OrderController::class, 'printThermal'])->name('order.print');
 
-      // user management
-      Route::resource('user', UserManagementController::class);
+        // user management
+        Route::resource('user', UserManagementController::class);
 
-      // menu management
-      Route::resource('menu', MenuManagementController::class);
-    });
+        // menu management
+        Route::resource('menu', MenuManagementController::class);
+      });
 
-    Route::put('company-info/create_or_update', [CompanyInfoController::class, 'CreateOrUpdate'])
-      ->name('company-info.create_or_update');
-    Route::resource('company-info', CompanyInfoController::class)
-      ->only(['index']);
+    Route::put('company-info/create_or_update', [CompanyInfoController::class, 'CreateOrUpdate'])->name('company-info.create_or_update');
+    Route::resource('company-info', CompanyInfoController::class)->only(['index']);
   });
 
   // Admin
   Route::group(['middleware' => ['role:admin']], function () {
-    Route::name('admin.')->group(function () {
-      Route::get('admin-dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::prefix('admin')
+      ->name('admin.')
+      ->group(function () {
+        Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-      Route::resource('order', OrderController::class);
+        Route::resource('order', OrderController::class);
+        Route::get('order/{order}/print', [OrderController::class, 'printThermal'])->name('order.print');
 
-      // stock item management
-      Route::resource('stock-item', StockItemManagementController::class);
-      Route::get('stock-item/{id}/fetch', [StockItemManagementController::class, 'fetch'])->name('stock-item.fetch');
-      Route::put('stock-item/{id}/restock', [StockItemManagementController::class, 'restock'])->name('stock-item.restock');
+        // stock item management
+        Route::resource('stock-item', StockItemManagementController::class);
+        Route::get('stock-item/{id}/fetch', [StockItemManagementController::class, 'fetch'])->name('stock-item.fetch');
+        Route::put('stock-item/{id}/restock', [StockItemManagementController::class, 'restock'])->name('stock-item.restock');
 
-      // user management
-      Route::resource('user', UserManagementController::class);
+        // user management
+        Route::resource('user', UserManagementController::class);
 
-      // menu management
-      Route::resource('menu', MenuManagementController::class);
-    });
+        // menu management
+        Route::resource('menu', MenuManagementController::class);
+      });
   });
 
   // Superadmin & Admin
@@ -85,8 +89,13 @@ Route::middleware(['auth', 'verified', 'check_password_set', 'set_outlet_role'])
 
   // Staff
   Route::group(['middleware' => ['role:staff']], function () {
-    Route::name('staff.')->group(function () {
-      Route::get('staff-dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    });
+    Route::prefix('staff')
+      ->name('staff.')
+      ->group(function () {
+        Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+        Route::resource('order', OrderController::class);
+        Route::get('order/{order}/print', [OrderController::class, 'printThermal'])->name('order.print');
+      });
   });
 });
