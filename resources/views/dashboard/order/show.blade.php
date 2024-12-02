@@ -43,7 +43,8 @@
                             </ul>
                         </div> --}}
                         <div class="btn-group position-static">
-                            <a href="{{ roleBasedRoute('order.index', ['outlet' => $outlet->slug]) }}" class="btn btn-primary">
+                            <a href="{{ roleBasedRoute('order.index', ['outlet' => $outlet->slug]) }}"
+                                class="btn btn-primary">
                                 <i class="bi bi-bag-plus me-2"></i>Pesanan Baru
                             </a>
                         </div>
@@ -321,14 +322,12 @@
                 showFeedback('Selesai', 'Cetak resi selesai.', 'success');
             }
 
-            // Main print function
-            function reciptPrint(url) {
+            function receiptPrint(url) {
                 $.get(url, function(data) {
-                    var printData = JSON.stringify(data);
                     if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-                        mobile_print(printData);
+                        mobile_print(data);
                     } else {
-                        pc_print(printData);
+                        pc_print(data);
                     }
                 }).fail(function() {
                     showFeedback('Error', 'Gagal mengambil data untuk cetak resi.', 'error');
@@ -338,12 +337,12 @@
             // Click event for print button
             $('.print').on('click', function() {
                 var url = $(this).data('url');
-                reciptPrint(url);
+                receiptPrint(url);
             });
 
             // Auto print if session exists
             @if (session('print_receipt'))
-                reciptPrint("{{ url()->current() }}/print");
+                receiptPrint("{{ url()->current() }}/print");
             @endif
         });
     </script>
