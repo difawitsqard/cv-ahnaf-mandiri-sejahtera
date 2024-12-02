@@ -60,6 +60,12 @@
                 const reloadSubmitButton = restockSection.querySelector('#reload-submit');
                 const restockSubmitButton = restockSection.querySelector('#restock-submit');
 
+                const qtyInput = restockSection.querySelector('#qty');
+                qtyInput.addEventListener('input', function() {
+                    qtyInput.value = qtyInput.value.replace(/[^0-9]/g, '');
+                });
+                const qty = qtyInput.value;
+
                 function setFieldsReadOnly(isReadOnly) {
                     inputs.forEach(function(input) {
                         input.readOnly = isReadOnly;
@@ -70,7 +76,7 @@
                 function loadStockData() {
                     setFieldsReadOnly(true);
                     textMessageElement.textContent = '';
-                    const url = `{!! auth()->user()->getRoleNames()->first() == 'superadmin' ? '/outlet/${outletId}/stock-item/${itemId}/fetch' : '/stock-item/${itemId}/fetch' !!}`;
+                    const url = `{{ roleBasedRoute('stock-item.index', ['outlet' => $outlet->slug]) }}/${itemId}/fetch`;
 
                     if (!outletId || !itemId) {
                         console.error('Error:', 'Outlet ID atau Item ID tidak ditemukan.');
@@ -84,11 +90,13 @@
                             if (data.status) {
 
                                 if (restockItemModal) restockItemModal.querySelector('.modal-title')
-                                    .textContent = data.data.name;
+                                    .textContent = data.data.name.charAt(0).toUpperCase() + data.data.name
+                                    .slice(1);
 
                                 stockNowElement.textContent = `${data.data.stock} ${data.data.unit.name}`;
                                 lastRestockElement.textContent = data.data.last_restock || '-';
-                                stockLifetimeElement.textContent = `${data.data.total_stock} ${data.data.unit.name}` || '-';
+                                stockLifetimeElement.textContent =
+                                    `${data.data.total_stock} ${data.data.unit.name}` || '-';
 
                             } else {
                                 console.error('Error:', 'Gagal memuat data stok.');
@@ -108,7 +116,7 @@
                     setFieldsReadOnly(true);
                     restockSubmitButton.disabled = true;
 
-                    const qty = restockSection.querySelector('#qty').value;
+                    const qty = qtyInput.value;
 
                     if (!qty) {
                         textMessageElement.textContent = 'Masukkan jumlah yang valid !';
@@ -119,7 +127,7 @@
 
                     textMessageElement.textContent = '';
 
-                    fetch(`{!! auth()->user()->getRoleNames()->first() == 'superadmin' ? '/outlet/${outletId}/stock-item/${itemId}/restock' : '/stock-item/${itemId}/restock' !!}`, {
+                    fetch(`{{ roleBasedRoute('stock-item.index', ['outlet' => $outlet->slug]) }}/${itemId}/restock`, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
