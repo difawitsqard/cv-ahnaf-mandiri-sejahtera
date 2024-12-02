@@ -77,7 +77,7 @@ function setDisable() {
 }
 
 function formatRupiahText(value) {
-    value = value.replace(/\D/g, ""); // Hanya angka
+    value = value.toString().replace(/\D/g, ""); // Hanya angka
     return new Intl.NumberFormat("id-ID").format(value); // Format ke Rupiah
 }
 
