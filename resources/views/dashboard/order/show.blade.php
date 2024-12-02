@@ -339,13 +339,6 @@
                 var url = $(this).data('url');
                 receiptPrint(url);
             });
-
-            // Auto print if session exists
-            @if (session('print_receipt'))
-                setTimeout(() => {
-                    receiptPrint("{{ url()->current() }}/print");
-                }, 1000);
-            @endif
         });
     </script>
 @endpush

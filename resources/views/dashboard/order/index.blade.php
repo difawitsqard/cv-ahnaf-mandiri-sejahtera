@@ -325,11 +325,17 @@
                     updateCartSummary();
                     updateNextButton();
                 }
+
+                if (cart.length < 1) {
+                    $('.qty-control').replaceWith(
+                        `<button type="button" class="btn btn-primary raised d-flex gap-2 mt-2 add-button"><i class="bi bi-plus-lg"></i></button>`
+                    );
+                }
             }
 
             function createInputGroupHtml(menuId, quantity) {
                 return $(`
-            <div class="input-group w-auto d-inline-flex mt-2">
+            <div class="input-group w-auto d-inline-flex mt-2 qty-control">
                 <button class="btn btn-outline-secondary decrement-button" data-menu-id="${menuId}"><i class="bi bi-dash-lg"></i></button>
                 <input type="text" class="form-control text-center quantity-input shadow-none" value="${quantity}" style="max-width: 60px; border: 1px solid #6c757d; padding: 0.375rem 0.75rem;" readonly>
                 <button class="btn btn-outline-secondary increment-button" data-menu-id="${menuId}"><i class="bi bi-plus-lg"></i></button>
@@ -556,8 +562,53 @@
                                 if (response.status) {
                                     cart = [];
                                     saveCart();
-                                    window.location.href =
-                                        `{{ roleBasedRoute('order.index', ['outlet' => $outlet->slug]) }}/${response.data.order_id}`;
+                                    stepper1.reset();
+                                    loadCart();
+
+                                    if (printReceipt) {
+                                        $.get(`{{ roleBasedRoute('order.index', ['outlet' => $outlet->slug]) }}/${response.data.order_id}/print`,
+                                            function(data) {
+                                                if (/Android|iPhone|iPad|iPod/i
+                                                    .test(navigator.userAgent)) {
+                                                    window.location.href = data;
+                                                } else {
+                                                    var socket = new WebSocket(
+                                                        "ws://127.0.0.1:40213/");
+                                                    socket.bufferType =
+                                                        "arraybuffer";
+                                                    socket.onerror = function(
+                                                    error) {
+                                                        console.error(
+                                                            "Error: " +
+                                                            error);
+                                                    };
+                                                    socket.onopen = function() {
+                                                        socket.send(data);
+                                                        socket.close(1000,
+                                                            "Work complete");
+                                                    };
+                                                }
+                                            }).fail(function() {
+                                            console.error(
+                                                "Failed to print receipt.");
+                                        });
+                                    }
+
+                                    Swal.fire({
+                                        title: 'Berhasil!',
+                                        html: `Pesanan berhasil dibuat!`,
+                                        confirmButtonColor: '#0d6efd',
+                                        icon: 'success',
+                                        showCancelButton: true,
+                                        confirmButtonText: 'Lihat Pesanan',
+                                        cancelButtonText: 'Tutup',
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            // Arahkan pengguna ke halaman detail order
+                                            window.location.href =
+                                                `{{ roleBasedRoute('order.index', ['outlet' => $outlet->slug]) }}/${response.data.order_id}`;
+                                        }
+                                    });
                                 }
                             },
                             error: function(xhr, status, error) {
