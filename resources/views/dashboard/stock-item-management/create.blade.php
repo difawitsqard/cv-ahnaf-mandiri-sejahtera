@@ -6,7 +6,6 @@
 @push('css')
     <link href="{{ URL::asset('build/plugins/quill/quill.bubble.css') }}" rel="stylesheet" />
     <link href="{{ URL::asset('build/plugins/cropperjs/css/cropper.min.css') }}" rel="stylesheet">
-    <link href="{{ URL::asset('build/css/picture-input-costum.css') }}" rel="stylesheet">
 @endpush
 
 @section('content')
