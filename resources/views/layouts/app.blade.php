@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-bs-theme="semi-dark">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-bs-theme="semi-dark" >
 
 <head>
     <meta charset="utf-8">
@@ -18,8 +18,8 @@
     @include('layouts.head-css')
 </head>
 
-<body>
-
+<body data-pace="true">
+    <div class="preloader"></div>
     @include('layouts.topbar')
 
     @include('layouts.sidebar')
@@ -36,7 +36,6 @@
     <!--end overlay-->
 
     @stack('modals')
-
 
     <!-- Modal for logout -->
     <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
