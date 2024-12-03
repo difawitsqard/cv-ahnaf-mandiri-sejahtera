@@ -35,9 +35,20 @@ class OrderController extends Controller
     {
         $menus = Menu::where('outlet_id', $outlet->id)->get();
         $menus->load('menuImages', 'stockItems');
-        //$menus = $menus->sortBy('max_order_quantity', SORT_REGULAR, true);
 
-        return view('dashboard.order.index', compact('menus', 'outlet'));
+        $orders = Order::where('outlet_id', $outlet->id)->get();
+        $orders->load('items.menu', 'user');
+
+        return view('dashboard.order.index',  compact('menus', 'orders', 'outlet'));
+    }
+
+    public function create(Outlet $outlet)
+    {
+        $menus = Menu::where('outlet_id', $outlet->id)->get();
+        $menus->load('menuImages', 'stockItems');
+        // $menus = $menus->sortBy('max_order_quantity', SORT_REGULAR, true);
+
+        return view('dashboard.order.create', compact('menus', 'outlet'));
     }
 
     /**

@@ -35,11 +35,19 @@
                            </a>
                        </li>
                        <li>
-                           <a href="{{ route('outlet.order.index', ['outlet' => $outletSlug]) }}">
+                           <a href="{{ route('outlet.order.create', ['outlet' => $outletSlug]) }}">
                                <div class="parent-icon">
                                    <i class="material-icons-outlined">shopping_cart</i>
                                </div>
                                <div class="menu-title" title="Buat Pesanan">Buat Pesanan</div>
+                           </a>
+                       </li>
+                       <li>
+                           <a href="{{ route('outlet.order.index', ['outlet' => $outletSlug]) }}">
+                               <div class="parent-icon">
+                                   <i class="material-icons-outlined">history</i>
+                               </div>
+                               <div class="menu-title" title="Riwayat Pesanan">Riwayat Pesanan</div>
                            </a>
                        </li>
                        <li class="menu-label">Menu</li>
@@ -115,11 +123,19 @@
                        </a>
                    </li>
                    <li>
-                       <a href="{{ route('admin.order.index') }}">
+                       <a href="{{ route('admin.order.create') }}">
                            <div class="parent-icon">
                                <i class="material-icons-outlined">shopping_cart</i>
                            </div>
                            <div class="menu-title" title="Buat Pesanan">Buat Pesanan</div>
+                       </a>
+                   </li>
+                   <li>
+                       <a href="{{ route('admin.order.index') }}">
+                           <div class="parent-icon">
+                               <i class="material-icons-outlined">history</i>
+                           </div>
+                           <div class="menu-title" title="Riwayat Pesanan">Riwayat Pesanan</div>
                        </a>
                    </li>
                    <li class="menu-label">Menu</li>
@@ -187,11 +203,19 @@
                        </a>
                    </li>
                    <li>
-                       <a href="{{ route('staff.order.index') }}">
+                       <a href="{{ route('staff.order.create') }}">
                            <div class="parent-icon">
                                <i class="material-icons-outlined">shopping_cart</i>
                            </div>
                            <div class="menu-title" title="Buat Pesanan">Buat Pesanan</div>
+                       </a>
+                   </li>
+                   <li>
+                       <a href="{{ route('staff.order.index') }}">
+                           <div class="parent-icon">
+                               <i class="material-icons-outlined">history</i>
+                           </div>
+                           <div class="menu-title" title="Riwayat Pesanan">Riwayat Pesanan</div>
                        </a>
                    </li>
                    <li class="menu-label">Menu</li>

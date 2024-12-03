@@ -43,7 +43,7 @@
                             </ul>
                         </div> --}}
                         <div class="btn-group position-static">
-                            <a href="{{ roleBasedRoute('order.index', ['outlet' => $outlet->slug]) }}"
+                            <a href="{{ roleBasedRoute('order.create', ['outlet' => $outlet->slug]) }}"
                                 class="btn btn-primary">
                                 <i class="bi bi-bag-plus me-2"></i>Pesanan Baru
                             </a>
