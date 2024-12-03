@@ -32,6 +32,7 @@ export default defineConfig({
     plugins: [
         laravel({
             input: [
+                "resources/sass/costum.scss",
                 "resources/sass/main.scss",
                 "resources/sass/blue-theme.scss",
                 "resources/sass/bordered-theme.scss",

@@ -101,7 +101,7 @@
                                 </div>
                                 <div class="mb-4">
                                     <h6 class="mb-2">Deskripsi Menu</h6>
-                                    <div class="quill-description bg-light rounded-2" data-placeholder="...">
+                                    <div class="quill-description quill-input form-control" data-placeholder="...">
                                         {!! old('description') ?? ($menu->description ?? '') !!}
                                     </div>
                                     <input type="hidden" name="description" id="description">

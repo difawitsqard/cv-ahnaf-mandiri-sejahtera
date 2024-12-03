@@ -97,7 +97,7 @@
                                 </div>
                                 <div class="mb-3">
                                     <h6 class="mb-2">Deskripsi Item</h6>
-                                    <div class="quill-description bg-light rounded-2" data-placeholder="...">
+                                    <div class="quill-description quill-input form-control" data-placeholder="...">
                                         {!! old('description') ?? ($stockItem->description ?? '') !!}
                                     </div>
                                     <input type="hidden" name="description" id="description">
