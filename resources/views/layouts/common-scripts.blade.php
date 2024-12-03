@@ -1,3 +1,17 @@
+
+<!-- loader-->
+<script>
+    paceOptions = {
+        ajax: {
+            trackMethods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+            trackWebSockets: true
+        },
+        document: true,
+        eventLag: false, 
+    };
+</script>
+<script  src="{{ URL::asset('build/js/pace.min.js') }}"></script>
+
 <!--plugins-->
 <script src="{{ URL::asset('build/js/jquery.min.js') }}"></script>
 <!--bootstrap js-->

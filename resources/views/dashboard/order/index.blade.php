@@ -217,56 +217,56 @@
                         </div>
                         <!---end row-->
 
-                </div>
+                        <div id="test-l-3" role="tabpanel" class="bs-stepper-pane" aria-labelledby="stepper1trigger3">
+                            <div class="row g-3">
 
-                <div id="test-l-3" role="tabpanel" class="bs-stepper-pane" aria-labelledby="stepper1trigger3">
-                    <div class="row g-3">
-
-                        <div class="col-12 col-lg-7">
-                            <div class="card w-100 mb-0">
-                                <div class="card-body">
-                                    <h5 class="mb-3 fw-bold">Rincian Pesanan</h5>
-                                    <div class="product-table">
-                                        <table class="table table-striped">
-                                            <tbody class="table-summary"></tbody>
-                                        </table>
+                                <div class="col-12 col-lg-7">
+                                    <div class="card w-100 mb-0">
+                                        <div class="card-body">
+                                            <h5 class="mb-3 fw-bold">Rincian Pesanan</h5>
+                                            <div class="product-table">
+                                                <table class="table table-striped">
+                                                    <tbody class="table-summary"></tbody>
+                                                </table>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
 
-                        <div class="col-12 col-lg-5">
-                            <div class="card mb-0">
-                                <div class="card-body">
-                                    <h5 class="card-title mb-3 fw-bold">Pembayaran</h5>
-                                    <label class="form-label">Jumlah Pembayaran Diterima</label>
-                                    <input type="text" name="paid_amount" class="form-control mb-3"
-                                        placeholder="...">
-                                    <label class="form-label">Metode Pembayaran</label>
-                                    <select class="form-select mb-3" name="payment_method" id="payment_method"
-                                        required="">
-                                        <option value="cash">Tunai</option>
-                                        <option value="credit_card">Kartu Kredit</option>
-                                        <option value="bank_transfer">Transfer Bank</option>
-                                        <option value="other">Lainnya</option>
-                                    </select>
-                                    <label class="form-label">Jumlah Kembalian</label>
-                                    <input type="text" name="change_amount" class="form-control" placeholder="..."
-                                        value="0" readonly disabled>
+                                <div class="col-12 col-lg-5">
+                                    <div class="card mb-0">
+                                        <div class="card-body">
+                                            <h5 class="card-title mb-3 fw-bold">Pembayaran</h5>
+                                            <label class="form-label">Jumlah Pembayaran Diterima</label>
+                                            <input type="text" name="paid_amount" class="form-control mb-3"
+                                                placeholder="...">
+                                            <label class="form-label">Metode Pembayaran</label>
+                                            <select class="form-select mb-3" name="payment_method" id="payment_method"
+                                                required="">
+                                                <option value="cash">Tunai</option>
+                                                <option value="credit_card">Kartu Kredit</option>
+                                                <option value="bank_transfer">Transfer Bank</option>
+                                                <option value="other">Lainnya</option>
+                                            </select>
+                                            <label class="form-label">Jumlah Kembalian</label>
+                                            <input type="text" name="change_amount" class="form-control"
+                                                placeholder="..." value="0" readonly disabled>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="col-12 d-flex justify-content-end gap-3">
-                            <button class="btn btn-secondary px-4" onclick="stepper1.previous()"><i
-                                    class="bi bi-arrow-left me-2"></i> Kembali</button>
-                            </button>
-                            <button class="btn btn-primary px-4 submit-button">Pesan <i
-                                    class="bi bi-arrow-right ms-2"></i></button>
-                        </div>
-                    </div><!---end row-->
+                                <div class="col-12 d-flex justify-content-end gap-3">
+                                    <button class="btn btn-secondary px-4" onclick="stepper1.previous()"><i
+                                            class="bi bi-arrow-left me-2"></i> Kembali</button>
+                                    </button>
+                                    <button class="btn btn-primary px-4 submit-button">Pesan <i
+                                            class="bi bi-arrow-right ms-2"></i></button>
+                                </div>
+                            </div><!---end row-->
 
+                        </div>
+
+                    </form>
                 </div>
-                </form>
             </div>
 
         </div>
@@ -544,6 +544,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         const printReceipt = result.value;
+
                         $.ajax({
                             url: "{{ roleBasedRoute('order.store', ['outlet' => $outlet->slug]) }}",
                             type: "POST",
@@ -577,7 +578,7 @@
                                                     socket.bufferType =
                                                         "arraybuffer";
                                                     socket.onerror = function(
-                                                    error) {
+                                                        error) {
                                                         console.error(
                                                             "Error: " +
                                                             error);
@@ -604,7 +605,6 @@
                                         cancelButtonText: 'Tutup',
                                     }).then((result) => {
                                         if (result.isConfirmed) {
-                                            // Arahkan pengguna ke halaman detail order
                                             window.location.href =
                                                 `{{ roleBasedRoute('order.index', ['outlet' => $outlet->slug]) }}/${response.data.order_id}`;
                                         }
@@ -621,14 +621,8 @@
                                         html: errorMessages,
                                         icon: 'error',
                                     });
-                                } else {
-                                    Swal.fire({
-                                        title: 'Upps!',
-                                        text: 'Terjadi kesalahan saat mengirim pesanan.',
-                                        confirmButtonColor: '#0d6efd',
-                                        icon: 'error',
-                                    });
                                 }
+                                console.error(error);
                             }
                         });
                     }
