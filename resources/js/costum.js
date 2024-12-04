@@ -96,7 +96,7 @@ $(function () {
             Pace.on("done", function () {
                 // console.log("Pace done fired");
                 if (!self.alwaysRun)
-                    $(".preloader").fadeOut(1000, function () {
+                    $(".preloader").fadeOut(300, function () {
                         toggleElements(true);
                     });
             });
