@@ -1,16 +1,17 @@
-
 <!-- loader-->
-<script>
+{{-- <script>
     paceOptions = {
         ajax: {
             trackMethods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-            trackWebSockets: true
+            // trackWebSockets: true
         },
-        document: true,
-        eventLag: false, 
+        // document: true,
+        // eventLag: false,
+        // // elements: false,
+        restartOnRequestAfter: 1000,
     };
-</script>
-<script  src="{{ URL::asset('build/js/pace.min.js') }}"></script>
+</script> --}}
+<script data-pace-options='{ "ajax": { "trackMethods": ["GET", "POST", "PUT", "DELETE", "PATCH"] } }' src="{{ URL::asset('build/js/pace.min.js') }}"> </script>
 
 <!--plugins-->
 <script src="{{ URL::asset('build/js/jquery.min.js') }}"></script>

@@ -55,7 +55,7 @@
                     <button type="button" class="btn btn-secondary d-flex" data-bs-dismiss="modal">Batal</button>
                     <form action="{{ route('logout') }}" method="POST">
                         @csrf
-                        <button type="submit" class="btn btn-danger" onclick="event.preventDefault();this.closest('form').submit();">Ya, keluar</button>
+                        <button type="submit" class="btn btn-danger">Ya, keluar</button>
                     </form>
                 </div>
             </div>

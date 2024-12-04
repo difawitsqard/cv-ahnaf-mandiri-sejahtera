@@ -1,109 +1,5 @@
 "use strict";
 
-function setEnable() {
-    document.body.classList.remove("disable-pointer-events");
-
-    // Enable all input elements except those with class 'not-disabled'
-    document
-        .querySelectorAll("input:not(.not-disabled)")
-        .forEach(function (element) {
-            element.removeAttribute("readonly");
-        });
-
-    // Enable all select elements except those with class 'not-disabled'
-    document
-        .querySelectorAll("select:not(.not-disabled)")
-        .forEach(function (element) {
-            element.removeAttribute("disabled");
-        });
-
-    // Enable all textarea elements except those with class 'not-disabled'
-    document
-        .querySelectorAll("textarea:not(.not-disabled)")
-        .forEach(function (element) {
-            element.removeAttribute("readonly");
-        });
-
-    // Enable all button elements except those with class 'not-disabled'
-    document
-        .querySelectorAll("button:not(.not-disabled)")
-        .forEach(function (element) {
-            element.removeAttribute("disabled");
-        });
-
-    // Remove 'disabled' class from all anchor elements except those with class 'not-disabled'
-    document
-        .querySelectorAll("a:not(.not-disabled)")
-        .forEach(function (element) {
-            element.classList.remove("disabled");
-        });
-}
-
-function setDisable() {
-    document.body.classList.add("disable-pointer-events");
-
-    // Disable all input elements except those with class 'not-disabled' and already disabled
-    document
-        .querySelectorAll("input:not(.not-disabled)")
-        .forEach(function (element) {
-            if (
-                element.hasAttribute("readonly") ||
-                element.hasAttribute("disabled")
-            ) {
-                element.classList.add("not-disabled");
-            } else {
-                element.setAttribute("readonly", true);
-            }
-        });
-
-    // Disable all select elements except those with class 'not-disabled' and already disabled
-    document
-        .querySelectorAll("select:not(.not-disabled)")
-        .forEach(function (element) {
-            if (element.hasAttribute("disabled")) {
-                element.classList.add("not-disabled");
-            } else {
-                element.setAttribute("disabled", true);
-            }
-        });
-
-    // Disable all textarea elements except those with class 'not-disabled' and already disabled
-    document
-        .querySelectorAll("textarea:not(.not-disabled)")
-        .forEach(function (element) {
-            if (
-                element.hasAttribute("readonly") ||
-                element.hasAttribute("disabled")
-            ) {
-                element.classList.add("not-disabled");
-            } else {
-                element.setAttribute("readonly", true);
-            }
-        });
-
-    // Disable all button elements except those with class 'not-disabled' and already disabled
-    document
-        .querySelectorAll("button:not(.not-disabled)")
-        .forEach(function (element) {
-            if (element.hasAttribute("disabled")) {
-                element.classList.add("not-disabled");
-            } else {
-                element.setAttribute("disabled", true);
-            }
-        });
-
-    // Add 'disabled' class to all anchor elements except those with class 'not-disabled'
-    document
-        .querySelectorAll("a:not(.not-disabled)")
-        .forEach(function (element) {
-            if (element.classList.contains("disabled")) {
-                element.classList.add("not-disabled");
-            } else {
-                element.classList.add("disabled");
-            }
-        });
-}
-
 function formatRupiahText(value) {
     value = value.toString().replace(/\D/g, ""); // Hanya angka
     return new Intl.NumberFormat("id-ID").format(value); // Format ke Rupiah
@@ -113,29 +9,113 @@ function formatRupiahElement(input) {
     input.value = formatRupiahText(input.value);
 }
 
+const toggleElements = (function () {
+    let toggleElementsState = null;
+
+    return function (state) {
+        if (toggleElementsState === state) {
+            // console.log(
+            //     `Elements are already ${state ? "enabled" : "disabled"}`
+            // );
+            return;
+        }
+
+        toggleElementsState = state;
+        // console.log(`Elements are now ${state ? "enabled" : "disabled"}`);
+
+        if (state) {
+            document.body.classList.remove("disable-pointer-events");
+        } else {
+            document.body.classList.add("disable-pointer-events");
+        }
+
+        // Elemen-elemen yang akan diaktifkan/dinonaktifkan
+        const elements = document.querySelectorAll(
+            "input, select, textarea, button, a"
+        );
+
+        elements.forEach((element) => {
+            // Abaikan elemen dengan class 'ignore'
+            if (element.classList.contains("ignore")) return;
+
+            if (element.tagName === "A") {
+                element.classList.toggle("disabled", !state);
+            } else {
+                if (state) {
+                    element.removeAttribute("readonly");
+                    element.removeAttribute("disabled");
+                } else {
+                    if (
+                        !element.hasAttribute("readonly") &&
+                        !element.hasAttribute("disabled")
+                    ) {
+                        element.setAttribute(
+                            element.tagName === "INPUT" ||
+                                element.tagName === "TEXTAREA"
+                                ? "readonly"
+                                : "disabled",
+                            true
+                        );
+                    }
+                }
+            }
+        });
+    };
+})();
+
 $(function () {
     "use strict";
 
-    // pace costum
-    $(document).ajaxStart(function () {
-        Pace.restart();
-    });
-
-    Pace.on("start", function () {
-        setDisable();
-        $(".preloader").fadeIn();
-    });
-
-    Pace.on("done", function () {
-        $(".preloader").fadeOut(1000);
-        setEnable();
-    });
-
-    $("form").on("submit", function (event) {
-        if ($("body").attr("data-pace") === "true") {
-            if ($(this).attr("onSubmit") !== "return false") {
-                Pace.restart();
-            }
+    class PaceManager {
+        constructor() {
+            this.alwaysRun = false;
+            this.initPaceEvents();
         }
-    });
+
+        initPaceEvents() {
+            self = this;
+
+            $(document).ajaxStart(function () {
+                toggleElements(false);
+                Pace.restart();
+            });
+
+            // // Menangani ketika semua permintaan AJAX selesai
+            // $(document).ajaxComplete(function () {
+            //     Pace.stop();
+            //     $(".preloader").fadeOut(1000, function () {
+            //         setEnable();
+            //     });
+            // });
+
+            Pace.on("start", function () {
+                toggleElements(false);
+                $(".preloader").fadeIn();
+            });
+
+            Pace.on("done", function () {
+                // console.log("Pace done fired");
+                if (!self.alwaysRun)
+                    $(".preloader").fadeOut(1000, function () {
+                        toggleElements(true);
+                    });
+            });
+
+            $("form").on("submit", function (event) {
+                if ($("body").attr("data-pace") === "true") {
+                    if ($(this).attr("onSubmit") !== "return false") {
+                        self.setAlwaysRun(true);
+                        toggleElements(false);
+                        Pace.restart();
+                    }
+                }
+            });
+        }
+
+        setAlwaysRun(alwaysRun) {
+            this.alwaysRun = alwaysRun;
+        }
+    }
+
+    const paceManager = new PaceManager();
 });

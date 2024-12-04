@@ -18,7 +18,8 @@
     @include('layouts.head-css')
 </head>
 
-<body class="{{ isset($bodyClass) ? $bodyClass : '' }}">
+<body class="{{ isset($bodyClass) ? $bodyClass : '' }}" data-pace="true">
+    <div class="preloader"></div>
 
     @yield('content')
 
