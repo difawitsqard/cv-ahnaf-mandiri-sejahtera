@@ -4,12 +4,13 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\SetPasswordController;
+use App\Http\Controllers\dashboard\OrderController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\dashboard\DashboardController;
 use App\Http\Controllers\dashboard\MenuManagementController;
-use App\Http\Controllers\dashboard\OrderController;
 use App\Http\Controllers\dashboard\UnitManagementController;
 use App\Http\Controllers\dashboard\UserManagementController;
+use App\Http\Controllers\dashboard\ExpenseManagementController;
 use App\Http\Controllers\dashboard\StockItemManagementController;
 use App\Http\Controllers\dashboard\superadmin\CompanyInfoController;
 use App\Http\Controllers\dashboard\superadmin\OutletManagementController;
@@ -71,6 +72,9 @@ Route::middleware(['auth', 'verified', 'check_password_set', 'set_outlet_role'])
         Route::resource('stock-item', StockItemManagementController::class);
         Route::get('stock-item/{id}/fetch', [StockItemManagementController::class, 'fetch'])->name('stock-item.fetch');
         Route::put('stock-item/{id}/restock', [StockItemManagementController::class, 'restock'])->name('stock-item.restock');
+
+        // expense management
+        Route::resource('expense', ExpenseManagementController::class);
 
         // user management
         Route::resource('user', UserManagementController::class);

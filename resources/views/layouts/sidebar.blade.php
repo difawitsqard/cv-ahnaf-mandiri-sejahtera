@@ -174,6 +174,28 @@
                            <div class="parent-icon">
                                <i class="material-icons-outlined">local_mall</i>
                            </div>
+                           <div class="menu-title" title="Manajemen Pengeluaran">Manajemen Pengeluaran</div>
+                       </a>
+                       <ul>
+                           <li>
+                               <a href="{{ route('admin.expense.create') }}">
+                                   <i class="material-icons-outlined">arrow_right</i>
+                                   Tambah Pengeluaran
+                               </a>
+                           </li>
+                           <li>
+                               <a href="{{ route('admin.expense.index') }}">
+                                   <i class="material-icons-outlined">arrow_right</i>
+                                   Daftar Pengeluaran
+                               </a>
+                           </li>
+                       </ul>
+                   </li>
+                   <li>
+                       <a href="#" class="has-arrow">
+                           <div class="parent-icon">
+                               <i class="material-icons-outlined">local_mall</i>
+                           </div>
                            <div class="menu-title">Manajemen Stok</div>
                        </a>
                        <ul>

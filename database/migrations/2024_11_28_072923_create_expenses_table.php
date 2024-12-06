@@ -13,7 +13,14 @@ return new class extends Migration
     {
         Schema::create('expenses', function (Blueprint $table) {
             $table->id();
-
+            $table->string('name')->nullable();
+            $table->text('description')->nullable();
+            $table->date('date_out');
+            $table->bigInteger('total');
+            $table->enum('status', ['submitted', 'canceled'])->default('submitted');
+            $table->string('batch_uuid')->nullable();
+            $table->foreignId('user_id')->constrained('users')->onDelete('restrict');
+            $table->foreignId('outlet_id')->constrained('outlets')->onDelete('restrict');
             $table->timestamps();
         });
     }
