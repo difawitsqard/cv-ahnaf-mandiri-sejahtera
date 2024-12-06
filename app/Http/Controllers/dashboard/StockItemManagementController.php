@@ -6,6 +6,7 @@ use App\Models\Unit;
 use App\Models\Outlet;
 use App\Models\StockItem;
 use Illuminate\Http\Request;
+use App\Models\StockItemCategory;
 use App\Http\Controllers\Controller;
 use App\Services\ImageUploadService;
 use Illuminate\Support\Facades\File;
@@ -56,7 +57,7 @@ class StockItemManagementController extends Controller
         // $stockItems->appends(['perPage' => $perPage]);
 
         $stockItems = StockItem::where('outlet_id', $outlet->id)
-            ->with(['outlet', 'unit'])
+            ->with(['outlet', 'unit', 'category'])
             ->get()
             ->map(function ($stockItem) {
                 $stockItem['alert_stock'] = $stockItem['stock'] < $stockItem['min_stock'] ? 1 : 0;
@@ -80,6 +81,9 @@ class StockItemManagementController extends Controller
         $validatedData['outlet_id'] = $outlet->id;
         $validatedData['total_stock'] = $validatedData['stock'];
 
+        $category = StockItemCategory::findOrCreate($validatedData['category_id']);
+        $validatedData['category_id'] = $category->id;
+
         $unit = Unit::findOrCreate($validatedData['unit_id']);
         $validatedData['unit_id'] = $unit->id;
 
@@ -96,8 +100,7 @@ class StockItemManagementController extends Controller
 
     public function create(Outlet $outlet)
     {
-        $units = Unit::all();
-        return view('dashboard.stock-item-management.create', compact('units', 'outlet'));
+        return view('dashboard.stock-item-management.create', compact('outlet'));
     }
 
     /**
@@ -105,7 +108,7 @@ class StockItemManagementController extends Controller
      */
     public function show($param1, $param2 = null)
     {
-        list($outlet, $id) = $this->processParameters($param1, $param2);
+        [$outlet, $id] = $this->processParameters($param1, $param2);
 
         $stockItem = StockItem::where('id', $id)
             ->where('outlet_id', $outlet->id)
@@ -117,7 +120,7 @@ class StockItemManagementController extends Controller
 
     public function fetch($param1, $param2 = null)
     {
-        list($outlet, $id) = $this->processParameters($param1, $param2);
+        [$outlet, $id] = $this->processParameters($param1, $param2);
 
         $stockItem = StockItem::where('id', $id)
             ->where('outlet_id', $outlet->id)
@@ -140,25 +143,30 @@ class StockItemManagementController extends Controller
                 'data' => $stockItem,
             ]);
         } else {
-            return response()->json([
-                'status' => false,
-                'code' => 404,
-            ], 404);
+            return response()->json(
+                [
+                    'status' => false,
+                    'code' => 404,
+                ],
+                404,
+            );
         }
     }
-
 
     /**
      * Update the specified resource in storage.
      */
     public function update(StockItemManagementRequest $request, $param1, $param2 = null)
     {
-        list($outlet, $id) = $this->processParameters($param1, $param2);
+        [$outlet, $id] = $this->processParameters($param1, $param2);
 
         $validatedData = $request->validated();
         $stockItem = StockItem::where('id', $id)
             ->where('outlet_id', $outlet->id)
             ->firstOrFail();
+
+        $category = StockItemCategory::findOrCreate($validatedData['category_id']);
+        $validatedData['category_id'] = $category->id;
 
         $unit = Unit::findOrCreate($validatedData['unit_id']);
         $validatedData['unit_id'] = $unit->id;
@@ -191,7 +199,7 @@ class StockItemManagementController extends Controller
 
     public function edit($param1, $param2 = null)
     {
-        list($outlet, $id) = $this->processParameters($param1, $param2);
+        [$outlet, $id] = $this->processParameters($param1, $param2);
 
         $stockItem = StockItem::where('id', $id)
             ->where('outlet_id', $outlet->id)
@@ -204,7 +212,7 @@ class StockItemManagementController extends Controller
 
     public function restock(Request $request, $param1, $param2 = null)
     {
-        list($outlet, $id) = $this->processParameters($param1, $param2);
+        [$outlet, $id] = $this->processParameters($param1, $param2);
 
         $request->validate([
             'qty' => 'required|numeric',
@@ -225,7 +233,7 @@ class StockItemManagementController extends Controller
      */
     public function destroy($param1, $param2 = null)
     {
-        list($outlet, $id) = $this->processParameters($param1, $param2);
+        [$outlet, $id] = $this->processParameters($param1, $param2);
 
         // Retrieve the specific service instance
         $stockItems = StockItem::findOrFail($id);

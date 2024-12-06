@@ -20,6 +20,7 @@ class StockItem extends Model
         'min_stock',
         'image_path',
         'price',
+        'category_id',
         'outlet_id',
     ];
 
@@ -35,6 +36,11 @@ class StockItem extends Model
     protected $appends = [
         'image_url',
     ];
+
+    public function category()
+    {
+        return $this->belongsTo(StockItemCategory::class, 'category_id', 'id');
+    }
 
     public function outlet()
     {

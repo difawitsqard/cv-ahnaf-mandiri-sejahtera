@@ -51,7 +51,8 @@ const toggleElements = (function () {
                     ) {
                         element.setAttribute(
                             element.tagName === "INPUT" ||
-                                element.tagName === "TEXTAREA"
+                                element.tagName === "TEXTAREA" ||
+                                element.tagName === "SELECT"
                                 ? "readonly"
                                 : "disabled",
                             true

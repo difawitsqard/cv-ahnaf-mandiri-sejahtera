@@ -42,9 +42,9 @@
 
     <div class="card">
         <div class="card-body">
-            <div class="row g-3">
+            <div class="row g-3 mb-3">
                 <div class="col-auto">
-                    <div class="input-group mb-3">
+                    <div class="input-group">
                         <select class="form-select" id="table-stock-item-length">
                             <option value="10" selected>10</option>
                             <option value="25">25</option>
@@ -75,7 +75,14 @@
                     </div>
                 </div>
                 <div class="col-auto">
-                    <div class="position-relative mb-3">
+                    <div class="position-relative">
+                        <select class="form-select" id="category-filter">
+                            <option value="">Semua Kategori</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-auto mt-">
+                    <div class="position-relative">
                         <input class="form-control px-5" type="search" id="table-stock-item-search" placeholder="Cari...">
                         <span
                             class="material-icons-outlined position-absolute ms-3 translate-middle-y start-0 top-50 fs-5">search</span>
@@ -94,6 +101,7 @@
                                 <th>Stok</th>
                                 <th>Satuan</th>
                                 <th>Harga</th>
+                                <th>Kategori</th>
                                 <th class="no-export">Aksi</th>
                             </tr>
                         </thead>
@@ -132,6 +140,7 @@
                                     </td>
                                     <td>{{ $stockItem['unit']->name }}</td>
                                     <td>{{ formatRupiah($stockItem['price']) }}</td>
+                                    <td>{{ $stockItem['category']->name }}</td>
                                     <td class="no-export">
                                         <div class="dropdown">
                                             <button class="btn btn-sm btn-filter dropdown-toggle dropdown-toggle-nocaret"
@@ -279,6 +288,21 @@
 
             $('#table-stock-item-print').on('click', function() {
                 table.button('.buttons-print').trigger();
+            });
+
+            // Mengisi dropdown kategori secara otomatis dari kategori yang ada di tabel
+            table.column(6).data().unique().sort().each(function(d, j) {
+                $('#category-filter').append('<option value="' + d + '">' + d + '</option>');
+            });
+
+            // Filter berdasarkan kategori
+            $('#category-filter').on('change', function() {
+                var selectedCategory = $(this).val();
+                if (selectedCategory) {
+                    table.column(6).search('^' + selectedCategory + '$', true, false).draw();
+                } else {
+                    table.column(6).search('').draw();
+                }
             });
         });
 

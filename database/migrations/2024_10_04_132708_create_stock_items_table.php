@@ -20,6 +20,8 @@ return new class extends Migration
             $table->bigInteger('total_stock')->default(0); // Jumlah total item yang pernah ada
             $table->bigInteger('price')->default(0); // Harga item
             $table->string('image_path')->nullable(); // Path gambar item
+            // $table->foreignId('category_id')->nullable()->constrained('stock_item_categories')->nullOnDelete(); // Foreign key ke tabel stock_item_categories
+            $table->foreignId('category_id')->constrained('stock_item_categories')->onDelete('restrict'); // Foreign key ke tabel stock_item_categories
             $table->foreignId('outlet_id')->constrained('outlets')->onDelete('restrict'); // Foreign key ke tabel outlets
             $table->foreignId('unit_id')->constrained('units')->onDelete('restrict'); // Foreign key ke tabel units
             $table->timestamps();

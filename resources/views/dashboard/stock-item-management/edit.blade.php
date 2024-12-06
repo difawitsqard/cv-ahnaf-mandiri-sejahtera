@@ -65,7 +65,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h6 class="mb-2">Gambar Item</h6>
-                        <label class="picture-input-costum" for="image" style="width: 100%; height: 190px;">
+                        <label class="picture-input-costum" for="image" style="width: 100%; height: 220px;">
                             <span class="picture__image"></span>
                             <span class="picture__text"><span
                                     class="material-icons-outlined">add_photo_alternate</span></span>
@@ -88,7 +88,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-12 col-lg-4 mb-3">
+                            <div class="col-12 col-lg-4">
                                 <div class="mb-3">
                                     <h6 class="mb-2">Nama Item <span class="text-danger">*</span></h6>
                                     <input type="text" class="form-control" id="name" name="name"
@@ -102,30 +102,35 @@
                                     <input type="hidden" name="description" id="description">
                                 </div>
                                 <div class="mb-3">
-                                    <h6 class="mb-2">Minimal Stok
-                                        <i class="bi bi-question-circle-fill text-info" data-bs-toggle="tooltip"
-                                            data-bs-placement="top" title="Jumlah minimum stok yang harus tersedia."></i>
-                                    </h6>
-                                    <div class="input-group">
-                                        <span class="input-group-text text-danger"><i
-                                                class="material-icons-outlined fs-5">priority_high</i></span>
-                                        <input type="number" class="form-control" id="min_stock" name="min_stock"
-                                            placeholder="Default '0'" value="{{ $stockItem->min_stock }}">
-                                    </div>
-                                </div>
-                                <div class="mb-3">
-                                    <x-unit-select :selectedUnit="$stockItem->unit_id" />
+                                    <x-category-item-select :selectedCategory="$stockItem->category_id" />
                                 </div>
                             </div>
 
                             <div class="col-12 col-lg-8 mb-3">
+
+                                <div class="row g-3 mb-4">
+                                    <div class="col-12 col-lg-6">
+                                        <h6 class="mb-2">Minimal Stok
+                                            <i class="bi bi-question-circle-fill text-info" data-bs-toggle="tooltip"
+                                                data-bs-placement="top"
+                                                title="Jumlah minimum stok yang harus tersedia."></i>
+                                        </h6>
+                                        <input class="form-control text-danger" type="number" id="min_stock"
+                                            name="min_stock" placeholder="Default '0'" value="{{ $stockItem->min_stock }}">
+                                    </div>
+                                    <div class="col-12 col-lg-6">
+                                        <x-unit-select :selectedUnit="$stockItem->unit_id"  />
+
+                                    </div>
+                                </div>
+
                                 <div class="card bg-light">
                                     <div class="card-body">
                                         <x-restock-item-section :outlet="$outlet" :stockItem="$stockItem" />
                                     </div>
                                 </div>
 
-                                <div class="row g-3">
+                                <div class="row">
                                     <div class="col-12 col-lg-12">
                                         <h6 class="mb-2">Harga</h6>
                                         <div class="input-group">

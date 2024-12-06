@@ -10,6 +10,11 @@ class ImageUploader {
 
     initialize() {
         document.querySelectorAll(".picture__input").forEach((inputFile) => {
+            inputFile.setAttribute(
+                "accept",
+                "image/png, image/jpeg, image/jpg, image/svg+xml, image/webp, image/bmp, image/gif, image/tiff, image/x-icon"
+            );
+
             const label = inputFile.previousElementSibling;
             const pictureImage = label.querySelector(".picture__image");
             const pictureText = label.querySelector(".picture__text");

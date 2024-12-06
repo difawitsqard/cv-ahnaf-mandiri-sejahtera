@@ -33,6 +33,7 @@ class StockItemManagementRequest extends FormRequest
             'name' => 'required|string|max:255',
             'description' => 'nullable|string|max:255',
             'unit_id' => 'required',
+            'category_id' => 'required',
             'min_stock' => 'nullable|numeric',
             'price' => 'required|numeric',
         ];

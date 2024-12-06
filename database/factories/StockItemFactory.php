@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Unit;
 use App\Models\Outlet;
+use App\Models\StockItemCategory;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -27,6 +28,7 @@ class StockItemFactory extends Factory
             'total_stock' =>  $stock,
             'image_path' => null,
             'description' => fake()->sentence,
+            'category_id' => StockItemCategory::factory(),
             'outlet_id' => Outlet::factory(),
             'unit_id' => Unit::factory(),
         ];

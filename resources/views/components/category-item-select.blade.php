@@ -5,22 +5,21 @@
     @endif
 @endpush
 
-
 <div class="unit-select">
-    <h6 class="mb-2">Satuan / Unit
-        <i class="bi bi-question-circle-fill text-info" data-bs-toggle="tooltip" data-bs-placement="top"
-            title="Akan ditempatkan setelah jumlah stok ( cth:1 ekor )"></i>
+    <h6 class="mb-2">Kategori Item
+        <i class="bi bi-question-circle-fill text-info" data-bs-toggle="tooltip" data-bs-placement="top" title="Kategori Item digunakan untuk mengelompokkan barang agar memudahkan pencarian dan pengelolaan stok. "></i>
         <span class="text-danger">*</span>
     </h6>
-    <select class="form-select select2-single select2-unit" id="unit_id" name="unit_id" required>
-        <option disabled selected>Pilih Satuan</option>
-        @foreach ($units as $unit)
-            <option value="{{ $unit->id }}" {{ $selectedUnit == $unit->id ? 'selected' : '' }}>
-                {{ $unit->name }}
+    <select class="form-select select2-single select2-category" id="category" name="category_id" required>
+        <option disabled selected>Pilih Kategori</option>
+        @foreach ($categories as $category)
+            <option value="{{ $category->id }}" {{ $selectedCategory == $category->id ? 'selected' : '' }}>
+                {{ $category->name }}
             </option>
         @endforeach
     </select>
 </div>
+
 
 @push('script')
     @if (importOnce('js-select2'))
@@ -29,7 +28,7 @@
 
     <script>
         $(document).ready(function() {
-            $('.select2-unit').select2({
+            $('.select2-category').select2({
                 theme: "bootstrap-5",
                 // width: function() {
                 //     return $(this).data('width') ? $(this).data('width') : $(this).hasClass('w-100') ?

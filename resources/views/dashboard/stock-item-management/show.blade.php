@@ -23,7 +23,7 @@
                 <div class="overflow-auto">
                     <div class="btn-group position-static">
                         <div class="btn-group position-static">
-                            <a type="button" href="{{ route('outlet.stock-item.edit', ['outlet' => $outlet->slug, 'stock_item' => $stockItem->id]) }}" class="btn btn-outline-primary">
+                            <a type="button" href="{{ roleBasedRoute('stock-item.edit', ['outlet' => $outlet->slug, 'stock_item' => $stockItem->id]) }}" class="btn btn-outline-primary">
                                 <i class="bi bi-pencil-square me-2"></i>Edit
                             </a>
                         </div>
@@ -41,7 +41,7 @@
                     class="card-img-top" id="image-preview" alt="">
                 <div class="card-body">
                     <h5 class="mb-3">{{ $stockItem->name }}</h5>
-                    <p>{{ $stockItem->description }}</p>
+                    <p>{!! $stockItem->description !!}</p>
                 </div>
             </div>
         </div>
@@ -62,11 +62,6 @@
                                 <td>Nama</td>
                                 <td>:</td>
                                 <td>{{ $stockItem->name }}</td>
-                            </tr>
-                            <tr>
-                                <td>Deskripsi</td>
-                                <td>:</td>
-                                <td>{{ $stockItem->description }}</td>
                             </tr>
                             <tr>
                                 <td>Stok</td>

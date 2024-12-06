@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
             OutletSeeder::class,
             RolesAndPermissionsSeeder::class,
             UserSeeder::class,
-
+            StockItemCategorySeeder::class,
             UnitSeeder::class,
             StockItemSeeder::class,
         ]);

@@ -49,3 +49,17 @@ if (! function_exists('roleBasedRoute')) {
     }
   }
 }
+
+if (! function_exists('importOnce')) {
+  function importOnce($asset)
+  {
+    static $imported = [];
+
+    if (!in_array($asset, $imported)) {
+      $imported[] = $asset;
+      return true;
+    }
+
+    return false;
+  }
+}

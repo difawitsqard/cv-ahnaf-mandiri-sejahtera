@@ -65,7 +65,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h6 class="mb-2">Gambar Item</h6>
-                        <label class="picture-input-costum" for="image" style="width: 100%; height: 190px;">
+                        <label class="picture-input-costum" for="image" style="width: 100%; height: 210px;">
                             <span class="picture__image"></span>
                             <span class="picture__text"><span
                                     class="material-icons-outlined">add_photo_alternate</span></span>
@@ -103,7 +103,10 @@
 
                             <div class="col-12 col-lg-8">
 
-                                <div class="row g-4">
+                                <div class="row g-3">
+                                    <div class="col-12">
+                                        <x-category-item-select :selectedCategory="old('category_id')" />
+                                    </div>
                                     <div class="col-12 col-lg-6">
                                         <h6 class="mb-2">Stok Awal</h6>
                                         <input class="form-control" type="number" id="stock" name="stock"
@@ -134,12 +137,7 @@
                                                 data-bs-placement="top"
                                                 title="Jumlah minimum stok yang harus tersedia."></i>
                                         </h6>
-                                        <div class="input-group">
-                                            <span class="input-group-text text-danger"><i
-                                                    class="material-icons-outlined fs-5">priority_high</i></span>
-                                            <input type="number" class="form-control" id="min_stock" name="min_stock"
-                                                placeholder="Default '0'" value="{{ old('min_stock') }}">
-                                        </div>
+                                        <input class="form-control text-danger" type="number" id="min_stock" name="min_stock" placeholder="Default '0'" value="{{ old('min_stock') }}">
                                     </div>
                                     <div class="col-12 col-lg-6">
                                         <h6 class="mb-2">Harga</h6>
@@ -208,7 +206,7 @@
                     ]
                 },
             });
-            $('.quill-description .ql-editor').css('min-height', '100px');
+            $('.quill-description .ql-editor').css('min-height', '118px');
             $('form').on('submit', function() {
                 $('[name="description"]').val(quill.root.innerHTML);
             });
