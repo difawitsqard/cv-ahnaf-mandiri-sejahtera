@@ -19,7 +19,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->bigInteger('price');
             $table->bigInteger('subtotal');
-            $table->string('image_path');
+            $table->string('image_path')->nullable();
             $table->timestamps();
         });
     }

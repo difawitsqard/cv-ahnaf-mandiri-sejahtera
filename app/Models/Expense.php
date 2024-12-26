@@ -11,13 +11,27 @@ class Expense extends Model
 
     protected $fillable = [
         'name',
-        'amount',
-        'date',
         'description',
+        'date_out',
+        'total',
+        'status',
+        'batch_uuid',
+        'user_id',
+        'outlet_id',
     ];
 
     public function items()
     {
         return $this->hasMany(ExpenseItem::class);
+    }
+
+    public function outlet()
+    {
+        return $this->belongsTo(Outlet::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

@@ -74,6 +74,8 @@ Route::middleware(['auth', 'verified', 'check_password_set', 'set_outlet_role'])
         Route::put('stock-item/{id}/restock', [StockItemManagementController::class, 'restock'])->name('stock-item.restock');
 
         // expense management
+        Route::get('expense/fetchAll', [ExpenseManagementController::class, 'fetchAll'])->name('expense.fetchAll');
+        Route::get('expense/{id}/fetch', [ExpenseManagementController::class, 'fetch'])->name('expense.fetch');
         Route::resource('expense', ExpenseManagementController::class);
 
         // user management

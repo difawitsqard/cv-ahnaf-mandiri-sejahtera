@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name')->nullable();
             $table->text('description')->nullable();
-            $table->date('date_out');
+            $table->dateTime('date_out');
             $table->bigInteger('total');
             $table->enum('status', ['submitted', 'canceled'])->default('submitted');
             $table->string('batch_uuid')->nullable();

@@ -10,9 +10,13 @@ class ExpenseItem extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name',
-        'amount',
         'expense_id',
+        'stock_item_id',
+        'quantity',
+        'price',
+        'subtotal',
+        'description',
+        'image_path',
     ];
 
     public function expense()
