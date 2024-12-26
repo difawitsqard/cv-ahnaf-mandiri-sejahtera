@@ -4,6 +4,7 @@ class ImageUploader {
         this.currentFile = null;
         this.currentLabel = null;
         this.options = options;
+        this.eventListeners = [];
 
         this.initialize();
     }
@@ -29,33 +30,123 @@ class ImageUploader {
                 );
             }
 
-            inputFile.addEventListener("change", (e) =>
-                this.handleFileChange(e, inputFile, label)
-            );
+            const changeListener = (e) =>
+                this.handleFileChange(e, inputFile, label);
+            inputFile.addEventListener("change", changeListener);
+            this.eventListeners.push({
+                element: inputFile,
+                type: "change",
+                listener: changeListener,
+            });
 
-            label
-                .querySelector(".delete-btn")
-                .addEventListener("click", () =>
-                    this.resetImageDisplay(
-                        pictureImage,
-                        pictureText,
-                        pictureButtons,
-                        inputFile
-                    )
+            const deleteBtn = label.querySelector(".delete-btn");
+            const deleteListener = () =>
+                this.resetImageDisplay(
+                    pictureImage,
+                    pictureText,
+                    pictureButtons,
+                    inputFile
                 );
+            deleteBtn.addEventListener("click", deleteListener);
+            this.eventListeners.push({
+                element: deleteBtn,
+                type: "click",
+                listener: deleteListener,
+            });
 
-            label.querySelector(".crop-btn").addEventListener("click", () => {
+            const cropBtn = label.querySelector(".crop-btn");
+            const cropListener = () => {
                 const imgElement = pictureImage.querySelector("img");
                 if (imgElement) {
+                    $(".modal.fade.show").hide();
                     $("#cropModal").modal("show");
                     $(".modal-crop-canvas").attr("src", imgElement.src);
                     this.currentFile = inputFile.files[0];
                     this.currentLabel = label;
                 }
+            };
+            cropBtn.addEventListener("click", cropListener);
+            this.eventListeners.push({
+                element: cropBtn,
+                type: "click",
+                listener: cropListener,
             });
+
+            // const modalCloseBtn = document
+            //     .querySelector("#cropModal")
+            //     .querySelector('[data-bs-dismiss="modal"]');
+            // const modalCloseListener = () =>
+            //     this.resetImageDisplay(
+            //         pictureImage,
+            //         pictureText,
+            //         pictureButtons,
+            //         inputFile
+            //     );
+            // modalCloseBtn.addEventListener("click", modalCloseListener);
+            // this.eventListeners.push({
+            //     element: modalCloseBtn,
+            //     type: "click",
+            //     listener: modalCloseListener,
+            // });
         });
 
         this.setupModal();
+
+        // Tambahkan event listener untuk reset form
+        document.querySelectorAll("form").forEach((form) => {
+            const resetListener = () => this.resetAllInputs(form);
+            form.addEventListener("reset", resetListener);
+            this.eventListeners.push({
+                element: form,
+                type: "reset",
+                listener: resetListener,
+            });
+        });
+    }
+
+    destroy() {
+        // Hapus semua event listener yang ditambahkan
+        this.eventListeners.forEach(({ element, type, listener }) => {
+            element.removeEventListener(type, listener);
+        });
+        this.eventListeners = [];
+
+        // Hancurkan cropper jika ada
+        if (this.cropper) {
+            this.cropper.destroy();
+            this.cropper = null;
+        }
+
+        // Reset semua input gambar
+        document.querySelectorAll(".picture__input").forEach((inputFile) => {
+            const label = inputFile.previousElementSibling;
+            const pictureImage = label.querySelector(".picture__image");
+            const pictureText = label.querySelector(".picture__text");
+            const pictureButtons = label.querySelector(".picture__buttons");
+            this.resetImageDisplay(
+                pictureImage,
+                pictureText,
+                pictureButtons,
+                inputFile
+            );
+        });
+
+        // console.log("ImageUploader instance destroyed.");
+    }
+
+    resetAllInputs(form) {
+        form.querySelectorAll(".picture__input").forEach((inputFile) => {
+            const label = inputFile.previousElementSibling;
+            const pictureImage = label.querySelector(".picture__image");
+            const pictureText = label.querySelector(".picture__text");
+            const pictureButtons = label.querySelector(".picture__buttons");
+            this.resetImageDisplay(
+                pictureImage,
+                pictureText,
+                pictureButtons,
+                inputFile
+            );
+        });
     }
 
     handleFileChange(event, inputFile, label) {
@@ -109,26 +200,42 @@ class ImageUploader {
     }
 
     setupModal() {
+        $("#cropModal").on("show.bs.modal", function () {
+            $(".modal.fade.show").hide();
+
+            $(this).find(".modal-body").hide();
+            $(this).find(".modal-footer").hide();
+        });
+
         $("#cropModal").on("shown.bs.modal", () => {
             if (this.cropper) this.cropper.destroy();
 
-            let aspectRatio = this.options.cropRatio
-                ? eval(this.options.cropRatio)
-                : 1;
+            $("#cropModal")
+                .find(".modal-body")
+                .show(600, () => {
+                    let aspectRatio = this.options.cropRatio
+                        ? eval(this.options.cropRatio)
+                        : 1;
 
-            this.cropper = new Cropper(
-                document.querySelector(".modal-crop-canvas"),
-                {
-                    aspectRatio: aspectRatio,
-                    dragMode: "move", // Memungkinkan gambar untuk bergerak
-                    autoCropArea: 1,
-                    cropBoxMovable: false, // Area crop tetap diam
-                    cropBoxResizable: false, // Area crop tidak dapat diubah ukurannya
-                    movable: true, // Memungkinkan gambar untuk bergerak
-                    checkOrientation: false,
-                    viewMode: 1,
-                }
-            );
+                    this.cropper = new Cropper(
+                        document.querySelector(".modal-crop-canvas"),
+                        {
+                            aspectRatio: aspectRatio,
+                            dragMode: "move", // Memungkinkan gambar untuk bergerak
+                            autoCropArea: 1,
+                            cropBoxMovable: false, // Area crop tetap diam
+                            cropBoxResizable: false, // Area crop tidak dapat diubah ukurannya
+                            movable: true, // Memungkinkan gambar untuk bergerak
+                            checkOrientation: false,
+                            viewMode: 1,
+                        }
+                    );
+                });
+            $("#cropModal").find(".modal-footer").show(600);
+        });
+
+        $("#cropModal").on("hidden.bs.modal", () => {
+            $(".modal.fade.show").show();
         });
 
         $("#rotateImageModal").on("click", () => {
