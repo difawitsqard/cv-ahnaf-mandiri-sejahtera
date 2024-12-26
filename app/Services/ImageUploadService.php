@@ -15,7 +15,7 @@ class ImageUploadService
    * @param string $directory
    * @return string
    */
-  public function uploadImage(UploadedFile $image, $directory = '')
+  public static function uploadImage(UploadedFile $image, $directory = '')
   {
     // Validate the image
     $validator = Validator::make(
@@ -50,7 +50,7 @@ class ImageUploadService
    * @param string $imagePath
    * @return void
    */
-  public function deleteImage($imagePath)
+  public static function deleteImage($imagePath)
   {
     $fullPath = public_path('uploads/' . $imagePath);
 
