@@ -50,13 +50,13 @@
                                <div class="menu-title" title="Riwayat Pesanan">Riwayat Pesanan</div>
                            </a>
                        </li>
-                       <li class="menu-label">Menu</li>
+                       <li class="menu-label">Menu Manajemen</li>
                        <li>
                            <a href="{{ route('outlet.user.index', ['outlet' => $outletSlug]) }}">
                                <div class="parent-icon">
                                    <i class="material-icons-outlined">group</i>
                                </div>
-                               <div class="menu-title" title="Manajemen Pengguna">Manajemen Pengguna</div>
+                               <div class="menu-title" title="Pengguna">Pengguna</div>
                            </a>
                        </li>
                        <li>
@@ -64,7 +64,7 @@
                                <div class="parent-icon">
                                    <i class="material-icons-outlined">menu_book</i>
                                </div>
-                               <div class="menu-title">Manajemen Menu</div>
+                               <div class="menu-title">Menu </div>
                            </a>
                            <ul>
                                <li>
@@ -86,7 +86,7 @@
                                <div class="parent-icon">
                                    <i class="material-icons-outlined">local_mall</i>
                                </div>
-                               <div class="menu-title">Manajemen Stok</div>
+                               <div class="menu-title">Stok</div>
                            </a>
                            <ul>
                                <li>
@@ -108,7 +108,7 @@
                            <a href="{{ route('outlet.index') }}">
                                <div class="parent-icon"><i class="material-icons-outlined">store</i>
                                </div>
-                               <div class="menu-title">Manajemen Outlet</div>
+                               <div class="menu-title">Outlet</div>
                            </a>
                        </li>
                    @endif
@@ -138,13 +138,13 @@
                            <div class="menu-title" title="Riwayat Pesanan">Riwayat Pesanan</div>
                        </a>
                    </li>
-                   <li class="menu-label">Menu</li>
+                   <li class="menu-label">Menu Manajemen</li>
                    <li>
                        <a href="{{ route('admin.user.index') }}">
                            <div class="parent-icon">
                                <i class="material-icons-outlined">group</i>
                            </div>
-                           <div class="menu-title" title="Manajemen Pengguna">Manajemen Pengguna</div>
+                           <div class="menu-title" title="Pengguna">Pengguna</div>
                        </a>
                    </li>
                    <li>
@@ -152,7 +152,7 @@
                            <div class="parent-icon">
                                <i class="material-icons-outlined">menu_book</i>
                            </div>
-                           <div class="menu-title">Manajemen Menu</div>
+                           <div class="menu-title">Menu</div>
                        </a>
                        <ul>
                            <li>
@@ -172,9 +172,9 @@
                    <li>
                        <a href="#" class="has-arrow">
                            <div class="parent-icon">
-                               <i class="material-icons-outlined">local_mall</i>
+                            <span class="material-icons-outlined">account_balance_wallet</span>
                            </div>
-                           <div class="menu-title" title="Manajemen Pengeluaran">Manajemen Pengeluaran</div>
+                           <div class="menu-title" title="Pengeluaran">Pengeluaran</div>
                        </a>
                        <ul>
                            <li>
@@ -196,7 +196,7 @@
                            <div class="parent-icon">
                                <i class="material-icons-outlined">local_mall</i>
                            </div>
-                           <div class="menu-title">Manajemen Stok</div>
+                           <div class="menu-title">Stok</div>
                        </a>
                        <ul>
                            <li>
@@ -251,7 +251,7 @@
                            <a href="{{ route('outlet.index') }}">
                                <div class="parent-icon"><i class="material-icons-outlined">store</i>
                                </div>
-                               <div class="menu-title">Manajemen Outlet</div>
+                               <div class="menu-title">Outlet</div>
                            </a>
                        </li>
                    @endif
