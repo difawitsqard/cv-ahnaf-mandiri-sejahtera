@@ -93,11 +93,12 @@ class StockItem extends Model
             ->firstOrFail();
 
         $oldStock = $stockItem->stock;
-        $stockItem->stock -= $quantity;
 
-        if ($stockItem->stock < 0) {
-            $stockItem->stock = 0;
+        if ($stockItem->stock < $quantity) {
+            throw new \Exception("Stock item {$stockItem->name} is not enough");
         }
+
+        $stockItem->stock -= $quantity;
         $stockItem->save();
 
         activity()
