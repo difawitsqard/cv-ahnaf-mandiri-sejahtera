@@ -175,10 +175,8 @@
     </form>
 @endsection
 
-<!-- Modal -->
 @push('modals')
-    <div class="modal fade" id="AddItem" aria-labelledby="AddItemLabel" aria-hidden="true" data-bs-backdrop="static"
-        data-bs-keyboard="false">
+    <div class="modal fade" id="AddItem" aria-labelledby="AddItemLabel" data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -216,8 +214,15 @@
                             </div>
                             <div class="col-12 col-lg-6 mb-3">
                                 <h6 class="mb-2">Jumlah <span class="text-danger">*</span></h6>
+
+                                <div class="input-group w-auto qty-control">
+                                    <button class="btn btn-outline-secondary decrement-button"><i class="bi bi-dash-lg"></i></button>
+                                    <input type="text" id="quantity" name="quantity" class="form-control text-center shadow-none quantity-input ignore" placeholder="default '1'" value="1" required>
+                                    <button class="btn btn-outline-secondary increment-button"><i class="bi bi-plus-lg"></i></button>
+                                </div>
+{{-- 
                                 <input type="number" class="form-control" id="quantity" name="quantity"
-                                    placeholder="default '1'" value="1" required>
+                                    placeholder="default '1'" value="1" required> --}}
                             </div>
                             <div class="col-12 col-lg-6 mb-3">
                                 <h6 class="mb-2">Subtotal</h6>
@@ -292,8 +297,8 @@
                 dateFormat: "d M Y H:i",
                 defaultDate: new Date(),
                 minuteIncrement: 1,
-                minDate: new Date().fp_incr(-3), 
-                maxDate: new Date().fp_incr(7), 
+                minDate: new Date().fp_incr(-3),
+                maxDate: new Date().fp_incr(7),
             });
 
             let imageUploaderInstance = new ImageUploader({
@@ -431,9 +436,6 @@
 
             modalItemQuantity.on('input', function() {
                 var value = $(this).val().replace(/[^0-9]/g, '');
-                if (value < 1) value = 1;
-                $(this).val(value);
-
                 let price = modalItemPrice.val().replace(/[^0-9]/g, '');
                 modalItemSubtotal.val(formatRupiahText(value * price));
             });
@@ -500,7 +502,6 @@
                                 item.quantity = maxQuantity;
                             }
                             item.subtotal = item.price * item.quantity;
-                            console.log(item);
                         }
                         item.price = option.data('price');
                         item.name = option.text().trim();
@@ -817,7 +818,8 @@
                                 saveExpenseItem();
                                 localStorage.removeItem(expenseKey);
 
-                               window.location.href = "{{ roleBasedRoute('expense.index', ['outlet' => $outlet->slug]) }}";
+                                window.location.href =
+                                    "{{ roleBasedRoute('expense.index', ['outlet' => $outlet->slug]) }}";
                             }
                         },
                         error: function(xhr) {

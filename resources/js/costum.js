@@ -9,6 +9,51 @@ function formatRupiahElement(input) {
     input.value = formatRupiahText(input.value);
 }
 
+document.addEventListener("DOMContentLoaded", function () {
+    const qtyControls = document.querySelectorAll(".qty-control");
+
+    qtyControls.forEach(function (qtyControl) {
+        const decrementButton = qtyControl.querySelector(".decrement-button");
+        const incrementButton = qtyControl.querySelector(".increment-button");
+        const quantityInput = qtyControl.querySelector(".quantity-input");
+
+        quantityInput.addEventListener("input", function () {
+            let value = parseInt(this.value.replace(/[^0-9]/g, ""));
+            let minValue = parseInt(this.getAttribute("min")) || 1;
+            let maxValue = parseInt(this.getAttribute("max")) || Infinity;
+
+            if (isNaN(value) || value < minValue) {
+                value = minValue;
+            } else if (value > maxValue) {
+                value = maxValue;
+            }
+
+            this.value = value;
+        });
+
+        decrementButton.addEventListener("click", function (event) {
+            event.preventDefault();
+            let currentValue = parseInt(quantityInput.value);
+            let minValue = parseInt(quantityInput.getAttribute("min")) || 1;
+            if (currentValue > minValue) {
+                quantityInput.value = currentValue - 1;
+                quantityInput.dispatchEvent(new Event("input"));
+            }
+        });
+
+        incrementButton.addEventListener("click", function (event) {
+            event.preventDefault();
+            let currentValue = parseInt(quantityInput.value);
+            let maxValue =
+                parseInt(quantityInput.getAttribute("max")) || Infinity;
+            if (currentValue < maxValue) {
+                quantityInput.value = currentValue + 1;
+                quantityInput.dispatchEvent(new Event("input"));
+            }
+        });
+    });
+});
+
 // Alert Message
 (function ($) {
     $.fn.alertError = function (message) {
