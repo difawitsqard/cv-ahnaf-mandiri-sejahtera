@@ -9,6 +9,40 @@ function formatRupiahElement(input) {
     input.value = formatRupiahText(input.value);
 }
 
+// Alert Message
+(function ($) {
+    $.fn.alertError = function (message) {
+        // Hapus elemen lama dengan ID 'msg-error' dalam konteks elemen yang dipilih
+        this.find("#msg-error").remove();
+
+        // Buat elemen baru
+        let element = $(`
+            <div class="alert alert-danger border-0 bg-danger alert-dismissible fade show" id="msg-error" role="alert">
+                <div class="d-flex align-items-center">
+                    <div class="font-35 text-white">
+                        <span class="material-icons-outlined fs-2">report_gmailerrorred</span>
+                    </div>
+                    <div class="ms-3">
+                        <h5 class="mb-0 text-white"> Uups!</h5>
+                        <div class="text-white">${message}</div>
+                    </div>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        `);
+
+        element.hide();
+        this.prepend(element);
+        element.fadeIn();
+
+        return this; // Memungkinkan chaining
+    };
+})(jQuery);
+
+function clearAlert() {
+    $("#msg-error").remove();
+}
+
 const toggleElements = (function () {
     let toggleElementsState = null;
 
