@@ -36,7 +36,7 @@
     </div>
 
     <div class="row">
-        <div class="col-xxl-4 d-flex align-items-stretch">
+        <div class="col-xl-5 col-xxl-3 d-flex align-items-stretch">
             <div class="card w-100 overflow-hidden rounded-4">
                 <div class="card-body position-relative p-4">
                     <div class="row">
@@ -72,7 +72,7 @@
             </div>
         </div>
 
-        <div class="col-xl-6 col-xxl-2 d-flex align-items-stretch">
+        <div class="col-xl-7 col-xxl-3 col-xxl-2 d-flex align-items-stretch">
             <div class="card w-100 rounded-4">
                 <div class="card-body">
                     <div class="d-flex align-items-start justify-content-between mb-3">
@@ -576,7 +576,7 @@
         </div> --}}
 
 
-        <div class="col-xl-8 col-xxl-12 d-flex align-items-stretch">
+        <div class="col-12 d-flex align-items-stretch">
             <div class="card w-100 rounded-4">
                 <div class="card-body">
                     <div class="d-flex align-items-start justify-content-between mb-3">
