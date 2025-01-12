@@ -24,7 +24,7 @@ return new class extends Migration
             $table->uuid('batch_uuid')->nullable();
             $table->enum('status', ['pending', 'completed', 'canceled'])->default('pending'); // Status pesanan
             $table->foreignId('user_id')->constrained('users')->onDelete('restrict'); // Foreign key ke tabel users
-            $table->foreignId('outlet_id')->constrained('outlets')->onDelete('restrict'); // Foreign key ke tabel outlets
+            $table->foreignId('outlet_id')->constrained('outlets')->onDelete('cascade');
             $table->timestamps();
         });
     }

@@ -43,7 +43,7 @@
     <div class="card">
         <div class="card-body">
             <div class="row g-3 mb-3">
-                <div class="col-auto">
+                <div class="col-12 col-md-auto">
                     <div class="input-group">
                         <select class="form-select" id="table-stock-item-length">
                             <option value="10" selected>10</option>
@@ -55,7 +55,7 @@
                         <label class="input-group-text" for="table-stock-item-length">Entri per halaman</label>
                     </div>
                 </div>
-                <div class="col-auto flex-grow-1 overflow-auto">
+                {{-- <div class="col-auto flex-grow-1 overflow-auto">
                     <div class="btn-group position-static">
                         <div class="btn-group position-static">
                             <button type="button" class="btn btn-outline-secondary" id="table-stock-item-excel">
@@ -73,15 +73,15 @@
                             </button>
                         </div>
                     </div>
-                </div>
-                <div class="col-auto">
+                </div> --}}
+                <div class="col-12 col-md-auto">
                     <div class="position-relative">
                         <select class="form-select" id="category-filter">
                             <option value="">Semua Kategori</option>
                         </select>
                     </div>
                 </div>
-                <div class="col-auto mt-">
+                <div class="col-12 col-md-auto ms-auto">
                     <div class="position-relative">
                         <input class="form-control px-5" type="search" id="table-stock-item-search" placeholder="Cari...">
                         <span
@@ -93,7 +93,7 @@
             <div class="product-table">
                 <div class="table-responsive white-space-nowrap">
                     <table class="table align-middle" id="table-stock-item">
-                        <thead class="table-light">
+                        <thead class="bg-light">
                             <tr>
                                 <th width="2%">#</th>
                                 <th>Nama</th>
@@ -195,8 +195,8 @@
 @endsection
 
 @push('modals')
-    <div class="modal fade" id="restockItemModal" tabindex="-1" aria-labelledby="restockItemModalLabel"
-        aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal fade" id="restockItemModal" tabindex="-1" aria-labelledby="restockItemModalLabel" aria-hidden="true"
+        data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -222,43 +222,43 @@
     <script>
         $(document).ready(function() {
             var table = $('#table-stock-item').DataTable({
-                buttons: [{
-                        extend: 'excel',
-                        exportOptions: {
-                            columns: ':not(.no-export)',
-                            format: {
-                                body: function(data, row, column, node) {
-                                    return $(node).find('.no-export').remove().end()
-                                        .text();
-                                }
-                            }
-                        }
-                    },
-                    {
-                        extend: 'pdf',
-                        exportOptions: {
-                            columns: ':not(.no-export)',
-                            format: {
-                                body: function(data, row, column, node) {
-                                    return $(node).find('.no-export').remove().end()
-                                        .text();
-                                }
-                            }
-                        }
-                    },
-                    {
-                        extend: 'print',
-                        exportOptions: {
-                            columns: ':not(.no-export)',
-                            format: {
-                                body: function(data, row, column, node) {
-                                    return $(node).find('.no-export').remove().end()
-                                        .text();
-                                }
-                            }
-                        }
-                    }
-                ],
+                // buttons: [{
+                //         extend: 'excel',
+                //         exportOptions: {
+                //             columns: ':not(.no-export)',
+                //             format: {
+                //                 body: function(data, row, column, node) {
+                //                     return $(node).find('.no-export').remove().end()
+                //                         .text();
+                //                 }
+                //             }
+                //         }
+                //     },
+                //     {
+                //         extend: 'pdf',
+                //         exportOptions: {
+                //             columns: ':not(.no-export)',
+                //             format: {
+                //                 body: function(data, row, column, node) {
+                //                     return $(node).find('.no-export').remove().end()
+                //                         .text();
+                //                 }
+                //             }
+                //         }
+                //     },
+                //     {
+                //         extend: 'print',
+                //         exportOptions: {
+                //             columns: ':not(.no-export)',
+                //             format: {
+                //                 body: function(data, row, column, node) {
+                //                     return $(node).find('.no-export').remove().end()
+                //                         .text();
+                //                 }
+                //             }
+                //         }
+                //     }
+                // ],
                 lengthChange: false,
                 lengthMenu: [10, 25, 50, 100, -1],
                 order: [
@@ -278,17 +278,17 @@
                 table.search($(this).val()).draw();
             });
 
-            $('#table-stock-item-excel').on('click', function() {
-                table.button('.buttons-excel').trigger();
-            });
+            // $('#table-stock-item-excel').on('click', function() {
+            //     table.button('.buttons-excel').trigger();
+            // });
 
-            $('#table-stock-item-pdf').on('click', function() {
-                table.button('.buttons-pdf').trigger();
-            });
+            // $('#table-stock-item-pdf').on('click', function() {
+            //     table.button('.buttons-pdf').trigger();
+            // });
 
-            $('#table-stock-item-print').on('click', function() {
-                table.button('.buttons-print').trigger();
-            });
+            // $('#table-stock-item-print').on('click', function() {
+            //     table.button('.buttons-print').trigger();
+            // });
 
             // Mengisi dropdown kategori secara otomatis dari kategori yang ada di tabel
             table.column(6).data().unique().sort().each(function(d, j) {

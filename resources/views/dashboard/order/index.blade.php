@@ -43,8 +43,8 @@
     <div class="card">
         <div class="card-body">
             <div class="row g-3">
-                <div class="col-auto">
-                    <div class="input-group mb-3">
+                <div class="col-12 col-md-auto">
+                    <div class="input-group">
                         <select class="form-select" id="table-order-length">
                             <option value="10" selected>10</option>
                             <option value="25">25</option>
@@ -55,26 +55,7 @@
                         <label class="input-group-text" for="table-order-length">Entri per halaman</label>
                     </div>
                 </div>
-                <div class="col-auto flex-grow-1 overflow-auto">
-                    <div class="btn-group position-static">
-                        <div class="btn-group position-static">
-                            <button type="button" class="btn btn-outline-secondary" id="table-order-excel">
-                                Excel
-                            </button>
-                        </div>
-                        <div class="btn-group position-static">
-                            <button type="button" class="btn btn-outline-secondary" id="table-order-pdf">
-                                PDF
-                            </button>
-                        </div>
-                        <div class="btn-group position-static">
-                            <button type="button" class="btn btn-outline-secondary" id="table-order-print">
-                                Print
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-auto">
+                <div class="col-12 col-md-auto ms-auto">
                     <div class="position-relative mb-3">
                         <input class="form-control px-5" type="search" id="table-order-search" placeholder="Cari...">
                         <span
@@ -86,7 +67,7 @@
             <div class="customer-table">
                 <div class="table-responsive white-space-nowrap">
                     <table class="table align-middle" id="table-order">
-                        <thead class="table-light">
+                        <thead class="bg-light">
                             <tr>
                                 <th>ID Pesanan</th>
                                 <th>Oleh</th>
@@ -174,43 +155,6 @@
     <script>
         $(document).ready(function() {
             var table = $('#table-order').DataTable({
-                buttons: [{
-                        extend: 'excel',
-                        exportOptions: {
-                            columns: ':not(.no-export)',
-                            format: {
-                                body: function(data, row, column, node) {
-                                    return $(node).find('.no-export').remove().end()
-                                        .text();
-                                }
-                            }
-                        }
-                    },
-                    {
-                        extend: 'pdf',
-                        exportOptions: {
-                            columns: ':not(.no-export)',
-                            format: {
-                                body: function(data, row, column, node) {
-                                    return $(node).find('.no-export').remove().end()
-                                        .text();
-                                }
-                            }
-                        }
-                    },
-                    {
-                        extend: 'print',
-                        exportOptions: {
-                            columns: ':not(.no-export)',
-                            format: {
-                                body: function(data, row, column, node) {
-                                    return $(node).find('.no-export').remove().end()
-                                        .text();
-                                }
-                            }
-                        }
-                    }
-                ],
                 lengthChange: false,
                 lengthMenu: [10, 25, 50, 100, -1],
                 order: [
@@ -228,18 +172,6 @@
 
             $('#table-order-search').on('input', function() {
                 table.search($(this).val()).draw();
-            });
-
-            $('#table-order-excel').on('click', function() {
-                table.button('.buttons-excel').trigger();
-            });
-
-            $('#table-order-pdf').on('click', function() {
-                table.button('.buttons-pdf').trigger();
-            });
-
-            $('#table-order-print').on('click', function() {
-                table.button('.buttons-print').trigger();
             });
         });
     </script>

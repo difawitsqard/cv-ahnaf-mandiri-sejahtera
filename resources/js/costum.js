@@ -183,8 +183,13 @@ $(function () {
 
             $("form").on("submit", function (event) {
                 if ($("body").attr("data-pace") === "true") {
-                    if ($(this).attr("onSubmit") !== "return false") {
-                        self.setAlwaysRun(true);
+                    if ($(this).attr("download") !== "true") {
+                        if ($(this).attr("onSubmit") !== "return false") {
+                            self.setAlwaysRun(true);
+                            toggleElements(false);
+                            Pace.restart();
+                        }
+                    } else {
                         toggleElements(false);
                         Pace.restart();
                     }

@@ -19,6 +19,7 @@ class Menu extends Model
 
     protected $appends = [
         'max_order_quantity',
+        'ordered_quantity',
     ];
 
     public function menuImages()
@@ -29,6 +30,11 @@ class Menu extends Model
     public function stockItems()
     {
         return $this->belongsToMany(StockItem::class, 'menu_stock_items')->withPivot('quantity');
+    }
+
+    public function orders()
+    {
+        return $this->belongsToMany(Order::class, 'order_items')->withPivot('quantity');
     }
 
     /**
@@ -50,5 +56,11 @@ class Menu extends Model
         }
 
         return $maxOrderQuantity;
+    }
+
+    // buatkan atribut baru seberapa banyak dipesan
+    public function getOrderedQuantityAttribute()
+    {
+        return $this->orders->sum('pivot.quantity');
     }
 }

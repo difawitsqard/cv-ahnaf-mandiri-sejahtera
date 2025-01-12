@@ -237,16 +237,28 @@ class StockItemManagementController extends Controller
 
         // Retrieve the specific service instance
         $stockItems = StockItem::findOrFail($id);
-        if ($stockItems->image_path) {
-            $imagePath = public_path('uploads/' . $stockItems->image_path);
-            if (File::exists($imagePath)) {
-                File::delete($imagePath);
-            }
-        }
-        $stockItems->delete();
 
-        return redirect()
-            ->back()
-            ->with('success', 'Item ' . $stockItems->name . ' berhasil dihapus.');
+        try {
+            $stockItems->delete();
+
+            if ($stockItems->image_path) {
+                $imagePath = public_path('uploads/' . $stockItems->image_path);
+                if (File::exists($imagePath)) {
+                    File::delete($imagePath);
+                }
+            }
+
+            return redirect()
+                ->back()
+                ->with('success', 'Item ' . $stockItems->name . ' berhasil dihapus.');
+        } catch (\Illuminate\Database\QueryException $e) {
+            if ($e->getCode() == '23000') {
+                return redirect()
+                    ->back()
+                    ->withErrors(['error' => 'Item ' . $stockItems->name . ' tidak dapat dihapus karena masih terkait dengan data lain.']);
+            }
+
+            throw $e;
+        }
     }
 }

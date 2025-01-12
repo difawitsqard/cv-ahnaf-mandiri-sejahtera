@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('title')
-    {{ __('Pesanan') }}
+    {{ __('Pengeluaran') }}
 @endsection
 @push('css')
     <link href="{{ URL::asset('build/plugins/datatable/css/dataTables.bootstrap5.min.css') }}" rel="stylesheet" />
@@ -24,7 +24,8 @@
                 </div>
                 <div class="ms-auto">
                     <a class="btn btn-primary px-4 add-button"
-                        href="{{ roleBasedRoute('expense.create', ['outlet' => $outlet->slug]) }}"><i class="bi bi-plus-lg me-2"></i>Pengeluaran Baru</a>
+                        href="{{ roleBasedRoute('expense.create', ['outlet' => $outlet->slug]) }}"><i
+                            class="bi bi-plus-lg me-2"></i>Pengeluaran Baru</a>
                 </div>
             </div>
         </div>
@@ -42,8 +43,8 @@
     <div class="card">
         <div class="card-body">
             <div class="row g-3">
-                <div class="col-auto">
-                    <div class="input-group mb-3">
+                <div class="col-12 col-md-auto">
+                    <div class="input-group">
                         <select class="form-select" id="table-order-length">
                             <option value="10" selected>10</option>
                             <option value="25">25</option>
@@ -54,26 +55,7 @@
                         <label class="input-group-text" for="table-order-length">Entri per halaman</label>
                     </div>
                 </div>
-                <div class="col-auto flex-grow-1 overflow-auto">
-                    <div class="btn-group position-static">
-                        <div class="btn-group position-static">
-                            <button type="button" class="btn btn-outline-secondary" id="table-order-excel">
-                                Excel
-                            </button>
-                        </div>
-                        <div class="btn-group position-static">
-                            <button type="button" class="btn btn-outline-secondary" id="table-order-pdf">
-                                PDF
-                            </button>
-                        </div>
-                        <div class="btn-group position-static">
-                            <button type="button" class="btn btn-outline-secondary" id="table-order-print">
-                                Print
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-auto">
+                <div class="col-12 col-md-auto ms-auto">
                     <div class="position-relative mb-3">
                         <input class="form-control px-5" type="search" id="table-order-search" placeholder="Cari...">
                         <span
@@ -85,7 +67,7 @@
             <div class="customer-table">
                 <div class="table-responsive white-space-nowrap">
                     <table class="table align-middle" id="table-order">
-                        <thead class="table-light">
+                        <thead class="bg-light">
                             <tr>
                                 <th>#</th>
                                 <th>Nama Pengeluaran</th>
@@ -105,8 +87,11 @@
                                 <tr>
                                     <td class="text-center fw-bold" width="2%">{{ $num + 1 }}</td>
                                     <td>
-                                        <a href="{{ roleBasedRoute('expense.edit', ['expense'=>$expense->id ,'outlet' => $outlet->slug]) }}">{{ $expense->name }}</a>
-                                        <p class="mb-0"><i>{!! str()->limit($description ?: '...', 16, '...') !!}</i></p>
+                                        <a
+                                            href="{{ roleBasedRoute('expense.show', ['expense' => $expense->id, 'outlet' => $outlet->slug]) }}">{{ $expense->name }}</a>
+                                        @if ($description)
+                                            <p class="mb-0"><i>{!! str()->limit($description ?: '...', 16, '...') !!}</i></p>
+                                        @endif
                                     </td>
                                     <td>{{ $expense->user->name }}</td>
                                     <td><b>{{ $expense->items->count() }}</b> Item</td>
@@ -144,11 +129,26 @@
                                             <ul class="dropdown-menu">
                                                 <li>
                                                     <a type="button" class="dropdown-item edit-button"
-                                                        href="{{ roleBasedRoute('expense.edit', ['expense'=>$expense->id ,'outlet' => $outlet->slug]) }}">
+                                                        href="{{ roleBasedRoute('expense.show', ['expense' => $expense->id, 'outlet' => $outlet->slug]) }}">
                                                         Detail
                                                     </a>
+                                                    @if ($expense->status == 'submitted' && $expense->updated_at->diffInHours(now()) < 12)
+                                                        <a type="button" class="dropdown-item edit-button"
+                                                            href="{{ roleBasedRoute('expense.edit', ['expense' => $expense->id, 'outlet' => $outlet->slug]) }}">
+                                                            Edit
+                                                        </a>
+                                                        <hr class="dropdown-divider">
+                                                        <form
+                                                            action="{{ roleBasedRoute('expense.cancel', ['id' => $expense->id, 'outlet' => $outlet->slug]) }}"
+                                                            method="POST">
+                                                            @csrf
+                                                            @method('PUT')
+                                                            <button type="submit" class="dropdown-item text-danger">
+                                                                Batalkan
+                                                            </button>
+                                                        </form>
+                                                    @endif
                                                 </li>
-                                                {{-- <hr class="dropdown-divider"> --}}
                                             </ul>
                                         </div>
                                     </td>
@@ -174,43 +174,6 @@
     <script>
         $(document).ready(function() {
             var table = $('#table-order').DataTable({
-                buttons: [{
-                        extend: 'excel',
-                        exportOptions: {
-                            columns: ':not(.no-export)',
-                            format: {
-                                body: function(data, row, column, node) {
-                                    return $(node).find('.no-export').remove().end()
-                                        .text();
-                                }
-                            }
-                        }
-                    },
-                    {
-                        extend: 'pdf',
-                        exportOptions: {
-                            columns: ':not(.no-export)',
-                            format: {
-                                body: function(data, row, column, node) {
-                                    return $(node).find('.no-export').remove().end()
-                                        .text();
-                                }
-                            }
-                        }
-                    },
-                    {
-                        extend: 'print',
-                        exportOptions: {
-                            columns: ':not(.no-export)',
-                            format: {
-                                body: function(data, row, column, node) {
-                                    return $(node).find('.no-export').remove().end()
-                                        .text();
-                                }
-                            }
-                        }
-                    }
-                ],
                 lengthChange: false,
                 lengthMenu: [10, 25, 50, 100, -1],
                 order: [
@@ -228,18 +191,6 @@
 
             $('#table-order-search').on('input', function() {
                 table.search($(this).val()).draw();
-            });
-
-            $('#table-order-excel').on('click', function() {
-                table.button('.buttons-excel').trigger();
-            });
-
-            $('#table-order-pdf').on('click', function() {
-                table.button('.buttons-pdf').trigger();
-            });
-
-            $('#table-order-print').on('click', function() {
-                table.button('.buttons-print').trigger();
             });
         });
     </script>

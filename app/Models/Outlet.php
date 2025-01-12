@@ -21,11 +21,9 @@ class Outlet extends Model
         });
     }
 
-    protected $fillable = ['name', 'address', 'image_path'];
+    protected $fillable = ['name', 'address', 'phone_number', 'image_path'];
 
-    protected $appends = [
-        'image_url',
-    ];
+    protected $appends = ['image_url'];
 
     /**
      * Get the route key for the model.
@@ -71,5 +69,30 @@ class Outlet extends Model
         }
 
         return $slug;
+    }
+
+    public function users()
+    {
+        return $this->hasMany(User::class);
+    }
+
+    public function menus()
+    {
+        return $this->hasMany(Menu::class);
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
+    public function stockItems()
+    {
+        return $this->hasMany(StockItem::class);
+    }
+
+    public function expenses()
+    {
+        return $this->hasMany(Expense::class);
     }
 }

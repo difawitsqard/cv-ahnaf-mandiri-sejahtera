@@ -9,7 +9,7 @@
       </div>
     </div>
     <ul class="navbar-nav gap-1 nav-right-links align-items-center">
-      <li class="nav-item dropdown">
+      {{-- <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle dropdown-toggle-nocaret position-relative" data-bs-auto-close="outside"
           data-bs-toggle="dropdown" href="javascript:;"><i class="material-icons-outlined">notifications</i>
           <span class="badge-notify">5</span>
@@ -78,7 +78,7 @@
             </div>
           </div>
         </div>
-      </li>
+      </li> --}}
       <li class="nav-item dropdown">
         <a href="javascript:void(0);" class="dropdown-toggle dropdown-toggle-nocaret" data-bs-toggle="dropdown">
            <img src="{{ URL::asset('build/images/default-avatar.jpg') }}" class="rounded-circle p-1 border" width="45" height="45" alt="{{ Auth::user()->name }}">

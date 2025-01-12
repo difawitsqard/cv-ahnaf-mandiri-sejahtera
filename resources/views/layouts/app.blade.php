@@ -1,10 +1,11 @@
 <!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-bs-theme="semi-dark" >
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-bs-theme="semi-dark">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ getCompanyInfo()->short_name ?? getCompanyInfo()->name ?? config('app.name')}} - @yield('title')</title>
+    <title>{{ getCompanyInfo()->short_name ?? (getCompanyInfo()->name ?? config('app.name')) }} - @yield('title')
+    </title>
     <meta content="" name="description" />
     <meta content="" name="keywords" />
 
@@ -86,6 +87,139 @@
     </div>
 
     @include('layouts.extra')
+
+    @isset($outlet)
+        <div class="modal fade" id="exportReportModal" tabindex="-1" aria-labelledby="exportReportModal"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header border-bottom-0 py-2">
+                        <h5 class="modal-title">{{ old('title') ?? '' }}</h5>
+
+                    </div>
+                    <div class="modal-body">
+                        <div class="card rounded-4 mb-3">
+                            <div class="card-body">
+                                <div
+                                    class="d-flex flex-lg-row flex-column align-items-start align-items-lg-center justify-content-between gap-3">
+                                    <div class="d-flex align-items-start gap-3">
+                                        <div class="detail-icon fs-2">
+                                            <i class="bi bi-house-door-fill"></i>
+                                        </div>
+                                        <div class="detail-info">
+                                            <h4 class="fw-bold mb-1">{{ $outlet->name }}</h4>
+                                            <p class="mb-0">{{ $outlet->address }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="ms-auto">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @if (session('report-error'))
+                            <x-alert-message type="danger" :messages="session('report-error')" />
+                        @endif
+                        <form action="{{ old('action') ?? '#' }}" method="POST" download="true">
+                            @csrf
+                            <div class="row">
+                                <div class="col-6 mb-3">
+                                    <h6 class="mb-2">Mulai<span class="text-danger">*</span></h6>
+                                    <input type="text" class="form-control w-100 ignore" id="start_date"
+                                        name="start_date" value="{{ old('start_date') ?? date('01 M Y') }}" required
+                                        readonly>
+                                </div>
+                                <div class="col-6 mb-3">
+                                    <h6 class="mb-2">Akhir<span class="text-danger">*</span></h6>
+                                    <input type="text" class="form-control w-100 ignore" id="end_date"
+                                        name="end_date" value="{{ old('end_date') ?? date('t M Y') }}" required readonly>
+                                </div>
+
+                                <div class="col-12 mt-2 text-end border-top pt-3 pb-0">
+                                    <button type="submit" class="btn btn-light me-2" name="export_as" value="excel">
+                                        <i class="bi bi-file-earmark-excel"></i>
+                                        Simpan Excel
+                                    </button>
+
+                                    <button type="submit" class="btn btn-light" name="export_as" value="pdf">
+                                        <i class="bi bi-filetype-pdf"></i>
+                                        Simpan PDF
+                                    </button>
+                                </div>
+                        </form>
+                        @push('script')
+                            <script>
+                                document.addEventListener('DOMContentLoaded', function() {
+                                    const exportReportModal = document.getElementById('exportReportModal');
+                                    const modalTitle = exportReportModal.querySelector('.modal-title');
+                                    const modalBody = exportReportModal.querySelector('.modal-body');
+                                    const form = exportReportModal.querySelector('form');
+
+                                    const start_date = exportReportModal.querySelector('#start_date');
+                                    const end_date = exportReportModal.querySelector('#end_date');
+
+                                    const modalInstance = new bootstrap.Modal(exportReportModal);
+
+                                    @if (session('report-error'))
+                                        modalInstance.show();
+                                    @endif
+
+                                    // listen click data-bs-target="#exportReportModal"
+                                    exportReportModal.addEventListener('show.bs.modal', function(event) {
+                                        const button = event.relatedTarget;
+
+                                        exportReportModal.querySelector('.alert-danger')?.remove();
+
+                                        modalTitle.textContent = button.getAttribute('data-bs-title');
+                                        form.action = button.getAttribute('data-bs-action');
+                                    });
+
+                                    form.addEventListener('submit', function(event) {
+                                        ['title', 'action', 'export_as'].forEach(name => {
+                                            const input = document.createElement('input');
+                                            input.type = 'hidden';
+                                            input.name = name;
+                                            input.value = name === 'title' ? modalTitle.textContent.trim() : (name ===
+                                                'action' ? form.action : event.submitter.value);
+                                            form.appendChild(input);
+                                        });
+
+                                        modalInstance.hide();
+                                    });
+
+                                    var startDatePicker = start_date.flatpickr({
+                                        static: true,
+                                        dateFormat: "d M Y",
+                                        allowInput: false,
+                                        onChange: function(selectedDates, dateStr, instance) {
+                                            var startDate = selectedDates[0]; // Tanggal yang dipilih di startDate
+                                            var endDate = endDatePicker.selectedDates[0]; // Tanggal yang dipilih di endDate
+
+                                            // Atur batas minimum untuk endDate
+                                            endDatePicker.set('minDate', dateStr);
+
+                                            if (!endDate || startDate > endDate) {
+                                                endDatePicker.setDate(startDate);
+                                                end_date.value = instance.formatDate(startDate,
+                                                    "d M Y"); // Update value input end_date
+                                            }
+                                        }
+                                    });
+
+                                    var endDatePicker = end_date.flatpickr({
+                                        static: true,
+                                        dateFormat: "d M Y",
+                                        allowInput: false,
+                                        minDate: new Date(),
+                                    });
+
+                                });
+                            </script>
+                        @endpush
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endisset
 
     @include('layouts.common-scripts')
 </body>

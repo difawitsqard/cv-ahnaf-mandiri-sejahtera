@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('expense_items', function (Blueprint $table) {
             $table->id();
             $table->foreignId('expense_id')->constrained('expenses')->onDelete('cascade');
+            $table->string('name');
             $table->foreignId('stock_item_id')->nullable()->constrained('stock_items')->onDelete('set null');
             $table->bigInteger('quantity');
             $table->text('description')->nullable();

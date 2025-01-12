@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name'); // Nama menu
             $table->text('description')->nullable(); // Deskripsi Menu
             $table->bigInteger('price'); // Harga menu
-            $table->foreignId('outlet_id')->constrained('outlets')->onDelete('restrict'); // Foreign key ke tabel outlets
+            $table->foreignId('outlet_id')->constrained('outlets')->onDelete('cascade');
             $table->timestamps();
         });
     }

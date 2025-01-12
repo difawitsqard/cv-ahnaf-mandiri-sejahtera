@@ -14,7 +14,7 @@ class OutletManagementController extends Controller
 {
     protected $imageUploadService;
 
-    public function __construct(private readonly Outlet $outlet, ImageUploadService $imageUploadService)
+    public function __construct(ImageUploadService $imageUploadService)
     {
         $this->imageUploadService = $imageUploadService;
     }
@@ -34,7 +34,9 @@ class OutletManagementController extends Controller
         }
         $Outlets->appends(['perPage' => $perPage]);
 
-        return view('dashboard.superadmin.outlet-management.index', compact('Outlets'));
+        $totalOutlets = Outlet::count();
+
+        return view('dashboard.superadmin.outlet-management.index', compact('Outlets', 'totalOutlets'));
     }
 
     /**
@@ -44,11 +46,13 @@ class OutletManagementController extends Controller
     {
         $validatedData = $request->validated();
 
+        $slug = Outlet::generateUniqueSlug($validatedData['name']);
+
         if ($request->hasFile('image')) {
-            $validatedData['image_path'] = $this->imageUploadService->uploadImage($validatedData['image'], 'outlets');
+            $validatedData['image_path'] = $this->imageUploadService->uploadImage($request->file('image'), $slug);
         }
 
-        $outlet = $this->outlet->create($validatedData);
+        $outlet = Outlet::create($validatedData);
 
         return redirect()
             ->route('outlet.index')
@@ -66,11 +70,14 @@ class OutletManagementController extends Controller
                 'data' => $outlet,
             ]);
         } catch (ModelNotFoundException $e) {
-            return response()->json([
-                'status' => false,
-                'code' => 404,
-                'message' => 'Outlet not found',
-            ], 404);
+            return response()->json(
+                [
+                    'status' => false,
+                    'code' => 404,
+                    'message' => 'Outlet not found',
+                ],
+                404,
+            );
         }
     }
 
@@ -102,15 +109,14 @@ class OutletManagementController extends Controller
      */
     public function destroy(string $id)
     {
-
         // Retrieve the specific service instance
-        $outlet = Outlet::findOrFail($id);
-        if ($outlet->image_path) {
-            $imagePath = public_path('uploads/' . $outlet->image_path);
-            if (File::exists($imagePath)) {
-                File::delete($imagePath);
-            }
+        $outlet = Outlet::where('slug', $id)->firstOrFail();
+
+        $directoryPath = public_path('uploads/' . $outlet->slug);
+        if (File::exists($directoryPath)) {
+            File::deleteDirectory($directoryPath);
         }
+
         $outlet->delete();
 
         return redirect()

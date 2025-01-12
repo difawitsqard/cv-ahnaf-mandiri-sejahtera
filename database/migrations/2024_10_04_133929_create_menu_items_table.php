@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name'); // Nama menu
             $table->bigInteger('price'); // Harga menu
             $table->foreignId('stock_item_id')->constrained('stock_items')->onDelete('restrict'); // Foreign key ke tabel stock_items
-            $table->foreignId('outlet_id')->constrained('outlets')->onDelete('restrict'); // Foreign key ke tabel outlets
+            $table->foreignId('outlet_id')->constrained('outlets')->onDelete('cascade');
             $table->timestamps();
         });
     }

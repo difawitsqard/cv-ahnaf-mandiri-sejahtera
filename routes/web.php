@@ -25,9 +25,10 @@ Route::middleware(['auth', 'verified', 'check_password_set', 'set_outlet_role'])
   Route::get('demo/{any}', [HomeController::class, 'root'])->where('any', '.*');
 
   // Superadmin
-  Route::group(['middleware' => ['role:superadmin']], function () {
+  Route::group(['middleware' => ['check_role:superadmin']], function () {
     // outlet management
-    Route::resource('outlet', OutletManagementController::class)->only(['index', 'store', 'update', 'destroy']);
+    Route::resource('outlet', OutletManagementController::class)->only(['index', 'store', 'update']);
+    Route::delete('outlet/{slug}', [OutletManagementController::class, 'destroy'])->name('outlet.destroy');
     Route::get('outlet/{id}/fetch', [OutletManagementController::class, 'fetch'])->name('outlet.fetch');
     Route::get('outlet/{outlet:slug}', [DashboardController::class, 'index'])->name('outlet.dashboard');
 
@@ -44,8 +45,16 @@ Route::middleware(['auth', 'verified', 'check_password_set', 'set_outlet_role'])
         Route::get('stock-item/{id}/fetch', [StockItemManagementController::class, 'fetch'])->name('stock-item.fetch');
         Route::put('stock-item/{id}/restock', [StockItemManagementController::class, 'restock'])->name('stock-item.restock');
 
+        Route::post('order/export', [OrderController::class, 'export'])->name('order.export');
         Route::resource('order', OrderController::class);
         Route::get('order/{order}/print', [OrderController::class, 'printThermal'])->name('order.print');
+
+        // expense management
+        Route::get('expense/fetchAll', [ExpenseManagementController::class, 'fetchAll'])->name('expense.fetchAll');
+        Route::get('expense/{id}/fetch', [ExpenseManagementController::class, 'fetch'])->name('expense.fetch');
+        Route::put('expense/{id}/cancel', [ExpenseManagementController::class, 'cancel'])->name('expense.cancel');
+        Route::post('expense/export', [ExpenseManagementController::class, 'export'])->name('expense.export');
+        Route::resource('expense', ExpenseManagementController::class)->except(['destroy']);
 
         // user management
         Route::resource('user', UserManagementController::class);
@@ -59,12 +68,13 @@ Route::middleware(['auth', 'verified', 'check_password_set', 'set_outlet_role'])
   });
 
   // Admin
-  Route::group(['middleware' => ['role:admin']], function () {
+  Route::group(['middleware' => ['check_role:admin']], function () {
     Route::prefix('admin')
       ->name('admin.')
       ->group(function () {
         Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+        Route::post('order/export', [OrderController::class, 'export'])->name('order.export');
         Route::resource('order', OrderController::class);
         Route::get('order/{order}/print', [OrderController::class, 'printThermal'])->name('order.print');
 
@@ -76,7 +86,9 @@ Route::middleware(['auth', 'verified', 'check_password_set', 'set_outlet_role'])
         // expense management
         Route::get('expense/fetchAll', [ExpenseManagementController::class, 'fetchAll'])->name('expense.fetchAll');
         Route::get('expense/{id}/fetch', [ExpenseManagementController::class, 'fetch'])->name('expense.fetch');
-        Route::resource('expense', ExpenseManagementController::class);
+        Route::put('expense/{id}/cancel', [ExpenseManagementController::class, 'cancel'])->name('expense.cancel');
+        Route::post('expense/export', [ExpenseManagementController::class, 'export'])->name('expense.export');
+        Route::resource('expense', ExpenseManagementController::class)->except(['destroy']);
 
         // user management
         Route::resource('user', UserManagementController::class);
@@ -87,14 +99,14 @@ Route::middleware(['auth', 'verified', 'check_password_set', 'set_outlet_role'])
   });
 
   // Superadmin & Admin
-  Route::group(['middleware' => ['role:superadmin|admin']], function () {
+  Route::group(['middleware' => ['check_role:superadmin|admin']], function () {
     // unit management
     Route::resource('unit', UnitManagementController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::get('unit/{id}/fetch', [UnitManagementController::class, 'fetch'])->name('unit.fetch');
   });
 
   // Staff
-  Route::group(['middleware' => ['role:staff']], function () {
+  Route::group(['middleware' => ['check_role:staff']], function () {
     Route::prefix('staff')
       ->name('staff.')
       ->group(function () {

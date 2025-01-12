@@ -65,4 +65,15 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         $this->notify(new CustomEmailVerificationNotification);
     }
+
+    /**
+     * Check if the user has any of the given roles.
+     *
+     * @param  array  $roles
+     * @return bool
+     */
+    public function hasAnyRole(array $roles)
+    {
+        return $this->roles()->whereIn('name', $roles)->exists();
+    }
 }

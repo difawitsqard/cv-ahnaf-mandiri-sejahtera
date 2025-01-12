@@ -20,7 +20,7 @@ return new class extends Migration
             $table->enum('status', ['submitted', 'canceled'])->default('submitted');
             $table->string('batch_uuid')->nullable();
             $table->foreignId('user_id')->constrained('users')->onDelete('restrict');
-            $table->foreignId('outlet_id')->constrained('outlets')->onDelete('restrict');
+            $table->foreignId('outlet_id')->constrained('outlets')->onDelete('cascade');
             $table->timestamps();
         });
     }

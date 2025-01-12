@@ -8,9 +8,7 @@
         <link href="{{ URL::asset('build/plugins/select2/css/select2.min.css') }}" rel="stylesheet" />
         <link href="{{ URL::asset('build/plugins/select2/css/select2-bootstrap-5.min.css') }}" rel="stylesheet" />
     @endif
-    @if (importOnce('css-flatpickr'))
-        <link href="{{ URL::asset('build/plugins/flatpickr/css/flatpickr.min.css') }}" rel="stylesheet">
-    @endif
+    <link href="{{ URL::asset('build/plugins/flatpickr/css/flatpickr.min.css') }}" rel="stylesheet">
     <link href="{{ URL::asset('build/plugins/quill/quill.bubble.css') }}" rel="stylesheet" />
     <link href="{{ URL::asset('build/plugins/cropperjs/css/cropper.min.css') }}" rel="stylesheet">
 
@@ -30,9 +28,9 @@
 @endpush
 
 @section('content')
-    <x-page-title title="Pengeluaran" subtitle="Tambah Pengeluaran" />
+    <x-page-title title="Pengeluaran" subtitle="Edit Pengeluaran" />
 
-    <form action="{{ roleBasedRoute('expense.store', ['outlet' => $outlet->slug]) }}" method="POST"
+    <form action="{{ roleBasedRoute('expense.update', ['outlet' => $outlet->slug, 'expense'=>$expense->id]) }}" method="POST"
         enctype="multipart/form-data" id="form-expense" onSubmit="return false">
 
         @csrf
@@ -279,9 +277,7 @@
     <script src="{{ URL::asset('build/plugins/quill/quill.js') }}"></script>
     <script src="{{ URL::asset('build/plugins/cropperjs/js/cropper.min.js') }}"></script>
     <script src="{{ URL::asset('build/js/picture-input-costum.js?v=') . md5(time()) }}"></script>
-    @if (importOnce('js-flatpickr'))
-        <script src="{{ URL::asset('build/plugins/flatpickr/js/flatpickr.js') }}"></script>
-    @endif
+    <script src="{{ URL::asset('build/plugins/flatpickr/js/flatpickr.js') }}"></script>
 
     <script>
         $(document).ready(function() {
@@ -295,7 +291,7 @@
             const modalItemImage = modalItem.find('[name="image"]');
             const modalItemStockId = modalItem.find('[name="stock_item_id"]');
 
-            const expenseKey = 'expenseDataItemCreate';
+            const expenseKey = 'expenseDataItemEdit';
 
             let expenseDataItem = [];
             let isPageLoaded = false;
@@ -475,6 +471,35 @@
                 expenseItemDescription.root.innerHTML = '';
             });
 
+            function getExpenseItem() {
+                $.ajax({
+                    url: "{{ roleBasedRoute('expense.index', ['outlet' => $outlet->slug]) }}/{{ $expense->id }}/fetch",
+                    type: "GET",
+                    success: function(response) {
+                        if (response.status) {
+                            response.data.items.forEach(item => {
+                                expenseDataItem.push({
+                                    id: item.id,
+                                    stock_item_id: item.stock_item_id,
+                                    name: item.name,
+                                    image: item.image_path,
+                                    image_upload: item.image_path,
+                                    price: item.price,
+                                    quantity: item.quantity,
+                                    subtotal: item.subtotal,
+                                    description: item.description
+                                });
+                                console.log(item);
+                            });
+                            saveExpenseItem();
+                            loadExpenseItem();
+                        }
+                    },
+                    error: function(xhr) {
+                        console.log(xhr);
+                    }
+                });
+            }
 
             // save expense item
             function saveExpenseItem() {
@@ -491,7 +516,6 @@
                     }
 
                     if (item.stock_item_id) {
-                        //console.log(item.stock_item_id);
                         const option = modalItem.find(
                             `[name="stock_item_id"] option[value="${item.stock_item_id}"]`);
 
@@ -499,39 +523,46 @@
                             item.stock_item_id = null;
                         } else {
                             const maxQuantity = option.data('max-qty');
+                            const price = option.data('price');
+                            const name = option.text().trim();
 
-                            if (maxQuantity < 1) {
-                                expenseDataItem = expenseDataItem.filter(function(item) {
-                                    return item.stock_item_id !== item.stock_item_id;
-                                });
-                                return;
-                            }
+                            // Periksa apakah data sesuai
+                            if (item.price != price || item.name != name) {
+                                console.log(item.price, price, item.name, name);
+                                item.stock_item_id = null;
+                            } else {
+                                if (maxQuantity < 1) {
+                                    expenseDataItem = expenseDataItem.filter(function(i) {
+                                        return i.stock_item_id !== item.stock_item_id;
+                                    });
+                                    return;
+                                }
 
-                            if (item.quantity > maxQuantity) {
-                                item.quantity = maxQuantity;
+                                if (item.quantity > maxQuantity) {
+                                    item.quantity = maxQuantity;
+                                }
+                                item.subtotal = item.price * item.quantity;
+
+                                item.price = price;
+                                item.name = name;
                             }
-                            item.subtotal = item.price * item.quantity;
                         }
-                        item.price = option.data('price');
-                        item.name = option.text().trim();
                     }
 
                     if (!isPageLoaded) item.image_upload = null;
+                    if (item.remove) return;
                     rowExpenseItem(item);
                 });
 
-                // if (expenseDataItem.length === 0) {
-                //     $('#expense-item-table > tbody').append(
-                //         '<tr><td colspan="6" class="text-center">Belum ada item.</td></tr>');
-                //     return;
-                // }
                 saveExpenseItem();
                 totalItem();
             }
 
             // total item
             function totalItem() {
-                let total = expenseDataItem.reduce((acc, item) => acc + item.subtotal, 0);
+                let total = expenseDataItem
+                    .filter(item => !item.remove)
+                    .reduce((acc, item) => acc + item.subtotal, 0);
                 $('.item-total').text(formatRupiahText(total));
             }
 
@@ -576,7 +607,7 @@
                 let existingRow = expenseDataItem.find(item => modalItem.data('uid') && item.id === modalItem.data(
                     'uid'));
                 let existingRowStockItemId = expenseDataItem.find(item => item.stock_item_id !== null && item
-                    .stock_item_id === stock_item_id);
+                    .stock_item_id == stock_item_id);
 
                 if (existingRow && existingRowStockItemId) {
                     // Jika kedua-duanya ada, periksa apakah ID mereka berbeda
@@ -584,8 +615,16 @@
                         existingRowStockItemId.quantity += quantity;
                         existingRowStockItemId.subtotal = existingRowStockItemId.quantity * existingRowStockItemId
                             .price;
-                        expenseDataItem = expenseDataItem.filter(item => item.id !== existingRow.id && item
-                            .stock_item_id !== existingRow.stock_item_id);
+                        expenseDataItem = expenseDataItem.map(item => {
+                            if (item.id === existingRow.id) {
+                                return {
+                                    ...item,
+                                    remove: true
+                                };
+                            }
+                            return item;
+                        });
+
                     } else {
                         // Jika ID sama, update data yang ada
                         existingRow.stock_item_id = stock_item_id,
@@ -609,7 +648,12 @@
                     existingRow.description = description;
                 } else if (!existingRow && existingRowStockItemId) {
                     // Jika hanya stock_item_id yang ada, tambahkan quantity dan subtotal
-                    existingRowStockItemId.quantity += quantity;
+                    if (existingRowStockItemId.remove) {
+                        existingRowStockItemId.quantity = quantity;
+                        existingRowStockItemId.remove = false;
+                    } else {
+                        existingRowStockItemId.quantity += quantity;
+                    }
                     existingRowStockItemId.subtotal = existingRowStockItemId.quantity * existingRowStockItemId
                         .price;
                     existingRowStockItemId.image_upload = image_upload;
@@ -656,13 +700,26 @@
                     class: 'btn btn-outline-danger btn-sm remove',
                     html: '<i class="bi bi-trash"></i>'
                 }).click(function() {
-                    expenseDataItem = expenseDataItem.filter(function(item) {
-                        return item.stock_item_id !== DataItem.stock_item_id;
-                    });
+                    expenseDataItem = expenseDataItem.map(function(item) {
+                        if (item.id === DataItem.id) {
+                            if (String(DataItem.id).startsWith('item-')) {
+                                return null;
+                            } else {
+                                return {
+                                    ...item,
+                                    remove: true
+                                };
+                            }
+                        }
+                        return item;
+                    }).filter(item => item !== null);
+
+
                     saveExpenseItem();
+                    console.log(expenseDataItem);
                     totalItem();
-                    $(this).closest('tr').fadeOut(300, function() {
-                        $(this).remove();
+                    row.fadeOut(300, function() {
+                        row.remove();
                     });
                 });
 
@@ -751,7 +808,7 @@
                 modalItem.modal('show');
             });
 
-            loadExpenseItem();
+            getExpenseItem();
             isPageLoaded = true;
 
             $('#form-expense').on('submit', function(event) {
@@ -765,6 +822,7 @@
                 formData.append('name', $(this).find('[name="name"]').val());
                 formData.append('description', $(this).find('[name="description"]').val());
                 formData.append('date_out', $(this).find('[name="date_out"]').val());
+                formData.append('_method', 'PUT');
 
                 // Fungsi untuk mengonversi URL gambar menjadi Blob
                 function urlToBlob(url) {
@@ -777,12 +835,14 @@
 
                 // Tambahkan setiap item ke FormData
                 const promises = expenseDataItem.map((item, index) => {
+                    formData.append(`items[${index}][id]`, item.id);
                     formData.append(`items[${index}][stock_item_id]`, item.stock_item_id);
                     formData.append(`items[${index}][name]`, item.name);
                     formData.append(`items[${index}][price]`, item.price);
                     formData.append(`items[${index}][quantity]`, parseInt(item.quantity));
                     formData.append(`items[${index}][subtotal]`, item.subtotal);
                     formData.append(`items[${index}][description]`, item.description);
+                    formData.append(`items[${index}][remove]`, item.remove ? 1 : 0);
 
                     // Jika ada gambar, tambahkan ke FormData
                     if (item.image_upload) {
@@ -813,7 +873,7 @@
                 Promise.all(promises).then(() => {
                     // Kirim data menggunakan AJAX
                     $.ajax({
-                        url: "{{ roleBasedRoute('expense.store', ['outlet' => $outlet->slug]) }}",
+                        url: "{{ roleBasedRoute('expense.update', ['outlet' => $outlet->slug, 'expense' => $expense->id]) }}",
                         type: "POST",
                         data: formData,
                         contentType: false,
@@ -832,11 +892,11 @@
                             }
                         },
                         error: function(xhr) {
-                            let errors = xhr.responseJSON.errors;
-                            let message = xhr.responseJSON.message;
+                            let errors = xhr.responseJSON?.errors || {};
+                            let message = xhr.responseJSON?.message || '';
                             let errorMessage = '';
 
-                            if (errors || message) {
+                            if (Object.keys(errors).length || message) {
                                 if (message) {
                                     errorMessage += message + '<br>';
                                 }

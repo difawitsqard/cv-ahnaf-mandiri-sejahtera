@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\dashboard;
 
+use App\Exports\OrderExport;
 use Exception;
 use App\Models\Menu;
 use App\Models\Order;
@@ -9,7 +10,10 @@ use App\Models\Outlet;
 use App\Models\StockItem;
 use Mike42\Escpos\Printer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use App\Http\Controllers\Controller;
+use Barryvdh\DomPDF\Facade\PDF;
+use Maatwebsite\Excel\Facades\Excel;
 use Spatie\Activitylog\Facades\LogBatch;
 use Illuminate\Support\Facades\Validator;
 use Mike42\Escpos\PrintConnectors\RawbtPrintConnector;
@@ -352,11 +356,40 @@ class OrderController extends Controller
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function export(Request $request, Outlet $outlet)
     {
-        //
+        try {
+            $validatedData = $request->validate([
+                'start_date' => 'required|date_format:d M Y',
+                'end_date' => 'required|date_format:d M Y|after_or_equal:start_date',
+                'export_as' => 'required|in:pdf,excel',
+            ]);
+            $startDate = Carbon::createFromFormat('d M Y', $validatedData['start_date']);
+            $endDate = Carbon::createFromFormat('d M Y', $validatedData['end_date']);
+
+            $nameFile = 'revenue-' . $outlet->slug . '-' . $startDate->format('dmY') . '-' . $endDate->format('dmY') . '-' . now()->format('YmdHis');
+
+            if ($validatedData['export_as'] == 'excel') {
+                return Excel::download(new OrderExport($outlet, $validatedData['start_date'], $validatedData['end_date']),  $nameFile . '.xlsx');
+            }
+
+            $orders = Order::where('outlet_id', $outlet->id)
+                ->where('status', 'completed')
+                ->whereBetween('created_at', [
+                    date('Y-m-d 00:00:00', strtotime($validatedData['start_date'])),
+                    date('Y-m-d 23:59:59', strtotime($validatedData['end_date'])),
+                ])
+                ->with('items')
+                ->get();
+
+            if ($orders->isEmpty()) {
+                throw new \Exception('Tidak ada data yang ditemukan untuk periode yang dipilih.');
+            }
+
+            $pdf = PDF::loadView('dashboard.order.export-pdf', compact('outlet', 'orders', 'validatedData'));
+            return $pdf->download($nameFile  . '.pdf');
+        } catch (\Exception $e) {
+            return redirect()->back()->withInput()->with('report-error', $e->getMessage());
+        }
     }
 }

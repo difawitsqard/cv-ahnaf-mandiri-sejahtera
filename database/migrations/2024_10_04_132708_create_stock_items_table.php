@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('image_path')->nullable(); // Path gambar item
             // $table->foreignId('category_id')->nullable()->constrained('stock_item_categories')->nullOnDelete(); // Foreign key ke tabel stock_item_categories
             $table->foreignId('category_id')->constrained('stock_item_categories')->onDelete('restrict'); // Foreign key ke tabel stock_item_categories
-            $table->foreignId('outlet_id')->constrained('outlets')->onDelete('restrict'); // Foreign key ke tabel outlets
+            $table->foreignId('outlet_id')->constrained('outlets')->onDelete('cascade'); // Foreign key ke tabel outlets
             $table->foreignId('unit_id')->constrained('units')->onDelete('restrict'); // Foreign key ke tabel units
             $table->timestamps();
         });

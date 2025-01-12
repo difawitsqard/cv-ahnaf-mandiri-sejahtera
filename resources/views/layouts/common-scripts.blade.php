@@ -11,7 +11,8 @@
         restartOnRequestAfter: 1000,
     };
 </script> --}}
-<script data-pace-options='{ "ajax": { "trackMethods": ["GET", "POST", "PUT", "DELETE", "PATCH"] } }' src="{{ URL::asset('build/js/pace.min.js') }}"> </script>
+<script data-pace-options='{ "ajax": { "trackMethods": ["GET", "POST", "PUT", "DELETE", "PATCH"] } }'
+    src="{{ URL::asset('build/js/pace.min.js') }}"></script>
 
 <!--plugins-->
 <script src="{{ URL::asset('build/js/jquery.min.js') }}"></script>
@@ -19,6 +20,9 @@
 <script src="{{ URL::asset('build/js/bootstrap.bundle.min.js') }}"></script>
 <!--swetalert2-->
 <script src="{{ URL::asset('build/plugins/sweetalert2/js/sweetalert2.min.js') }}"></script>
+@if (importOnce('js-flatpickr'))
+    <script src="{{ URL::asset('build/plugins/flatpickr/js/flatpickr.js') }}"></script>
+@endif
 
 <!--plugins-->
 <script src="{{ URL::asset('build/plugins/perfect-scrollbar/js/perfect-scrollbar.js') }}"></script>

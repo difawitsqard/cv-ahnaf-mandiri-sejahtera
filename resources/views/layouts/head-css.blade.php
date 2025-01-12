@@ -11,6 +11,10 @@
 <!--swetalert2-->
 <link href="{{ URL::asset('build/plugins/sweetalert2/css/sweetalert2.min.css') }}" rel="stylesheet">
 
+@if (importOnce('css-flatpickr'))
+    <link href="{{ URL::asset('build/plugins/flatpickr/css/flatpickr.min.css') }}" rel="stylesheet">
+@endif
+
 @stack('css')
 
 <!--main css-->

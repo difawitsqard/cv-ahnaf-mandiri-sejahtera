@@ -81,28 +81,6 @@
                                </li>
                            </ul>
                        </li>
-                       <li>
-                           <a href="#" class="has-arrow">
-                               <div class="parent-icon">
-                                   <i class="material-icons-outlined">local_mall</i>
-                               </div>
-                               <div class="menu-title">Stok</div>
-                           </a>
-                           <ul>
-                               <li>
-                                   <a href="{{ route('outlet.stock-item.create', ['outlet' => $outletSlug]) }}">
-                                       <i class="material-icons-outlined">arrow_right</i>
-                                       Tambah Item
-                                   </a>
-                               </li>
-                               <li>
-                                   <a href="{{ route('outlet.stock-item.index', ['outlet' => $outletSlug]) }}">
-                                       <i class="material-icons-outlined">arrow_right</i>
-                                       Daftar Item
-                                   </a>
-                               </li>
-                           </ul>
-                       </li>
                    @else
                        <li>
                            <a href="{{ route('outlet.index') }}">
@@ -169,52 +147,79 @@
                            </li>
                        </ul>
                    </li>
-                   <li>
-                       <a href="#" class="has-arrow">
-                           <div class="parent-icon">
-                            <span class="material-icons-outlined">account_balance_wallet</span>
-                           </div>
-                           <div class="menu-title" title="Pengeluaran">Pengeluaran</div>
-                       </a>
-                       <ul>
-                           <li>
-                               <a href="{{ route('admin.expense.create') }}">
-                                   <i class="material-icons-outlined">arrow_right</i>
-                                   Tambah Pengeluaran
-                               </a>
-                           </li>
-                           <li>
-                               <a href="{{ route('admin.expense.index') }}">
-                                   <i class="material-icons-outlined">arrow_right</i>
-                                   Daftar Pengeluaran
-                               </a>
-                           </li>
-                       </ul>
-                   </li>
-                   <li>
-                       <a href="#" class="has-arrow">
-                           <div class="parent-icon">
-                               <i class="material-icons-outlined">local_mall</i>
-                           </div>
-                           <div class="menu-title">Stok</div>
-                       </a>
-                       <ul>
-                           <li>
-                               <a href="{{ route('admin.stock-item.create') }}">
-                                   <i class="material-icons-outlined">arrow_right</i>
-                                   Tambah Item
-                               </a>
-                           </li>
-                           <li>
-                               <a href="{{ route('admin.stock-item.index') }}">
-                                   <i class="material-icons-outlined">arrow_right</i>
-                                   Daftar Item
-                               </a>
-                           </li>
-                       </ul>
-                   </li>
                @endhasrole
 
+               @hasrole('superadmin|admin')
+      
+                   @isset($outlet->slug)
+                       <li>
+                           <a href="#" class="has-arrow">
+                               <div class="parent-icon">
+                                   <i class="material-icons-outlined">local_mall</i>
+                               </div>
+                               <div class="menu-title">Stok</div>
+                           </a>
+                           <ul>
+                               <li>
+                                   <a href="{{ roleBasedRoute('stock-item.create', ['outlet' => $outlet->slug]) }}">
+                                       <i class="material-icons-outlined">arrow_right</i>
+                                       Tambah Item
+                                   </a>
+                               </li>
+                               <li>
+                                   <a href="{{ roleBasedRoute('stock-item.index', ['outlet' => $outlet->slug]) }}">
+                                       <i class="material-icons-outlined">arrow_right</i>
+                                       Daftar Item
+                                   </a>
+                               </li>
+                           </ul>
+                       </li>
+                       <li>
+                           <a href="#" class="has-arrow">
+                               <div class="parent-icon">
+                                   <span class="material-icons-outlined">account_balance_wallet</span>
+                               </div>
+                               <div class="menu-title" title="Pengeluaran">Pengeluaran</div>
+                           </a>
+                           <ul>
+                               <li>
+                                   <a href="{{ roleBasedRoute('expense.create', ['outlet' => $outlet->slug]) }}">
+                                       <i class="material-icons-outlined">arrow_right</i>
+                                       Tambah Pengeluaran
+                                   </a>
+                               </li>
+                               <li>
+                                   <a href="{{ roleBasedRoute('expense.index', ['outlet' => $outlet->slug]) }}">
+                                       <i class="material-icons-outlined">arrow_right</i>
+                                       Daftar Pengeluaran
+                                   </a>
+                               </li>
+                           </ul>
+                       </li>
+
+                       <li class="menu-label">Menu Laporan</li>
+                       <li>
+                           <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#exportReportModal"
+                               data-bs-title="Laporan Pendapatan"
+                               data-bs-action="{{ roleBasedRoute('order.export', ['outlet' => $outlet->slug]) }}">
+                               <div class="parent-icon">
+                                   <i class="material-icons-outlined">description</i>
+                               </div>
+                               <div class="menu-title">Pendapatan</div>
+                           </a>
+                       </li>
+                       <li>
+                           <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#exportReportModal"
+                               data-bs-title="Laporan Pengelauran"
+                               data-bs-action="{{ roleBasedRoute('expense.export', ['outlet' => $outlet->slug]) }}">
+                               <div class="parent-icon">
+                                   <i class="material-icons-outlined">description</i>
+                               </div>
+                               <div class="menu-title">Pengelauran</div>
+                           </a>
+                       </li>
+                   @endisset
+               @endhasrole
 
                @hasrole('staff')
                    <li>

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->string('name'); // Nama outlet
             $table->string('address'); // Alamat outlet
-            $table->string('phone_number'); // Nomor telepon outlet
+            $table->string('phone_number')->nullable(); // Nomor telepon outlet
             $table->string('image_path')->nullable(); // Path gambar outlet
             $table->unsignedBigInteger('tax')->default(0); // Pajak outlet
             $table->unsignedBigInteger('discount')->default(0); // Diskon outlet

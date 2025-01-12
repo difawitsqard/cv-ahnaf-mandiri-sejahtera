@@ -23,6 +23,8 @@
 
     @yield('content')
 
+    @stack('modals')
+
     @include('layouts.extra')
 
     @include('layouts.common-scripts')

@@ -157,8 +157,8 @@
     </form>
 @endsection
 
-<!-- Modal -->
 @push('modals')
+<!-- Modal -->
 @endpush
 
 @push('script')

@@ -43,40 +43,21 @@
     <div class="card">
         <div class="card-body">
             <div class="row g-3">
-                <div class="col-auto">
-                    <div class="input-group mb-3">
-                        <select class="form-select" id="table-stock-item-length">
+                <div class="col-12 col-md-auto">
+                    <div class="input-group">
+                        <select class="form-select" id="table-menu-length">
                             <option value="10" selected>10</option>
                             <option value="25">25</option>
                             <option value="50">50</option>
                             <option value="100">100</option>
                             <option value="-1">All</option>
                         </select>
-                        <label class="input-group-text" for="table-stock-item-length">Entri per halaman</label>
+                        <label class="input-group-text" for="table-menu-length">Entri per halaman</label>
                     </div>
                 </div>
-                <div class="col-auto flex-grow-1 overflow-auto">
-                    <div class="btn-group position-static">
-                        <div class="btn-group position-static">
-                            <button type="button" class="btn btn-outline-secondary" id="table-stock-item-excel">
-                                Excel
-                            </button>
-                        </div>
-                        <div class="btn-group position-static">
-                            <button type="button" class="btn btn-outline-secondary" id="table-stock-item-pdf">
-                                PDF
-                            </button>
-                        </div>
-                        <div class="btn-group position-static">
-                            <button type="button" class="btn btn-outline-secondary" id="table-stock-item-print">
-                                Print
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-auto">
+                <div class="col-12 col-md-auto ms-auto">
                     <div class="position-relative mb-3">
-                        <input class="form-control px-5" type="search" id="table-stock-item-search" placeholder="Cari...">
+                        <input class="form-control px-5" type="search" id="table-menu-search" placeholder="Cari...">
                         <span
                             class="material-icons-outlined position-absolute ms-3 translate-middle-y start-0 top-50 fs-5">search</span>
                     </div>
@@ -85,14 +66,14 @@
 
             <div class="product-table">
                 <div class="table-responsive white-space-nowrap">
-                    <table class="table align-middle" id="table-stock-item">
-                        <thead class="table-light">
+                    <table class="table align-middle" id="table-menu">
+                        <thead class="bg-light">
                             <tr>
                                 <th width="2%">#</th>
                                 <th>Nama</th>
                                 <th>Deskripsi</th>
                                 <th>Harga</th>
-                                {{-- <th>Deskripsi</th> --}}
+                                <th>Dipesan</th>
                                 <th>status</th>
                                 <th class="no-export">Aksi</th>
                             </tr>
@@ -115,7 +96,18 @@
                                     </td>
                                     <td>{{ Str::limit(strip_tags($menu['description']), 32) }}</td>
                                     <td>{{ formatRupiah($menu['price']) }}</td>
-                                    <td>{!! $menu->max_order_quantity < 1 ? '<span class="badge bg-danger">Stock Habis</span>' : '<span class="badge bg-success">Tersedia</span>' !!}</td>
+                                    <td>{{ $menu->ordered_quantity }}x</td>
+                                    <td>
+                                        @php
+                                            $status = $menu->max_order_quantity < 1 ? false : true;
+
+                                            $color = $status ? 'success' : 'danger';
+                                            $status = $status ? 'Tersedia' : 'Habis';
+                                        @endphp
+
+                                        <span
+                                            class="lable-table bg-{{ $color }}-subtle text-{{ $color }} rounded border border-{{ $color }}-subtle font-text2 fw-bold">{{ $status }}</span>
+                                    </td>
                                     <td class="no-export">
                                         <div class="dropdown">
                                             <button class="btn btn-sm btn-filter dropdown-toggle dropdown-toggle-nocaret"
@@ -144,8 +136,7 @@
                                                         @method('DELETE')
                                                     </form>
                                                     <button type="button" class="dropdown-item text-danger"
-                                                        data-id="{{ $menu['id'] }}"
-                                                        data-msg="{{ $menu['name'] }}"
+                                                        data-id="{{ $menu['id'] }}" data-msg="{{ $menu['name'] }}"
                                                         onclick="confirmDelete(this)">Hapus</button>
                                                 </li>
                                             </ul>
@@ -162,7 +153,6 @@
 @endsection
 
 @push('modals')
-
 @endpush
 
 @push('script')
@@ -171,44 +161,7 @@
 
     <script>
         $(document).ready(function() {
-            var table = $('#table-stock-item').DataTable({
-                buttons: [{
-                        extend: 'excel',
-                        exportOptions: {
-                            columns: ':not(.no-export)',
-                            format: {
-                                body: function(data, row, column, node) {
-                                    return $(node).find('.no-export').remove().end()
-                                        .text();
-                                }
-                            }
-                        }
-                    },
-                    {
-                        extend: 'pdf',
-                        exportOptions: {
-                            columns: ':not(.no-export)',
-                            format: {
-                                body: function(data, row, column, node) {
-                                    return $(node).find('.no-export').remove().end()
-                                        .text();
-                                }
-                            }
-                        }
-                    },
-                    {
-                        extend: 'print',
-                        exportOptions: {
-                            columns: ':not(.no-export)',
-                            format: {
-                                body: function(data, row, column, node) {
-                                    return $(node).find('.no-export').remove().end()
-                                        .text();
-                                }
-                            }
-                        }
-                    }
-                ],
+            var table = $('#table-menu').DataTable({
                 lengthChange: false,
                 lengthMenu: [10, 25, 50, 100, -1],
                 order: [
@@ -216,7 +169,7 @@
                 ]
             });
 
-            $('#table-stock-item-length').on('change', function() {
+            $('#table-menu-length').on('change', function() {
                 var selectedValue = $(this).val();
                 table.page.len(selectedValue).draw();
             });
@@ -224,20 +177,8 @@
             // Hide default search box
             $('.dataTables_filter').hide();
 
-            $('#table-stock-item-search').on('input', function() {
+            $('#table-menu-search').on('input', function() {
                 table.search($(this).val()).draw();
-            });
-
-            $('#table-stock-item-excel').on('click', function() {
-                table.button('.buttons-excel').trigger();
-            });
-
-            $('#table-stock-item-pdf').on('click', function() {
-                table.button('.buttons-pdf').trigger();
-            });
-
-            $('#table-stock-item-print').on('click', function() {
-                table.button('.buttons-print').trigger();
             });
         });
 

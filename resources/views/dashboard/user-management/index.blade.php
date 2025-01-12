@@ -45,8 +45,8 @@
     <div class="card">
         <div class="card-body">
             <div class="row g-3">
-                <div class="col-auto">
-                    <div class="input-group mb-3">
+                <div class="col-12 col-md-auto">
+                    <div class="input-group">
                         <select class="form-select" id="table-stock-item-length">
                             <option value="10" selected>10</option>
                             <option value="25">25</option>
@@ -57,26 +57,7 @@
                         <label class="input-group-text" for="table-stock-item-length">Entri per halaman</label>
                     </div>
                 </div>
-                <div class="col-auto flex-grow-1 overflow-auto">
-                    <div class="btn-group position-static">
-                        <div class="btn-group position-static">
-                            <button type="button" class="btn btn-outline-secondary" id="table-stock-item-excel">
-                                Excel
-                            </button>
-                        </div>
-                        <div class="btn-group position-static">
-                            <button type="button" class="btn btn-outline-secondary" id="table-stock-item-pdf">
-                                PDF
-                            </button>
-                        </div>
-                        <div class="btn-group position-static">
-                            <button type="button" class="btn btn-outline-secondary" id="table-stock-item-print">
-                                Print
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-auto">
+                <div class="col-12 col-md-auto ms-auto">
                     <div class="position-relative mb-3">
                         <input class="form-control px-5" type="search" id="table-stock-item-search" placeholder="Cari...">
                         <span
@@ -88,7 +69,7 @@
 
             <div class="table-responsive white-space-nowrap">
                 <table class="table align-middle" id="table-user">
-                    <thead class="table-light">
+                    <thead class="bg-light">
                         <tr>
                             <th width="2%">#</th>
                             <th>Nama</th>
@@ -249,43 +230,6 @@
         $(document).ready(function() {
 
             var table = $('#table-user').DataTable({
-                buttons: [{
-                        extend: 'excel',
-                        exportOptions: {
-                            columns: ':not(.no-export)',
-                            format: {
-                                body: function(data, row, column, node) {
-                                    return $(node).find('.no-export').remove().end()
-                                        .text();
-                                }
-                            }
-                        }
-                    },
-                    {
-                        extend: 'pdf',
-                        exportOptions: {
-                            columns: ':not(.no-export)',
-                            format: {
-                                body: function(data, row, column, node) {
-                                    return $(node).find('.no-export').remove().end()
-                                        .text();
-                                }
-                            }
-                        }
-                    },
-                    {
-                        extend: 'print',
-                        exportOptions: {
-                            columns: ':not(.no-export)',
-                            format: {
-                                body: function(data, row, column, node) {
-                                    return $(node).find('.no-export').remove().end()
-                                        .text();
-                                }
-                            }
-                        }
-                    }
-                ],
                 lengthChange: false,
                 lengthMenu: [10, 25, 50, 100, -1],
                 order: [
@@ -303,18 +247,6 @@
 
             $('#table-stock-item-search').on('input', function() {
                 table.search($(this).val()).draw();
-            });
-
-            $('#table-stock-item-excel').on('click', function() {
-                table.button('.buttons-excel').trigger();
-            });
-
-            $('#table-stock-item-pdf').on('click', function() {
-                table.button('.buttons-pdf').trigger();
-            });
-
-            $('#table-stock-item-print').on('click', function() {
-                table.button('.buttons-print').trigger();
             });
         });
 

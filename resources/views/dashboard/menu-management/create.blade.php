@@ -134,7 +134,7 @@
                         <div class="product-table">
                             <div class="table-responsive white-space-nowrap">
                                 <table class="table align-middle stock-item-table">
-                                    <thead class="table-light">
+                                    <thead class="bg-light">
                                         <tr>
                                             <th>
                                                 <input class="form-check-input" type="checkbox" id="select-all">
@@ -168,7 +168,7 @@
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <input type="text" class="form-control border-0 w-100"
+                                                    <input type="text" class="form-control border-0 w-100 ignore"
                                                         name="quantity[]" placeholder="..."
                                                         style="background-color: transparent;" disabled>
                                                 </td>

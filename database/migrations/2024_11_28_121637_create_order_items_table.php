@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('order_items', function (Blueprint $table) {
             $table->string('order_id'); // Sesuaikan tipe data dengan orders.id
             $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade'); // Foreign key
-            $table->foreignId('menu_id')->constrained('menus')->onDelete('restrict'); // Foreign key ke tabel menus
+            $table->foreignId('menu_id')->nullable()->constrained('menus')->onDelete('set null'); // Foreign key ke tabel menus
             $table->integer('quantity'); // Jumlah menu yang dipesan
             $table->bigInteger('price'); // Harga menu
             $table->bigInteger('subtotal'); // Total harga pesanan

@@ -2,12 +2,16 @@
 
 namespace App\Http\Requests\dashboard;
 
+use App\Models\Expense;
+use Illuminate\Support\Facades\Auth;
+use App\Traits\ExpenseAuthorizationTrait;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
 class ExpenseManagementRequest extends FormRequest
 {
+    use ExpenseAuthorizationTrait;
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -18,8 +22,16 @@ class ExpenseManagementRequest extends FormRequest
 
     protected function prepareForValidation()
     {
+        if ($this->isMethod('put') || $this->isMethod('patch')) {
+            $expense = Expense::findOrFail($this->route('expense'));
+            $this->canUpdateExpense($expense);
+        }
+
         $items = $this->input('items', []);
         foreach ($items as $index => $item) {
+            if (isset($item['id']) && strpos($item['id'], 'item') === 0) {
+                $items[$index]['id'] = null;
+            }
             if (isset($item['quantity'])) {
                 $items[$index]['quantity'] = (int) $item['quantity'];
             }
@@ -37,7 +49,7 @@ class ExpenseManagementRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        $rules = [
             'name' => 'required|string',
             'description' => 'nullable|string',
             'date_out' => [
@@ -55,6 +67,14 @@ class ExpenseManagementRequest extends FormRequest
             'items.*.description' => 'nullable|string',
             'items.*.image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:1024',
         ];
+
+        if ($this->isMethod('post')) {
+        } elseif ($this->isMethod('put') || $this->isMethod('patch')) {
+            $rules['items.*.id'] = 'nullable|exists:expense_items,id';
+            $rules['items.*.remove'] = 'boolean';
+        }
+
+        return $rules;
     }
 
     protected function failedValidation(Validator $validator)
