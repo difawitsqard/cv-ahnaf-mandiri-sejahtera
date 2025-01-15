@@ -8,10 +8,10 @@
         <div class="container my-5 my-lg-0">
             <div class="row">
                 <div class="col-12 col-md-8 col-lg-6 col-xl-5 col-xxl-4 mx-auto">
-                    <div class="card rounded-bottom-4 rounded-top-0 mb-0 border-top border-4 border-secondary">
+                    <div class="card rounded-4 mb-0">
                         <div class="card-body p-5">
                             <h4 class="fw-bold">Hei, {{ $user->name }}</h4>
-                            <p class="mb-0">Buat kata sandi anda.</p>
+                            <p class="mb-0">Untuk melanjutkan, silahkan buat kata sandi.</p>
                             <div class="form-body mt-4">
                                 <form method="POST" class="row g-4"
                                     action="{{ route('set-password.set', ['user' => $user->id]) }}">
@@ -45,7 +45,7 @@
                                     </div>
                                     <div class="col-12">
                                         <div class="d-grid gap-2">
-                                            <button type="submit" class="btn btn-dark">Simpan</button>
+                                            <button type="submit" class="btn btn-grd btn-grd-royal">Simpan</button>
                                         </div>
                                     </div>
                                 </form>

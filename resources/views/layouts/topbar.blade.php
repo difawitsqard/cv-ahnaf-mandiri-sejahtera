@@ -1,15 +1,15 @@
  <!--start header-->
  <header class="top-header">
-  <nav class="navbar navbar-expand align-items-center gap-4">
-    <div class="btn-toggle">
-      <a href="javascript:;"><i class="material-icons-outlined">menu</i></a>
-    </div>
-    <div class="search-bar flex-grow-1">
-      <div class="search-content d-none"> 
-      </div>
-    </div>
-    <ul class="navbar-nav gap-1 nav-right-links align-items-center">
-      {{-- <li class="nav-item dropdown">
+     <nav class="navbar navbar-expand align-items-center gap-4">
+         <div class="btn-toggle">
+             <a href="javascript:;"><i class="material-icons-outlined">menu</i></a>
+         </div>
+         <div class="search-bar flex-grow-1">
+             <div class="search-content d-none">
+             </div>
+         </div>
+         <ul class="navbar-nav gap-1 nav-right-links align-items-center">
+             {{-- <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle dropdown-toggle-nocaret position-relative" data-bs-auto-close="outside"
           data-bs-toggle="dropdown" href="javascript:;"><i class="material-icons-outlined">notifications</i>
           <span class="badge-notify">5</span>
@@ -79,31 +79,37 @@
           </div>
         </div>
       </li> --}}
-      <li class="nav-item dropdown">
-        <a href="javascript:void(0);" class="dropdown-toggle dropdown-toggle-nocaret" data-bs-toggle="dropdown">
-           <img src="{{ URL::asset('build/images/default-avatar.jpg') }}" class="rounded-circle p-1 border" width="45" height="45" alt="{{ Auth::user()->name }}">
-        </a>
-        <div class="dropdown-menu dropdown-user dropdown-menu-end shadow">
-          <a class="dropdown-item  gap-2 py-2" href="javascript:;">
-            <div class="text-center">
-              <img src="{{ URL::asset('build/images/default-avatar.jpg') }}" class="rounded-circle p-1 shadow mb-3" width="90" height="90"
-                alt="{{ Auth::user()->name }}">
-              <h5 class="user-name mb-0 fw-bold">{{ Auth::user()->name }}</h5>
-              <p class="user-role mb-0">{{ Auth::user()->roles[0]->name }}</p>
-            </div>
-          </a>
-          <hr class="dropdown-divider">
-          <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="javascript:;"><i
-            class="material-icons-outlined">person_outline</i>Profile</a>
-          <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="javascript:;"><i
-            class="material-icons-outlined">local_bar</i>Setting</a>
-          <hr class="dropdown-divider">
-          <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal"><i
-          class="material-icons-outlined">power_settings_new</i>Keluar</a>
-        </div>
-      </li>
-    </ul>
+             <li class="nav-item dropdown">
+                 <a href="javascript:void(0);" class="dropdown-toggle dropdown-toggle-nocaret" data-bs-toggle="dropdown">
+                     <img src="{{ URL::asset('build/images/default-avatar.jpg') }}" class="rounded-circle p-1 border"
+                         width="45" height="45" alt="{{ Auth::user()->name }}">
+                 </a>
+                 <div class="dropdown-menu dropdown-user dropdown-menu-end shadow">
+                     <a class="dropdown-item  gap-2 py-2" href="javascript:;">
+                         <div class="text-center">
+                             <img src="{{ URL::asset('build/images/default-avatar.jpg') }}"
+                                 class="rounded-circle p-1 shadow mb-3" width="90" height="90"
+                                 alt="{{ Auth::user()->name }}">
+                             <h5 class="user-name mb-0 fw-bold">{{ Auth::user()->name }}</h5>
+                             <p class="user-role mb-0">{{ Auth::user()->roles[0]->name }}</p>
+                         </div>
+                     </a>
+                     <hr class="dropdown-divider">
 
-  </nav>
-</header>
-<!--end top header-->
+                     @if (request()->route('outlet'))
+                         <a class="dropdown-item d-flex align-items-center gap-2 py-2 mm-active"
+                             href="{{ roleBasedRoute('account-settings.index', ['outlet' => request()->route('outlet')]) }}"><i
+                                 class="material-icons-outlined">settings</i>Pengaturan Akun
+                         </a>
+                         <hr class="dropdown-divider">
+                     @endif
+                     <a class="dropdown-item d-flex align-items-center gap-2 py-2" href="#" data-bs-toggle="modal"
+                         data-bs-target="#logoutModal"><i
+                             class="material-icons-outlined">power_settings_new</i>Keluar</a>
+                 </div>
+             </li>
+         </ul>
+
+     </nav>
+ </header>
+ <!--end top header-->

@@ -25,6 +25,8 @@ class ExpenseItem extends Model
         'image_path',
     ];
 
+    protected $appends = ['image_url'];
+
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
@@ -35,5 +37,17 @@ class ExpenseItem extends Model
     public function expense()
     {
         return $this->belongsTo(Expense::class, 'expense_id', 'id');
+    }
+
+    public function getImageUrlAttribute()
+    {
+        if ($this->image_path) {
+            $filePath = public_path('uploads/' . $this->image_path);
+            if (file_exists($filePath)) {
+                return asset('uploads/' . $this->image_path);
+            }
+        }
+
+        return asset('build/images/placeholder-image.webp');
     }
 }

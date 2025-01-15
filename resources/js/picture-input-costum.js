@@ -40,13 +40,16 @@ class ImageUploader {
             });
 
             const deleteBtn = label.querySelector(".delete-btn");
-            const deleteListener = () =>
+            const deleteListener = () => {
                 this.resetImageDisplay(
                     pictureImage,
                     pictureText,
                     pictureButtons,
                     inputFile
                 );
+
+                this.deleteInputImage(inputFile);
+            };
             deleteBtn.addEventListener("click", deleteListener);
             this.eventListeners.push({
                 element: deleteBtn,
@@ -73,20 +76,20 @@ class ImageUploader {
             });
 
             // const modalCloseBtn = document
-            //     .querySelector("#cropModal")
-            //     .querySelector('[data-bs-dismiss="modal"]');
+            // .querySelector("#cropModal")
+            // .querySelector('[data-bs-dismiss="modal"]');
             // const modalCloseListener = () =>
-            //     this.resetImageDisplay(
-            //         pictureImage,
-            //         pictureText,
-            //         pictureButtons,
-            //         inputFile
-            //     );
+            // this.resetImageDisplay(
+            // pictureImage,
+            // pictureText,
+            // pictureButtons,
+            // inputFile
+            // );
             // modalCloseBtn.addEventListener("click", modalCloseListener);
             // this.eventListeners.push({
-            //     element: modalCloseBtn,
-            //     type: "click",
-            //     listener: modalCloseListener,
+            // element: modalCloseBtn,
+            // type: "click",
+            // listener: modalCloseListener,
             // });
         });
 
@@ -123,6 +126,7 @@ class ImageUploader {
             const pictureImage = label.querySelector(".picture__image");
             const pictureText = label.querySelector(".picture__text");
             const pictureButtons = label.querySelector(".picture__buttons");
+
             this.resetImageDisplay(
                 pictureImage,
                 pictureText,
@@ -140,12 +144,22 @@ class ImageUploader {
             const pictureImage = label.querySelector(".picture__image");
             const pictureText = label.querySelector(".picture__text");
             const pictureButtons = label.querySelector(".picture__buttons");
-            this.resetImageDisplay(
-                pictureImage,
-                pictureText,
-                pictureButtons,
-                inputFile
-            );
+
+            if (inputFile.dataset.imageSrc) {
+                this.displayImage(
+                    inputFile.dataset.imageSrc,
+                    pictureImage,
+                    pictureText,
+                    pictureButtons
+                );
+            } else {
+                this.resetImageDisplay(
+                    pictureImage,
+                    pictureText,
+                    pictureButtons,
+                    inputFile
+                );
+            }
         });
     }
 
@@ -182,14 +196,6 @@ class ImageUploader {
         pictureText.style.display = "block";
         pictureButtons.style.display = "none";
         inputFile.value = ""; // Clear input file
-
-        if (inputFile.dataset.imageId) {
-            let hiddenInput = document.createElement("input");
-            hiddenInput.type = "hidden";
-            hiddenInput.name = `delete_image[]`;
-            hiddenInput.value = inputFile.dataset.imageId;
-            inputFile.parentElement.appendChild(hiddenInput);
-        }
     }
 
     showCropModal(imgSrc, inputFile, label) {
@@ -245,19 +251,78 @@ class ImageUploader {
         });
 
         $("#cropImageModal").on("click", () => {
-            const canvas = this.cropper.getCroppedCanvas({
-                width: this.options.imageWidth,
-                height: this.options.imageHeight,
-            });
+            if (this.cropper) {
+                const canvas = this.cropper.getCroppedCanvas({
+                    width: this.options.imageWidth,
+                    height: this.options.imageHeight,
+                });
 
-            canvas.toBlob((blob) => {
-                this.updateCroppedImage(blob);
-                $("#cropModal").modal("hide");
-            });
+                if (canvas) {
+                    canvas.toBlob((blob) => {
+                        this.updateCroppedImage(blob);
+                        $("#cropModal").modal("hide");
+                    });
+                } else {
+                    console.error("Cropper canvas is not available.");
+                }
+            } else {
+                console.error("Cropper instance is not initialized.");
+            }
+        });
+    }
+
+    deleteInputImage(fileInput) {
+        if (fileInput.dataset.imageId) {
+            let hiddenInput = document.createElement("input");
+            hiddenInput.type = "hidden";
+            hiddenInput.name = `delete_image[]`;
+            hiddenInput.value = fileInput.dataset.imageId;
+
+            if (
+                fileInput.parentElement.querySelector(
+                    "input[name='delete_image[]']"
+                )
+            ) {
+                fileInput.parentElement
+                    .querySelector("input[name='delete_image[]']")
+                    .remove();
+            }
+
+            fileInput.parentElement.appendChild(hiddenInput);
+        }
+    }
+
+    updateImagePreview() {
+        document.querySelectorAll(".picture__input").forEach((inputFile) => {
+            const label = inputFile.previousElementSibling;
+            const pictureImage = label.querySelector(".picture__image");
+            const pictureText = label.querySelector(".picture__text");
+            const pictureButtons = label.querySelector(".picture__buttons");
+
+            if (inputFile.dataset.imageSrc) {
+                this.displayImage(
+                    inputFile.dataset.imageSrc,
+                    pictureImage,
+                    pictureText,
+                    pictureButtons
+                );
+            } else {
+                this.resetImageDisplay(
+                    pictureImage,
+                    pictureText,
+                    pictureButtons,
+                    inputFile
+                );
+            }
         });
     }
 
     updateCroppedImage(blob) {
+        if (!this.currentLabel) {
+            console.error("Current label is not set.");
+            return;
+        }
+
         const img = document.createElement("img");
         img.src = URL.createObjectURL(blob);
         img.classList.add("picture__img");
@@ -267,34 +332,38 @@ class ImageUploader {
         const pictureButtons =
             this.currentLabel.querySelector(".picture__buttons");
 
-        pictureImage.innerHTML = "";
-        pictureImage.appendChild(img);
+        if (pictureImage && pictureText && pictureButtons) {
+            pictureImage.innerHTML = "";
+            pictureImage.appendChild(img);
 
-        pictureText.style.display = "none";
-        pictureButtons.style.display = "flex";
+            pictureText.style.display = "none";
+            pictureButtons.style.display = "flex";
 
-        const fileInput = this.currentLabel.nextElementSibling;
-        const dataTransfer = new DataTransfer();
-        const fileName = this.currentFile
-            ? this.currentFile.name
-            : `new ${Date.now()}`;
+            const fileInput = this.currentLabel.nextElementSibling;
+            const dataTransfer = new DataTransfer();
+            const fileName = this.currentFile
+                ? this.currentFile.name
+                : `new ${Date.now()}`;
 
-        const croppedFile = new File([blob], `${fileName}_cropped.jpg`, {
-            type: blob.type,
-            lastModified: Date.now(),
-        });
+            const croppedFile = new File([blob], `${fileName}_cropped.jpg`, {
+                type: blob.type,
+                lastModified: Date.now(),
+            });
 
-        dataTransfer.items.add(croppedFile);
-        fileInput.files = dataTransfer.files;
+            dataTransfer.items.add(croppedFile);
+            fileInput.files = dataTransfer.files;
 
-        if (fileInput.dataset.imageId) {
-            console.log("update image");
-            let hiddenInput = fileInput.parentElement.querySelector(
-                `input[name="delete_image[]"]`
-            );
-            if (hiddenInput) {
-                hiddenInput.remove();
+            if (fileInput.dataset.imageId) {
+                console.log("update image");
+                let hiddenInput = fileInput.parentElement.querySelector(
+                    `input[name="delete_image[]"]`
+                );
+                if (hiddenInput) {
+                    hiddenInput.remove();
+                }
             }
+        } else {
+            console.error("Required elements for image display are missing.");
         }
     }
 }

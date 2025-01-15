@@ -139,8 +139,14 @@
                                         @endif
                                     </td>
                                     <td>{{ $stockItem['unit']->name }}</td>
-                                    <td>{{ formatRupiah($stockItem['price']) }}</td>
-                                    <td>{{ $stockItem['category']->name }}</td>
+                                    <td>{{ $stockItem['category']->id == 1 ? '-' : formatRupiah($stockItem['price']) }}</td>
+                                    <td>
+                                        @if ( $stockItem['category']->is_static)
+                                            <span class="lable-table bg-info-subtle text-info rounded border border-info-subtle font-text2 fw-bold">{{ $stockItem['category']->name }}</span>
+                                        @else
+                                            <span class="lable-table bg-secondary-subtle text-secondary rounded border border-secondary-subtle font-text2 fw-bold">{{ $stockItem['category']->name }}</span>
+                                        @endif
+                                    </td>
                                     <td class="no-export">
                                         <div class="dropdown">
                                             <button class="btn btn-sm btn-filter dropdown-toggle dropdown-toggle-nocaret"
@@ -292,7 +298,8 @@
 
             // Mengisi dropdown kategori secara otomatis dari kategori yang ada di tabel
             table.column(6).data().unique().sort().each(function(d, j) {
-                $('#category-filter').append('<option value="' + d + '">' + d + '</option>');
+                var categoryText = $(d).text();
+                $('#category-filter').append('<option value="' + categoryText + '">' + categoryText + '</option>');
             });
 
             // Filter berdasarkan kategori

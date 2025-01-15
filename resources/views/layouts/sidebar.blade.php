@@ -21,21 +21,21 @@
            <!--navigation-->
            <ul class="metismenu" id="sidenav">
 
-               @hasrole('superadmin')
+               @hasrole('superadmin|admin|staff')
 
                    @if (request()->route('outlet'))
                        @php
                            $outletSlug = request()->route('outlet');
                        @endphp
                        <li>
-                           <a href="{{ route('outlet.dashboard', ['outlet' => $outletSlug]) }}">
+                           <a href="{{ roleBasedRoute('dashboard', ['outlet' => $outletSlug]) }}">
                                <div class="parent-icon"><i class="material-icons-outlined">home</i>
                                </div>
                                <div class="menu-title">Dashboard</div>
                            </a>
                        </li>
                        <li>
-                           <a href="{{ route('outlet.order.create', ['outlet' => $outletSlug]) }}">
+                           <a href="{{ roleBasedRoute('order.create', ['outlet' => $outletSlug]) }}">
                                <div class="parent-icon">
                                    <i class="material-icons-outlined">shopping_cart</i>
                                </div>
@@ -43,137 +43,77 @@
                            </a>
                        </li>
                        <li>
-                           <a href="{{ route('outlet.order.index', ['outlet' => $outletSlug]) }}">
+                           <a href="{{ roleBasedRoute('order.index', ['outlet' => $outletSlug]) }}">
                                <div class="parent-icon">
                                    <i class="material-icons-outlined">history</i>
                                </div>
                                <div class="menu-title" title="Riwayat Pesanan">Riwayat Pesanan</div>
                            </a>
                        </li>
+
                        <li class="menu-label">Menu Manajemen</li>
-                       <li>
-                           <a href="{{ route('outlet.user.index', ['outlet' => $outletSlug]) }}">
-                               <div class="parent-icon">
-                                   <i class="material-icons-outlined">group</i>
-                               </div>
-                               <div class="menu-title" title="Pengguna">Pengguna</div>
-                           </a>
-                       </li>
-                       <li>
-                           <a href="#" class="has-arrow">
-                               <div class="parent-icon">
-                                   <i class="material-icons-outlined">menu_book</i>
-                               </div>
-                               <div class="menu-title">Menu </div>
-                           </a>
-                           <ul>
-                               <li>
-                                   <a href="{{ route('outlet.menu.create', ['outlet' => $outletSlug]) }}">
-                                       <i class="material-icons-outlined">arrow_right</i>
-                                       Tambah Menu
-                                   </a>
-                               </li>
-                               <li>
-                                   <a href="{{ route('outlet.menu.index', ['outlet' => $outletSlug]) }}">
-                                       <i class="material-icons-outlined">arrow_right</i>
-                                       Daftar Menu
-                                   </a>
-                               </li>
-                           </ul>
-                       </li>
-                   @else
-                       <li>
-                           <a href="{{ route('outlet.index') }}">
-                               <div class="parent-icon"><i class="material-icons-outlined">store</i>
-                               </div>
-                               <div class="menu-title">Outlet</div>
-                           </a>
-                       </li>
-                   @endif
-               @endhasrole
 
-               @hasrole('admin')
-                   <li>
-                       <a href="{{ route('admin.dashboard') }}">
-                           <div class="parent-icon"><i class="material-icons-outlined">home</i>
-                           </div>
-                           <div class="menu-title">Dashboard</div>
-                       </a>
-                   </li>
-                   <li>
-                       <a href="{{ route('admin.order.create') }}">
-                           <div class="parent-icon">
-                               <i class="material-icons-outlined">shopping_cart</i>
-                           </div>
-                           <div class="menu-title" title="Buat Pesanan">Buat Pesanan</div>
-                       </a>
-                   </li>
-                   <li>
-                       <a href="{{ route('admin.order.index') }}">
-                           <div class="parent-icon">
-                               <i class="material-icons-outlined">history</i>
-                           </div>
-                           <div class="menu-title" title="Riwayat Pesanan">Riwayat Pesanan</div>
-                       </a>
-                   </li>
-                   <li class="menu-label">Menu Manajemen</li>
-                   <li>
-                       <a href="{{ route('admin.user.index') }}">
-                           <div class="parent-icon">
-                               <i class="material-icons-outlined">group</i>
-                           </div>
-                           <div class="menu-title" title="Pengguna">Pengguna</div>
-                       </a>
-                   </li>
-                   <li>
-                       <a href="#" class="has-arrow">
-                           <div class="parent-icon">
-                               <i class="material-icons-outlined">menu_book</i>
-                           </div>
-                           <div class="menu-title">Menu</div>
-                       </a>
-                       <ul>
+                       @hasrole('superadmin|admin')
                            <li>
-                               <a href="{{ route('admin.menu.create') }}">
-                                   <i class="material-icons-outlined">arrow_right</i>
-                                   Tambah Menu
+                               <a href="{{ roleBasedRoute('user.index', ['outlet' => $outletSlug]) }}">
+                                   <div class="parent-icon">
+                                       <i class="material-icons-outlined">group</i>
+                                   </div>
+                                   <div class="menu-title" title="Pengguna">Pengguna</div>
                                </a>
                            </li>
                            <li>
-                               <a href="{{ route('admin.menu.index') }}">
-                                   <i class="material-icons-outlined">arrow_right</i>
-                                   Daftar Menu
+                               <a href="#" class="has-arrow">
+                                   <div class="parent-icon">
+                                       <i class="material-icons-outlined">library_books</i>
+                                   </div>
+                                   <div class="menu-title">Menu </div>
                                </a>
+                               <ul>
+                                   <li>
+                                       <a href="{{ roleBasedRoute('menu.create', ['outlet' => $outletSlug]) }}">
+                                           <i class="material-icons-outlined">arrow_right</i>
+                                           Tambah Menu
+                                       </a>
+                                   </li>
+                                   <li>
+                                       <a href="{{ roleBasedRoute('menu.index', ['outlet' => $outletSlug]) }}">
+                                           <i class="material-icons-outlined">arrow_right</i>
+                                           Daftar Menu
+                                       </a>
+                                   </li>
+                               </ul>
                            </li>
-                       </ul>
-                   </li>
-               @endhasrole
+                           <li>
+                               <a href="#" class="has-arrow">
+                                   <div class="parent-icon">
+                                       <i class="material-icons-outlined">local_mall</i>
+                                   </div>
+                                   <div class="menu-title">Stok</div>
+                               </a>
+                               <ul>
+                                   <li>
+                                       <a href="{{ roleBasedRoute('stock-item.create', ['outlet' => $outletSlug]) }}">
+                                           <i class="material-icons-outlined">arrow_right</i>
+                                           Tambah Item
+                                       </a>
+                                   </li>
+                                   <li>
+                                       <a href="{{ roleBasedRoute('stock-item.index', ['outlet' => $outletSlug]) }}">
+                                           <i class="material-icons-outlined">arrow_right</i>
+                                           Daftar Item
+                                       </a>
+                                   </li>
+                                   <li>
+                                       <a href="{{ roleBasedRoute('stock-item-category.index', ['outlet' => $outletSlug]) }}">
+                                           <i class="material-icons-outlined">arrow_right</i>
+                                           Daftar Kategori
+                                       </a>
+                                   </li>
+                               </ul>
+                           </li>
+                       @endhasrole
 
-               @hasrole('superadmin|admin')
-      
-                   @isset($outlet->slug)
-                       <li>
-                           <a href="#" class="has-arrow">
-                               <div class="parent-icon">
-                                   <i class="material-icons-outlined">local_mall</i>
-                               </div>
-                               <div class="menu-title">Stok</div>
-                           </a>
-                           <ul>
-                               <li>
-                                   <a href="{{ roleBasedRoute('stock-item.create', ['outlet' => $outlet->slug]) }}">
-                                       <i class="material-icons-outlined">arrow_right</i>
-                                       Tambah Item
-                                   </a>
-                               </li>
-                               <li>
-                                   <a href="{{ roleBasedRoute('stock-item.index', ['outlet' => $outlet->slug]) }}">
-                                       <i class="material-icons-outlined">arrow_right</i>
-                                       Daftar Item
-                                   </a>
-                               </li>
-                           </ul>
-                       </li>
                        <li>
                            <a href="#" class="has-arrow">
                                <div class="parent-icon">
@@ -183,13 +123,13 @@
                            </a>
                            <ul>
                                <li>
-                                   <a href="{{ roleBasedRoute('expense.create', ['outlet' => $outlet->slug]) }}">
+                                   <a href="{{ roleBasedRoute('expense.create', ['outlet' => $outletSlug]) }}">
                                        <i class="material-icons-outlined">arrow_right</i>
                                        Tambah Pengeluaran
                                    </a>
                                </li>
                                <li>
-                                   <a href="{{ roleBasedRoute('expense.index', ['outlet' => $outlet->slug]) }}">
+                                   <a href="{{ roleBasedRoute('expense.index', ['outlet' => $outletSlug]) }}">
                                        <i class="material-icons-outlined">arrow_right</i>
                                        Daftar Pengeluaran
                                    </a>
@@ -201,95 +141,78 @@
                        <li>
                            <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#exportReportModal"
                                data-bs-title="Laporan Pendapatan"
-                               data-bs-action="{{ roleBasedRoute('order.export', ['outlet' => $outlet->slug]) }}">
+                               data-bs-action="{{ roleBasedRoute('order.export', ['outlet' => $outletSlug]) }}">
                                <div class="parent-icon">
                                    <i class="material-icons-outlined">description</i>
                                </div>
-                               <div class="menu-title">Pendapatan</div>
+                               <div class="menu-title">Pendapatan @hasrole('staff')
+                                       Saya
+                                   @endhasrole
+                               </div>
                            </a>
                        </li>
                        <li>
                            <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#exportReportModal"
                                data-bs-title="Laporan Pengelauran"
-                               data-bs-action="{{ roleBasedRoute('expense.export', ['outlet' => $outlet->slug]) }}">
+                               data-bs-action="{{ roleBasedRoute('expense.export', ['outlet' => $outletSlug]) }}">
                                <div class="parent-icon">
                                    <i class="material-icons-outlined">description</i>
                                </div>
-                               <div class="menu-title">Pengelauran</div>
-                           </a>
-                       </li>
-                   @endisset
-               @endhasrole
-
-               @hasrole('staff')
-                   <li>
-                       <a href="{{ route('staff.dashboard') }}">
-                           <div class="parent-icon"><i class="material-icons-outlined">home</i>
-                           </div>
-                           <div class="menu-title">Dashboard</div>
-                       </a>
-                   </li>
-                   <li>
-                       <a href="{{ route('staff.order.create') }}">
-                           <div class="parent-icon">
-                               <i class="material-icons-outlined">shopping_cart</i>
-                           </div>
-                           <div class="menu-title" title="Buat Pesanan">Buat Pesanan</div>
-                       </a>
-                   </li>
-                   <li>
-                       <a href="{{ route('staff.order.index') }}">
-                           <div class="parent-icon">
-                               <i class="material-icons-outlined">history</i>
-                           </div>
-                           <div class="menu-title" title="Riwayat Pesanan">Riwayat Pesanan</div>
-                       </a>
-                   </li>
-                   <li class="menu-label">Menu</li>
-               @endhasrole
-
-
-               <li class="menu-label">Pengaturan</li>
-               @hasrole('superadmin')
-                   @if (request()->route('outlet'))
-                       <li>
-                           <a href="{{ route('outlet.index') }}">
-                               <div class="parent-icon"><i class="material-icons-outlined">store</i>
+                               <div class="menu-title">Pengelauran @hasrole('staff')
+                                       Saya
+                                   @endhasrole
                                </div>
-                               <div class="menu-title">Outlet</div>
                            </a>
                        </li>
+
+                       @hasrole('superadmin|admin')
+                           <li class="menu-label">Lainnya</li>
+                           <li>
+                               <a href="{{ roleBasedRoute('unit.index', ['outlet' => $outletSlug]) }}">
+                                   <div class="parent-icon"><i class="material-icons-outlined">calculate</i>
+                                   </div>
+                                   <div class="menu-title">Satuan / Unit</div>
+                               </a>
+                           </li>
+                       @endhasrole
+
+                       <li class="menu-label">Pengaturan</li>
+                       @if (request()->route('outlet'))
+                           @hasrole('superadmin|admin')
+                               <li>
+                                   <a href="{{ roleBasedRoute('outlet.edit', ['outlet' => $outletSlug]) }}">
+                                       <div class="parent-icon"><i class="material-icons-outlined">storefront</i>
+                                       </div>
+                                       <div class="menu-title">Pengaturan Outlet</div>
+                                   </a>
+                               </li>
+                           @endhasrole
+
+                           <li>
+                               <a href="{{ roleBasedRoute('account-settings.index', ['outlet' => $outletSlug]) }}">
+                                   <div class="parent-icon"><i class="material-icons-outlined">settings</i>
+                                   </div>
+                                   <div class="menu-title">Pengaturan Akun</div>
+                               </a>
+                           </li>
+                       @endif
+
+                       @hasrole('superadmin')
+                           @if (request()->route('outlet'))
+                               <li class="menu-label">Superadmin</li>
+                               <li class="bg-grd-royal rounded-2">
+                                   <a href="{{ route('outlet.index') }}" class="text-light">
+                                       <div class="parent-icon"><i class="material-icons-outlined">storefront</i>
+                                       </div>
+                                       <div class="menu-title">Daftar Outlet</div>
+                                   </a>
+                               </li>
+                           @endif
+                       @endhasrole
                    @endif
                @endhasrole
-
-               @hasrole('superadmin|admin')
-                   <li>
-                       @if (request()->route('outlet') && auth()->user()->hasRole('superadmin'))
-                           <a href="{{ route('outlet.unit.index', ['outlet' => request()->route('outlet')]) }}">
-                           @else
-                               <a href="{{ route('unit.index') }}">
-                       @endif
-                       <div class="parent-icon"><i class="material-icons-outlined">calculate</i>
-                       </div>
-                       <div class="menu-title">Satuan / Unit</div>
-                       </a>
-                   </li>
-               @endhasrole
-
-               @hasrole('superadmin')
-                   <li>
-                       @if (request()->route('outlet') && auth()->user()->hasRole('superadmin'))
-                           <a href="{{ route('outlet.company-info.index', ['outlet' => request()->route('outlet')]) }}">
-                           @else
-                               <a href="{{ route('company-info.index') }}">
-                       @endif
-                       <div class="parent-icon"><i class="material-icons-outlined">apartment</i>
-                       </div>
-                       <div class="menu-title">Info Perusahaan</div>
-                       </a>
-                   </li>
-               @endhasrole
            </ul>
+
            <!--end navigation-->
        </div>
    </aside>

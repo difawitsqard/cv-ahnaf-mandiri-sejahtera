@@ -45,7 +45,10 @@ class MenuManagementController extends Controller
 
     public function create(Outlet $outlet)
     {
-        $stockItems = StockItem::where('outlet_id', $outlet->id)->get();
+        $stockItems = StockItem::where('outlet_id', $outlet->id)
+            ->where('category_id', 1) // Filter etalase only
+            ->get();
+
         $stockItems->load('unit');
         return view('dashboard.menu-management.create', compact('stockItems', 'outlet'));
     }
@@ -105,7 +108,9 @@ class MenuManagementController extends Controller
             ->firstOrFail();
         $menu->load('menuImages', 'stockItems');
 
-        $stockItems = StockItem::where('outlet_id', $outlet->id)->get();
+        $stockItems = StockItem::where('outlet_id', $outlet->id)
+            ->where('category_id', 1)
+            ->get();
         $stockItems->load('unit');
 
         $checkedItems = [];

@@ -18,8 +18,8 @@ return new class extends Migration
             $table->string('address'); // Alamat outlet
             $table->string('phone_number')->nullable(); // Nomor telepon outlet
             $table->string('image_path')->nullable(); // Path gambar outlet
-            $table->unsignedBigInteger('tax')->default(0); // Pajak outlet
-            $table->unsignedBigInteger('discount')->default(0); // Diskon outlet
+            $table->float('tax')->default(0); // Pajak outlet
+            $table->float('discount')->default(0); // Diskon outlet
             $table->timestamps();
         });
     }

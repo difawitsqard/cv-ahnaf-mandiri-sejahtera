@@ -8,17 +8,22 @@
         <div class="container my-5 my-lg-0">
             <div class="row">
                 <div class="col-12 col-md-8 col-lg-6 col-xl-5 col-xxl-4 mx-auto">
-                    <div class="card rounded-bottom-4 rounded-top-0 mb-0 border-top border-4 border-secondary">
+                    <div class="card rounded-4 mb-0">
                         <div class="card-body p-5">
                             <h4 class="fw-bold">Lupa Kata Sandi ?</h4>
                             <p class="mb-3">Masukkan email Anda untuk mengatur ulang kata sandi.</p>
-                            @if (session('status'))
-                                <div class="alert alert-success border-0 bg-success alert-dismissible fade show">
-                                    <div class="text-white">{{ session('status') }}</div>
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                        aria-label="Close"></button>
-                                </div>
+
+                            @if (session('success') || session('info') || session('warning') || $errors->any())
+                                <x-alert-message :type="session('success')
+                                    ? 'success'
+                                    : (session('info')
+                                        ? 'info'
+                                        : (session('warning')
+                                            ? 'warning'
+                                            : 'danger'))" :messages="session('success') ??
+                                    (session('info') ?? (session('warning') ?? $errors->all()))" />
                             @endif
+
                             <div class="form-body mt-4">
                                 <form method="POST" class="row g-4" action="{{ route('password.email') }}">
                                     @csrf
@@ -40,7 +45,9 @@
 
                                     <div class="col-12">
                                         <div class="d-grid gap-2">
-                                            <button type="submit" class="btn btn-dark">Kirim</button>
+                                            <button type="submit" class="btn btn-grd btn-grd-royal">Kirim</button>
+                                            <a href="{{ route('login') }}" class="btn btn-grd btn-grd-voilet">Kembali ke
+                                                login</a>
                                         </div>
                                     </div>
                                 </form>

@@ -8,19 +8,20 @@
         <div class="container-fluid my-5 my-lg-0">
             <div class="row">
                 <div class="col-12 col-md-8 col-lg-6 col-xl-5 col-xxl-4 mx-auto">
-                    <div class="card rounded-bottom-4 rounded-top-0 mb-0 border-top border-4 border-secondary">
+                    <div class="card rounded-4 mb-0">
                         <div class="card-body p-5">
                             <h3 class="fw-bolder">
                                 {{ getCompanyInfo()->name ?? config('app.name') }}</h3>
                             <p class="mb-0">Masukan email dan password anda untuk login</p>
-                            <div class="form-body my-5">
-                                @if (session('success'))
-                                    <x-alert-message type="success" :messages="session('success')" />
-                                @endif
+                            <div class="form-body my-4">
 
-                                @if ($errors->any())
-                                    <x-alert-message type="danger" :messages="$errors->all()" />
+                                @if (session('success') || session('info') || session('warning') || $errors->any())
+                                    <x-alert-message 
+                                        :type="session('success') ? 'success' : (session('info') ? 'info' : (session('warning') ? 'warning' : 'danger'))" 
+                                        :messages="session('success') ?? session('info') ?? session('warning') ?? $errors->all()" 
+                                    />
                                 @endif
+                                
                                 <form method="POST" action="{{ route('login') }}" class="row g-3">
                                     @csrf
 
@@ -52,7 +53,7 @@
                                             @enderror
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-6">
                                         <div class="form-check form-switch">
                                             <input class="form-check-input" type="checkbox" id="checkbox"
                                                 {{ old('remember') ? 'checked' : '' }}>
@@ -60,13 +61,13 @@
                                         </div>
                                     </div>
                                     @if (Route::has('password.request'))
-                                        <div class="col-md-6 text-end"> <a href="{{ route('password.request') }}">Lupa kata
+                                        <div class="col-6 text-end"> <a href="{{ route('password.request') }}">Lupa kata
                                                 sandi ?</a>
                                         </div>
                                     @endif
                                     <div class="col-12">
                                         <div class="d-grid">
-                                            <button type="submit" class="btn btn-dark">Login</button>
+                                            <button type="submit" class="btn btn-grd btn-grd-royal">Login</button>
                                         </div>
                                     </div>
                                 </form>

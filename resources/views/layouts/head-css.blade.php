@@ -19,9 +19,9 @@
 
 <!--main css-->
 <link href="{{ URL::asset('build/css/bootstrap-extended.css') }}" rel="stylesheet">
-<link href="{{ URL::asset('build/css/main.css') }}?v={{ md5(time()) }}" rel="stylesheet">
-<link href="{{ URL::asset('build/css/dark-theme.css') }}?v=1" rel="stylesheet">
-<link href="{{ URL::asset('build/css/blue-theme.css') }}?v=1" rel="stylesheet">
+<link href="{{ URL::asset('build/css/main.css') }}?v=2" rel="stylesheet">
+<link href="{{ URL::asset('build/css/dark-theme.css')  }}?v=2" rel="stylesheet">
+<link href="{{ URL::asset('build/css/blue-theme.css') }}?v=2" rel="stylesheet">
 <link href="{{ URL::asset('build/css/semi-dark.css') }}" rel="stylesheet">
 <link href="{{ URL::asset('build/css/bordered-theme.css') }}" rel="stylesheet">
 <link href="{{ URL::asset('build/css/costum.css') }}?v={{ md5(time()) }}" rel="stylesheet">

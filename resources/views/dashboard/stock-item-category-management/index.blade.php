@@ -1,25 +1,25 @@
 @extends('layouts.app')
 @section('title')
-    {{ __('Unit') }}
+    {{ __('Kategori Stok') }}
 @endsection
 @push('css')
     <link href="{{ URL::asset('build/plugins/datatable/css/dataTables.bootstrap5.min.css') }}" rel="stylesheet" />
 @endpush
 
 @section('content')
-    <x-page-title title="Unit" subtitle="Manajemen Unit" />
+    <x-page-title title="Kategori Stok" subtitle="Manajemen Kategori Stok Item" />
 
     <div class="card mb-3">
         <div class="card-body">
             <div class="row align-items-center">
                 <div class="col-auto flex-grow-1 overflow-auto">
-                    <h4 class="fw-bold mb-xl-0 mb-3">Daftar Satuan</h4>
+                    <h4 class="fw-bold mb-xl-0 mb-3">Daftar Kategori Stok Item</h4>
                 </div>
                 <div class="col-auto">
                     <div class="d-flex align-items-center gap-2 justify-content-lg-end">
                         <button class="btn btn-primary px-4 add-button" data-bs-toggle="modal" data-bs-target="#MyModal"
-                            data-add-url="{{ route('unit.store') }}">
-                            <i class="bi bi-plus-lg me-2"></i>Satuan Baru
+                            data-add-url="{{ route('stock-item-category.store') }}">
+                            <i class="bi bi-plus-lg me-2"></i>Kategori Baru
                         </button>
                     </div>
                 </div>
@@ -67,39 +67,60 @@
                             <tr>
                                 <th width="5%">#</th>
                                 <th width="85%">Nama</th>
+                                {{-- <th>Total Stok Item</th>
+                                <th>Outlet Yang Digunakan</th> --}}
                                 <th class="no-export">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($units as $num => $unit)
+                            @foreach ($stockItemCategories as $num => $stockItemCategory)
                                 <tr>
                                     <td class="text-center fw-bold" width="2%">{{ $num + 1 }}</td>
-                                    <td>{{ $unit['name'] }}</td>
+                                    <td>
+                                        @if ($stockItemCategory['is_static'])
+                                            <span
+                                                class="lable-table bg-info-subtle text-info rounded border border-info-subtle font-text2 fw-bold">{{ $stockItemCategory['name'] }}</span>
+                                        @else
+                                            <span
+                                                class="lable-table bg-secondary-subtle text-secondary rounded border border-secondary-subtle font-text2 fw-bold">{{ $stockItemCategory['name'] }}</span>
+                                        @endif
+                                    </td>
+                                    {{-- <td>{{ $stockItemCategory->stockItems->count() }}</td>
+                                    <td>
+                                        @foreach ($stockItemCategory->stockItems->groupBy('outlet.name') as $outletName => $items)
+                                          {{ $outletName }} ({{ $items->count() }}){{ !$loop->last ? ', ' : '' }}
+                                        @endforeach
+                                    </td> --}}
                                     <td class="no-export">
-                                        <div class="dropdown">
-                                            <button class="btn btn-sm btn-filter dropdown-toggle dropdown-toggle-nocaret"
-                                                type="button" data-bs-toggle="dropdown">
-                                                <i class="bi bi-three-dots"></i>
-                                            </button>
-                                            <ul class="dropdown-menu"
-                                                style="position: absolute; top: 100%; right: 0; z-index: 1000;">
-                                                <li><button class="dropdown-item edit-button" data-bs-toggle="modal"
-                                                        data-bs-target="#MyModal" data-add-url="{{ route('unit.store') }}"
-                                                        data-id="{{ $unit->id }}">Edit</button></li>
-                                                <hr class="dropdown-divider">
-                                                <li>
-                                                    <form id="delete-form-{{ $unit->id }}"
-                                                        action="{{ route('unit.destroy', ['unit' => $unit->id]) }}"
-                                                        method="POST" style="display: none;">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                    </form>
-                                                    <button type="button" class="dropdown-item text-danger"
-                                                        data-id="{{ $unit->id }}" data-msg="{{ $unit->name }}"
-                                                        onclick="confirmDelete(this)">Hapus</button>
-                                                </li>
-                                            </ul>
-                                        </div>
+                                        @if (!$stockItemCategory->is_static)
+                                            <div class="dropdown">
+                                                <button
+                                                    class="btn btn-sm btn-filter dropdown-toggle dropdown-toggle-nocaret"
+                                                    type="button" data-bs-toggle="dropdown">
+                                                    <i class="bi bi-three-dots"></i>
+                                                </button>
+                                                <ul class="dropdown-menu"
+                                                    style="position: absolute; top: 100%; right: 0; z-index: 1000;">
+                                                    <li><button class="dropdown-item edit-button" data-bs-toggle="modal"
+                                                            data-bs-target="#MyModal"
+                                                            data-add-url="{{ route('stock-item-category.store') }}"
+                                                            data-id="{{ $stockItemCategory->id }}">Edit</button></li>
+                                                    <hr class="dropdown-divider">
+                                                    <li>
+                                                        <form id="delete-form-{{ $stockItemCategory->id }}"
+                                                            action="{{ route('stock-item-category.destroy', ['stock_item_category' => $stockItemCategory->id]) }}"
+                                                            method="POST" style="display: none;">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                        </form>
+                                                        <button type="button" class="dropdown-item text-danger"
+                                                            data-id="{{ $stockItemCategory->id }}"
+                                                            data-msg="{{ $stockItemCategory->name }}"
+                                                            onclick="confirmDelete(this)">Hapus</button>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach
@@ -118,17 +139,17 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="MyModalLabel">Tambah</h5>
-                    <button type="button" class="btn-close" data-add-url="{{ route('unit.store') }}"
+                    <button type="button" class="btn-close" data-add-url="{{ route('stock-item-category.store') }}"
                         data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="{{ route('unit.store') }}" method="POST">
+                <form action="{{ route('stock-item-category.store') }}" method="POST">
                     <div class="modal-body">
                         @csrf
                         @method('POST')
                         <input type="hidden" id="itemId" name="id">
 
                         <div class="mb-3">
-                            <label for="name" class="form-label">Nama Satuan <span
+                            <label for="name" class="form-label">Nama Kategori <span
                                     class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="name" name="name" placeholder="..."
                                 required>
@@ -193,7 +214,7 @@
                     submitButton.style.display = 'block';
                     setFieldsReadOnly(false);
                     methodInput.value = 'POST';
-                    Modal.querySelector('#MyModalLabel').textContent = 'Tambah Satuan';
+                    Modal.querySelector('#MyModalLabel').textContent = 'Tambah Kategori Stok';
                     modalForm.action = button.getAttribute('data-add-url');
                     modalForm.reset();
                     itemIdInput.value = '';
@@ -207,7 +228,7 @@
 
                     if (isEdit) {
                         modalForm.action =
-                            `/unit/${itemId}`;
+                            `/stock-item-category/${itemId}`;
                         methodInput.value = 'PUT';
                         submitButton.style.display = 'block';
                         setFieldsReadOnly(false);
@@ -218,10 +239,11 @@
                         setFieldsReadOnly(true);
                     }
 
-                    Modal.querySelector('#MyModalLabel').textContent = isEdit ? 'Edit Satuan' :
+                    Modal.querySelector('#MyModalLabel').textContent = isEdit ?
+                        'Edit Kategori Stok' :
                         'Detail';
 
-                    fetch(`/unit/${itemId}/fetch`)
+                    fetch(`/stock-item-category/${itemId}/fetch`)
                         .then(response => response.json())
                         .then(response => {
                             if (response.status) {
@@ -241,7 +263,7 @@
 
             Swal.fire({
                 title: 'Apa kamu yakin?',
-                html: `Ingin menghapus satuan <b>${stockItemMsg}</b>`,
+                html: `Ingin menghapus Kategori <b>${stockItemMsg}</b>`,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#0d6efd',

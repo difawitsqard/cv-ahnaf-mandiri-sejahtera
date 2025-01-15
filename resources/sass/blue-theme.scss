@@ -829,6 +829,10 @@
     width: max-content;
 }
 
+.text-muted {
+    color: #a3a7aa !important;
+}
+
 [data-bs-theme="blue-theme"] .preloader {
     background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' style='margin: auto; background: none; display: block; shape-rendering: auto;' width='200px' height='200px' viewBox='0 0 100 100' preserveAspectRatio='xMidYMid'%3E%3Ccircle cx='50' cy='50' r='34.8053' fill='none' stroke='%2393dbe9' stroke-width='2'%3E%3Canimate attributeName='r' repeatCount='indefinite' dur='1s' values='0;40' keyTimes='0;1' keySplines='0 0.2 0.8 1' calcMode='spline' begin='-0.5s'%3E%3C/animate%3E%3Canimate attributeName='opacity' repeatCount='indefinite' dur='1s' values='1;0' keyTimes='0;1' keySplines='0.2 0 0.8 1' calcMode='spline' begin='-0.5s'%3E%3C/animate%3E%3C/circle%3E%3Ccircle cx='50' cy='50' r='15.8746' fill='none' stroke='%23689cc5' stroke-width='2'%3E%3Canimate attributeName='r' repeatCount='indefinite' dur='1s' values='0;40' keyTimes='0;1' keySplines='0 0.2 0.8 1' calcMode='spline'%3E%3C/animate%3E%3Canimate attributeName='opacity' repeatCount='indefinite' dur='1s' values='1;0' keyTimes='0;1' keySplines='0.2 0 0.8 1' calcMode='spline'%3E%3C/animate%3E%3C/circle%3E%3C/svg%3E");
     background-color: #0f1535;

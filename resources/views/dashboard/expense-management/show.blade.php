@@ -89,6 +89,10 @@
                                 <span>{{ \Carbon\Carbon::parse($Expense->date_out)->format('d M Y H:i') }}</span>
                             </p>
                         </div>
+                        <div class="d-flex justify-content-between">
+                            <p class="fw-semi-bold">Oleh ( <i class="text-muted">{{ ucfirst($Expense->user->roles->first()->name) }}</i> )</p>
+                            <p class="fw-bold">{{ $Expense->user->name }}</p>
+                        </div>
 
                         <div class="card card-body mb-3">
                             @php

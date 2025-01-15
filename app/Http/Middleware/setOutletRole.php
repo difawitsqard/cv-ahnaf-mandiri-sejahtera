@@ -33,7 +33,8 @@ class setOutletRole
         } else if ($user?->hasRole('staff') && $user?->outlet_id) {
             $outlet = Outlet::where('id', $user->outlet_id)->firstOrFail();
         } else {
-            return abort(403, 'Unauthorized');
+            Auth::logout();
+            return redirect()->route('login')->with('warning', 'Akun Anda tidak memiliki akses ke outlet manapun, silakan hubungi superadmin.');
         }
 
         if (!$outlet)

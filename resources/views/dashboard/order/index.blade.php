@@ -24,8 +24,7 @@
                 </div>
                 <div class="ms-auto">
                     <a class="btn btn-primary px-4 add-button"
-                        href="{{ roleBasedRoute('order.create', ['outlet' => $outlet->slug]) }}"><i
-                            class="bi bi-bag-plus me-2"></i>Pesanan Baru</a>
+                        href="{{ roleBasedRoute('order.create', ['outlet' => $outlet->slug]) }}"><i class="bi bi-plus-lg me-2"></i>Pesanan Baru</a>
                 </div>
             </div>
         </div>
@@ -129,7 +128,18 @@
                                                         Detail
                                                     </a>
                                                 </li>
-                                                {{-- <hr class="dropdown-divider"> --}}
+                                                @if ($order->can_be_canceled)
+                                                    <hr class="dropdown-divider">
+                                                    <form
+                                                        action="{{ roleBasedRoute('order.cancel', ['id' => $order->id, 'outlet' => $outlet->slug]) }}"
+                                                        method="POST">
+                                                        @csrf
+                                                        @method('PUT')
+                                                        <button type="submit" class="dropdown-item text-danger">
+                                                            Batalkan
+                                                        </button>
+                                                    </form>
+                                                @endif
                                             </ul>
                                         </div>
                                     </td>

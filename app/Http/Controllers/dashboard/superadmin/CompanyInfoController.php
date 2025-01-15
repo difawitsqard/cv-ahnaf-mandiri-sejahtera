@@ -10,15 +10,6 @@ use App\Http\Requests\dashboard\superadmin\CompanyInfoRequest;
 class CompanyInfoController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        $CompanyInfo = CompanyInfo::first();
-        return view('dashboard.superadmin.company-info.index', compact('CompanyInfo'));
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     private function store($data)
@@ -26,7 +17,9 @@ class CompanyInfoController extends Controller
         $CompanyInfo = new CompanyInfo();
         $CompanyInfo->fill($data);
         $CompanyInfo->save();
-        return redirect()->back()->with('success', 'Info perusahaan berhasil ditambahkan.');
+
+        session()->flash('form-name', 'company-info');
+        return redirect()->back()->with('success', 'Informasi perusahaan berhasil ditambahkan.');
     }
 
     /**
@@ -36,7 +29,9 @@ class CompanyInfoController extends Controller
     {
         $CompanyInfo = CompanyInfo::first();
         $CompanyInfo->update($data);
-        return redirect()->back()->with('success', 'Info perusahaan berhasil diperbarui.');
+
+        session()->flash('form-name', 'company-info');
+        return redirect()->back()->with('success', 'Informasi perusahaan berhasil diperbarui.');
     }
 
     public function CreateOrUpdate(CompanyInfoRequest $request)

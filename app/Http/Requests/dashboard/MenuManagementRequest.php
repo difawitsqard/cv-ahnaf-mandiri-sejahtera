@@ -32,7 +32,7 @@ class MenuManagementRequest extends FormRequest
             'name' => 'required|string|max:255',
             'description' => 'nullable|string|max:255',
             'price' => 'required|numeric',
-            'stock_item_id.*' => 'nullable|exists:stock_items,id',
+            'stock_item_id.*' => 'nullable|exists:stock_items,id,category_id,1',
             'quantity.*' => 'nullable|integer|min:1|required_with:stock_item_id.*',
         ];
 

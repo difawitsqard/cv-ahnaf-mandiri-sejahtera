@@ -2,18 +2,21 @@
 
 namespace App\Http\Controllers\dashboard;
 
-use App\Exports\OrderExport;
 use Exception;
 use App\Models\Menu;
 use App\Models\Order;
 use App\Models\Outlet;
 use App\Models\StockItem;
 use Mike42\Escpos\Printer;
+use App\Exports\OrderExport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use App\Http\Controllers\Controller;
 use Barryvdh\DomPDF\Facade\PDF;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Traits\OrderAuthorizationTrait;
+use Spatie\Activitylog\Models\Activity;
 use Spatie\Activitylog\Facades\LogBatch;
 use Illuminate\Support\Facades\Validator;
 use Mike42\Escpos\PrintConnectors\RawbtPrintConnector;
@@ -37,13 +40,17 @@ class OrderController extends Controller
      */
     public function index(Outlet $outlet)
     {
-        $menus = Menu::where('outlet_id', $outlet->id)->get();
-        $menus->load('menuImages', 'stockItems');
+        if (auth()->user()->hasRole('staff')) {
+            $orders = Order::where('outlet_id', $outlet->id)
+                ->where('user_id', auth()->id())
+                ->get();
+        } else {
+            $orders = Order::where('outlet_id', $outlet->id)->get();
+        }
 
-        $orders = Order::where('outlet_id', $outlet->id)->get();
         $orders->load('items.menu', 'user');
 
-        return view('dashboard.order.index',  compact('menus', 'orders', 'outlet'));
+        return view('dashboard.order.index',  compact('orders', 'outlet'));
     }
 
     public function create(Outlet $outlet)
@@ -174,7 +181,16 @@ class OrderController extends Controller
     {
         list($outlet, $id) = $this->processParameters($param1, $param2);
 
-        $order = Order::findOrFail($id);
+        if (auth()->user()->hasRole('staff')) {
+            $order = Order::where('id', $id)
+                ->where('outlet_id', $outlet->id)
+                ->where('user_id', auth()->id())
+                ->firstOrFail();
+        } else {
+            $order = Order::where('id', $id)
+                ->where('outlet_id', $outlet->id)
+                ->firstOrFail();
+        }
         $order->load('items.menu');
 
         return view('dashboard.order.show', compact('order', 'outlet'));
@@ -348,12 +364,47 @@ class OrderController extends Controller
         }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function cancel($param1, $param2 = null)
     {
-        //
+        list($outlet, $id) = $this->processParameters($param1, $param2);
+
+        $order = Order::where('id', $id)
+            ->where('outlet_id', $outlet->id)
+            ->firstOrFail();
+
+        if (!$order->can_be_canceled) {
+            return back()->withErrors(["Pesanan #{$order->id} tidak dapat dibatalkan."]);
+        }
+
+        DB::beginTransaction();
+        LogBatch::startBatch();
+
+        try {
+
+            //get activity log by uuid
+            $activity = Activity::where('batch_uuid', $order->batch_uuid)
+                ->where('event', 'deducted')->get();
+
+            // kemablikan stock item
+            foreach ($activity as $act) {
+                try {
+                    $quantity = abs($act->properties['qty']);
+                    StockItem::restock($act->subject_id, $outlet->id, $quantity);
+                } catch (Exception $e) {
+                    // Abaikan jika terjadi error saat restock
+                }
+            }
+
+            $order->update(['status' => 'canceled']);
+
+            DB::commit();
+            return back()->with('success', "Pesanan #{$order->id} berhasil dibatalkan.");
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withErrors([$e->getMessage()]);
+        }
+
+        LogBatch::endBatch();
     }
 
     public function export(Request $request, Outlet $outlet)

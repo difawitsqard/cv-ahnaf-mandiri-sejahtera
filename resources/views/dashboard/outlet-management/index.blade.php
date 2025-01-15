@@ -204,12 +204,12 @@
                                                                 <li><button class="dropdown-item edit-button"
                                                                         data-bs-toggle="modal" data-bs-target="#MyModal"
                                                                         data-add-url="{{ route('outlet.store') }}"
-                                                                        data-id="{{ $_outletRow->id }}">Edit</button>
+                                                                        data-id="{{ $_outletRow->slug }}">Edit</button>
                                                                 </li>
                                                                 <hr class="dropdown-divider">
                                                                 <li>
                                                                     <form id="delete-form-{{ $_outletRow->id }}"
-                                                                        action="{{ route('outlet.destroy', ['slug' => $_outletRow->slug]) }}"
+                                                                        action="{{ route('outlet.destroy', ['outlet' => $_outletRow->slug]) }}"
                                                                         method="POST" style="display: none;">
                                                                         @csrf
                                                                         @method('DELETE')
@@ -259,10 +259,10 @@
                         @method('POST')
                         <input type="hidden" id="itemId" name="id">
 
-                        <div class="col-12 col-lg-4">
+                        <div class="col-12 col-lg-4 mb-3">
                             <h6 class="mb-2">Gambar ( Opsional )</h6>
                             <label class="picture-input-costum" for="image"
-                                style="width: 100%; min-height: 80px; height:243px;">
+                                style="width: 100%; min-height: 80px; height:253px;">
                                 <span class="picture__image"></span>
                                 <span class="picture__text"><span
                                         class="material-icons-outlined">add_photo_alternate</span></span>
@@ -284,10 +284,15 @@
                                 <input type="text" class="form-control" id="name" name="name"
                                     placeholder="..." required>
                             </div>
-                            <div class="mb-">
+                            <div class="mb-3">
                                 <label for="address" class="form-label">Alamat Outlet <span
                                         class="text-danger">*</span></label>
-                                <textarea class="form-control" id="address" name="address" placeholder="..." rows="6" required></textarea>
+                                <textarea class="form-control" id="address" name="address" placeholder="..." rows="3" required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Nomor Telepon Outlet</label>
+                                <input type="number" class="form-control" id="phone_number" name="phone_number"
+                                    placeholder="628XX/08XX">
                             </div>
                         </div>
                     </div>
@@ -336,10 +341,11 @@
             var itemIdInput = modalForm.querySelector('input[name="id"]');
             var nameInput = modalForm.querySelector('input[name="name"]');
             var addressTextarea = modalForm.querySelector('textarea[name="address"]');
+            var phone_number = modalForm.querySelector('input[name="phone_number"]');
             var submitButton = modalForm.querySelector('button[type="submit"]');
             var imgPreview = modalForm.querySelector('#image-preview');
 
-            new ImageUploader({
+            let imageUploaderInstance = new ImageUploader({
                 imageWidth: 400,
                 imageHeight: 500,
                 cropRatio: 4 / 5,
@@ -356,6 +362,8 @@
             document.querySelectorAll('.add-button').forEach(function(button) {
                 button.addEventListener('click', function() {
                     submitButton.style.display = 'block';
+                    modalForm.querySelector('#image').removeAttribute('data-image-src');
+                    modalForm.querySelector('#image').removeAttribute('data-image-id');
                     setFieldsReadOnly(false);
                     methodInput.value = 'POST';
                     Modal.querySelector('#MyModalLabel').textContent = 'Tambah Outlet';
@@ -369,6 +377,8 @@
                 button.addEventListener('click', function() {
                     var isEdit = button.classList.contains('edit-button');
                     var itemId = button.getAttribute('data-id');
+
+                    modalForm.reset();
 
                     if (isEdit) {
                         modalForm.action =
@@ -392,7 +402,21 @@
                             if (response.status) {
                                 nameInput.value = response.data.name;
                                 addressTextarea.value = response.data.address;
-                                imgPreview.src = response.data.image_url;
+                                phone_number.value = response.data.phone_number;
+
+                                if (isEdit) {
+                                    if (response.data.image_path) {
+                                        modalForm.querySelector('#image').setAttribute(
+                                            'data-image-src', response.data.image_url);
+                                        modalForm.querySelector('#image').setAttribute(
+                                            'data-image-id', response.data.id);
+                                    } else {
+                                        modalForm.querySelector('#image').removeAttribute('data-image-src');
+                                        modalForm.querySelector('#image').removeAttribute('data-image-id');
+                                    }
+
+                                    imageUploaderInstance.updateImagePreview();
+                                }
                             } else {
                                 console.error('Error:', 'Gagal memuat data.');
                             }

@@ -45,7 +45,7 @@
                         <div class="btn-group position-static">
                             <a href="{{ roleBasedRoute('order.create', ['outlet' => $outlet->slug]) }}"
                                 class="btn btn-primary">
-                                <i class="bi bi-bag-plus me-2"></i>Pesanan Baru
+                                <i class="bi bi-plus-lg me-2"></i>Pesanan Baru
                             </a>
                         </div>
                     </div>
@@ -72,7 +72,7 @@
                             <div class="product-table">
                                 <div class="table-responsive white-space-nowrap">
                                     <table class="table align-middle">
-                                        <thead class="table-light">
+                                        <thead class="bg-light">
                                             <tr>
                                                 <th>Menu</th>
                                                 <th>Jumlah</th>
@@ -148,7 +148,8 @@
                                         break;
                                 }
                             @endphp
-                            <h6 class="rounded-pill bg-{{ $color }} px-3 fw-bold">{{ $status }}</h6>
+                            <span
+                                class="lable-table bg-{{ $color }}-subtle text-{{ $color }} rounded border border-{{ $color }}-subtle fw-bold px-3">{{ $status }}</span>
                         </div>
                         <div>
                             <div class="d-flex justify-content-between">

@@ -217,12 +217,12 @@
                                 <h6 class="mb-2">Jumlah <span class="text-danger">*</span></h6>
 
                                 <div class="input-group w-auto qty-control">
-                                    <button class="btn btn-outline-secondary decrement-button"><i
+                                    <button class="btn btn-inverse-secondary border decrement-button"><i
                                             class="bi bi-dash-lg"></i></button>
                                     <input type="text" id="quantity" name="quantity"
                                         class="form-control text-center shadow-none quantity-input ignore"
                                         placeholder="default '1'" value="1" required>
-                                    <button class="btn btn-outline-secondary increment-button"><i
+                                    <button class="btn btn-inverse-secondary border increment-button"><i
                                             class="bi bi-plus-lg"></i></button>
                                 </div>
                                 {{-- 
@@ -482,14 +482,15 @@
                                     id: item.id,
                                     stock_item_id: item.stock_item_id,
                                     name: item.name,
-                                    image: item.image_path,
-                                    image_upload: item.image_path,
+                                    image: item.image_path ? item.image_url : null,
+                                    image_upload: item.image_path ? item.image_url : null,
                                     price: item.price,
                                     quantity: item.quantity,
                                     subtotal: item.subtotal,
                                     description: item.description
                                 });
-                                console.log(item);
+
+                                console.log(item.image_url);
                             });
                             saveExpenseItem();
                             loadExpenseItem();
@@ -594,7 +595,7 @@
                     modalItem.find('.modal-body').alertError('Nama item harus diisi');
                     return;
                 }
-                if (!price) {
+                if (!stock_item_id && !price) {
                     modalItem.find('.modal-body').alertError('Harga item harus diisi');
                     return;
                 }

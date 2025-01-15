@@ -21,7 +21,7 @@ class Outlet extends Model
         });
     }
 
-    protected $fillable = ['name', 'address', 'phone_number', 'image_path'];
+    protected $fillable = ['name', 'address', 'phone_number', 'tax', 'discount', 'image_path'];
 
     protected $appends = ['image_url'];
 

@@ -38,10 +38,18 @@ class ExpenseManagementController extends Controller
      */
     public function index(Outlet $outlet)
     {
-        $expenses = Expense::where('outlet_id', $outlet->id)
-            ->with('items')
-            ->latest()
-            ->get();
+        if (auth()->user()->hasRole('staff')) {
+            $expenses = Expense::where('outlet_id', $outlet->id)
+                ->where('user_id', auth()->id())
+                ->with('items')
+                ->latest()
+                ->get();
+        } else {
+            $expenses = Expense::where('outlet_id', $outlet->id)
+                ->with('items')
+                ->latest()
+                ->get();
+        }
 
         return view('dashboard.expense-management.index', compact('outlet', 'expenses'));
     }
@@ -136,10 +144,16 @@ class ExpenseManagementController extends Controller
     {
         [$outlet, $id] = $this->processParameters($param1, $param2);
 
-        $Expense = Expense::where('id', $id)
-            ->where('outlet_id', $outlet->id)
-            ->firstOrFail();
-
+        if (auth()->user()->hasRole('staff')) {
+            $Expense = Expense::where('id', $id)
+                ->where('outlet_id', $outlet->id)
+                ->where('user_id', auth()->id())
+                ->firstOrFail();
+        } else {
+            $Expense = Expense::where('id', $id)
+                ->where('outlet_id', $outlet->id)
+                ->firstOrFail();
+        }
         $Expense->load('items', 'user');
 
         return view('dashboard.expense-management.show', compact('Expense', 'outlet'));
@@ -149,39 +163,24 @@ class ExpenseManagementController extends Controller
     {
         [$outlet, $id] = $this->processParameters($param1, $param2);
 
-        $Expenses = Expense::where('id', $id)
-            ->where('outlet_id', $outlet->id)
-            ->firstOrFail();
-        $Expenses->load('items', 'user');
-
-        if ($Expenses) {
-            return response()->json([
-                'status' => true,
-                'code' => 200,
-                'data' => $Expenses,
-            ]);
+        if (auth()->user()->hasRole('staff')) {
+            $Expense = Expense::where('id', $id)
+                ->where('outlet_id', $outlet->id)
+                ->where('user_id', auth()->id())
+                ->firstOrFail();
         } else {
-            return response()->json(
-                [
-                    'status' => false,
-                    'code' => 404,
-                ],
-                404,
-            );
+            $Expense = Expense::where('id', $id)
+                ->where('outlet_id', $outlet->id)
+                ->firstOrFail();
         }
-    }
 
-    public function fetchAll(Outlet $outlet)
-    {
-        $Expenses = Expense::where('outlet_id', $outlet->id)
-            ->with('items.stockItem.unit', 'items.stockItem.category')
-            ->get();
+        $Expense->load('items', 'user');
 
-        if ($Expenses) {
+        if ($Expense) {
             return response()->json([
                 'status' => true,
                 'code' => 200,
-                'data' => $Expenses,
+                'data' => $Expense,
             ]);
         } else {
             return response()->json(
@@ -394,25 +393,39 @@ class ExpenseManagementController extends Controller
 
             $nameFile = 'expenses-' . $outlet->slug . '-' . $startDate->format('dmY') . '-' . $endDate->format('dmY') . '-' . now()->format('YmdHis');
 
-            if ($validatedData['export_as'] == 'excel') {
-                return Excel::download(new ExpensesExport($outlet, $validatedData['start_date'], $validatedData['end_date']),  $nameFile . '.xlsx');
+            if (auth()->user()->hasRole('staff')) {
+                $expenses = Expense::where('outlet_id', $outlet->id)
+                    ->where('user_id', auth()->id())
+                    ->where('status', 'submitted')
+                    ->whereBetween('date_out', [
+                        date('Y-m-d 00:00:00', strtotime($validatedData['start_date'])),
+                        date('Y-m-d 23:59:59', strtotime($validatedData['end_date'])),
+                    ])
+                    ->with('items')
+                    ->get();
+            } else {
+                $expenses = Expense::where('outlet_id', $outlet->id)
+                    ->where('status', 'submitted')
+                    ->whereBetween('date_out', [
+                        date('Y-m-d 00:00:00', strtotime($validatedData['start_date'])),
+                        date('Y-m-d 23:59:59', strtotime($validatedData['end_date'])),
+                    ])
+                    ->with('items')
+                    ->get();
             }
-
-            $expenses = Expense::where('outlet_id', $outlet->id)
-                ->where('status', 'submitted')
-                ->whereBetween('date_out', [
-                    date('Y-m-d 00:00:00', strtotime($validatedData['start_date'])),
-                    date('Y-m-d 23:59:59', strtotime($validatedData['end_date'])),
-                ])
-                ->with('items')
-                ->get();
 
             if ($expenses->isEmpty()) {
                 throw new \Exception('Tidak ada data yang ditemukan untuk periode yang dipilih.');
             }
 
-            $pdf = PDF::loadView('dashboard.expense-management.export-pdf', compact('outlet', 'expenses', 'validatedData'));
-            return $pdf->download($nameFile  . '.pdf');
+            if ($validatedData['export_as'] == 'excel') {
+                return Excel::download(new ExpensesExport($expenses, $outlet, $validatedData['start_date'], $validatedData['end_date']),  $nameFile . '.xlsx');
+            } else if ($validatedData['export_as'] == 'pdf') {
+                $pdf = PDF::loadView('dashboard.expense-management.export-pdf', compact('outlet', 'expenses', 'validatedData'));
+                return $pdf->download($nameFile  . '.pdf');
+            } else {
+                throw new \Exception('Format ekspor tidak valid.');
+            }
         } catch (\Exception $e) {
             return redirect()->back()->withInput()->with('report-error', $e->getMessage());
         }

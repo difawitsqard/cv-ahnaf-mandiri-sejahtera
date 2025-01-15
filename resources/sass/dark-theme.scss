@@ -285,6 +285,35 @@
         cursor: pointer;
     }
 
+    /*select 2*/
+
+    .select2-container--bootstrap-5 {
+        .select2-selection {
+            background-color: var(--bs-body-bg);
+            border-color: var(--bs-border-color-translucent);
+        }
+    }
+
+    .select2-selection__rendered {
+        color: var(--bs-body-color) !important;
+    }
+
+    .select2-selection__choice {
+        color: var(--bs-body-color) !important;
+        border-color: var(--bs-border-color-translucent) !important;
+    }
+
+    .select2-dropdown {
+        color: #ffffff;
+        background-color: var(--bs-body-bg);
+    }
+
+    .select2-search__field {
+        color: var(--bs-body-color) !important;
+        border-color: var(--bs-border-color-translucent) !important;
+        background-color: var(--bs-body-bg);
+    }
+
     /*page footer*/
 
     .page-footer {

@@ -60,4 +60,9 @@ class StockItemCategory extends Model
         // Jika tidak ditemukan, buat unit baru
         return self::create(['name' => $identifier]);
     }
+
+    public function stockItems()
+    {
+        return $this->hasMany(StockItem::class, 'category_id');
+    }
 }

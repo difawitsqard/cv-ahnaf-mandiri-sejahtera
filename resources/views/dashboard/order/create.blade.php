@@ -119,8 +119,8 @@
                                                             {{ $menu['price'] == 0 ? 'Gratis' : formatRupiah($menu['price']) }}
                                                         </h6>
                                                         <div class="mt-auto d-flex align-items-center justify-content-end">
-                                                            <button type="button"
-                                                                class="btn btn-primary raised d-flex gap-2 add-button mt-2"
+                                                             <button type="button"
+                                                                class="btn btn-primary btn-circle raised d-flex gap-2 rounded-circle wh-48 add-button mt-2"
                                                                 {{ $menu->max_order_quantity < 1 ? 'disabled' : '' }}>
                                                                 <i class="bi bi-plus-lg"></i>
                                                             </button>
@@ -245,7 +245,7 @@
                                                 required="">
                                                 <option value="cash">Tunai</option>
                                                 <option value="credit_card">Kartu Kredit</option>
-                                                <option value="bank_transfer">Transfer Bank</option>
+                                                <option value="transfer_bank">Transfer Bank</option>
                                                 <option value="other">Lainnya</option>
                                             </select>
                                             <label class="form-label">Jumlah Kembalian</label>
@@ -328,7 +328,7 @@
 
                 if (cart.length < 1) {
                     $('.qty-control').replaceWith(
-                        `<button type="button" class="btn btn-primary raised d-flex gap-2 mt-2 add-button"><i class="bi bi-plus-lg"></i></button>`
+                        `<button type="button" class="btn btn-primary btn-circle raised d-flex gap-2 rounded-circle wh-48 add-button mt-2"><i class="bi bi-plus-lg"></i></button>`
                     );
                 }
             }
@@ -473,7 +473,7 @@
                     if (item) item.quantity = quantity;
                 } else {
                     cart = cart.filter(item => item.id !== menuId);
-                    $(this).parent().parent().html(`<button type="button" class="btn btn-primary raised d-flex gap-2 mt-2 add-button">
+                    $(this).parent().parent().html(`<button type="button" class="btn btn-primary btn-circle raised d-flex gap-2 rounded-circle wh-48 add-button mt-2">
                 <i class="bi bi-plus-lg"></i>
             </button>`);
                 }

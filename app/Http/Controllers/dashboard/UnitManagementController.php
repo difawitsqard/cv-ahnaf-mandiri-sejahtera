@@ -62,7 +62,7 @@ class UnitManagementController extends Controller
 
         return redirect()
             ->back()
-            ->with('success', 'Unit ' . $unit->name . ' berhasil diubah.');
+            ->with('success', 'Unit ' . $unit->name . ' berhasil diperbarui.');
     }
 
     /**
@@ -83,7 +83,7 @@ class UnitManagementController extends Controller
         } catch (\Illuminate\Database\QueryException $e) {
             return redirect()
                 ->back()
-                ->withErrors(['error' => 'Gagal melakukan operasi hapus pada unit ' . $unitName . ' karena terkait dengan data lain.']);
+                ->withErrors(['error' => 'Gagal menghapus unit ' . $unitName . ' karena masih terkait dengan data lain.']);
         }
     }
 }

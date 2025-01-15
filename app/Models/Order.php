@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Spatie\Activitylog\LogOptions;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -62,6 +63,33 @@ class Order extends Model
         $sequence = str_pad($countToday + 1, 3, '0', STR_PAD_LEFT);
 
         return "{$sequence}{$outletId}{$date}";
+    }
+
+    /**
+     * Cek apakah pesanan bisa dibatalkan dan pengguna memiliki izin untuk membatalkan pesanan.
+     *
+     * @param User $user
+     * @return bool
+     */
+    public function canBeCanceled($user)
+    {
+        if ($user->id ===  $this->user_id || $user->hasRole('superadmin')) {
+            if ($this->status != "completed" || $this->created_at->diffInHours(now()) > 2) {
+                return false;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Get the "can_be_canceled" attribute.
+     *
+     * @return bool
+     */
+    public function getCanBeCanceledAttribute()
+    {
+        return $this->canBeCanceled(Auth::user());
     }
 
     public function items()

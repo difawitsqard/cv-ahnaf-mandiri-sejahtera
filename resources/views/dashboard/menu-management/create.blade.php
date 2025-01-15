@@ -65,7 +65,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-12 col-lg-5">
+                            <div class="col-12 col-xl-7 col-xxl-5">
                                 <h6 class="mb-2">Gambar Menu</h6>
                                 <div class="row">
 
@@ -92,7 +92,7 @@
 
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-7">
+                            <div class="col-12 col-xl-5 col-xxl-7">
                                 <div class="mb-4">
                                     <h6 class="mb-2">Nama Menu <span class="text-danger">*</span></h6>
                                     <input type="text" class="form-control" id="name" name="name"

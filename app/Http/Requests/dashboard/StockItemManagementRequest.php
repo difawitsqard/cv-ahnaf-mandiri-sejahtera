@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\dashboard\superadmin;
+namespace App\Http\Requests\dashboard;
 
 use Illuminate\Foundation\Http\FormRequest;
 

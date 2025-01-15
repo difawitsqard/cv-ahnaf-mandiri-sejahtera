@@ -11,7 +11,7 @@ use App\Http\Controllers\Controller;
 use App\Services\ImageUploadService;
 use Illuminate\Support\Facades\File;
 use Spatie\Activitylog\Models\Activity;
-use App\Http\Requests\dashboard\superadmin\StockItemManagementRequest;
+use App\Http\Requests\dashboard\StockItemManagementRequest;
 
 class StockItemManagementController extends Controller
 {
@@ -91,6 +91,9 @@ class StockItemManagementController extends Controller
             $validatedData['image_path'] = $this->imageUploadService->uploadImage($validatedData['image'], "{$outlet->slug}/stock-items");
         }
 
+        // set price to 0 if the category etalase
+        $validatedData['price'] = $category->id == 1 ? $validatedData['price'] : 0;
+
         $stockItems = StockItem::create($validatedData);
 
         return redirect()
@@ -100,7 +103,8 @@ class StockItemManagementController extends Controller
 
     public function create(Outlet $outlet)
     {
-        return view('dashboard.stock-item-management.create', compact('outlet'));
+        $stockItems = StockItem::where('category_id', 1)->get();
+        return view('dashboard.stock-item-management.create', compact('outlet', 'stockItems'));
     }
 
     /**

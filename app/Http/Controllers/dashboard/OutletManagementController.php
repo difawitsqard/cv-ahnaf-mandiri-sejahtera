@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\dashboard\superadmin;
+namespace App\Http\Controllers\dashboard;
 
 use App\Models\Outlet;
 use Illuminate\Http\Request;
@@ -8,7 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Services\ImageUploadService;
 use Illuminate\Support\Facades\File;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use App\Http\Requests\dashboard\superadmin\OutletManagementRequest;
+use App\Http\Requests\dashboard\OutletManagementRequest;
 
 class OutletManagementController extends Controller
 {
@@ -36,7 +36,7 @@ class OutletManagementController extends Controller
 
         $totalOutlets = Outlet::count();
 
-        return view('dashboard.superadmin.outlet-management.index', compact('Outlets', 'totalOutlets'));
+        return view('dashboard.outlet-management.index', compact('Outlets', 'totalOutlets'));
     }
 
     /**
@@ -62,7 +62,7 @@ class OutletManagementController extends Controller
     public function fetch(string $id)
     {
         try {
-            $outlet = Outlet::findOrFail($id);
+            $outlet = Outlet::where('slug', $id)->orWhere('id', $id)->firstOrFail();
 
             return response()->json([
                 'status' => true,
@@ -81,14 +81,30 @@ class OutletManagementController extends Controller
         }
     }
 
+    public function edit(Outlet $outlet)
+    {
+        return view('dashboard.outlet-management.edit', compact('outlet'));
+    }
+
     /**
      * Update the specified resource in storage.
      */
-    public function update(OutletManagementRequest $request, string $id)
+    public function update(OutletManagementRequest $request, Outlet $outlet)
     {
         $validatedData = $request->validated();
 
-        $outlet = Outlet::findOrFail($id);
+        if (auth()->user()->role != 'superadmin') {
+            if ($outlet->id != auth()->user()->outlet_id) {
+                return redirect()
+                    ->back()
+                    ->withErrors(['error' => 'Anda tidak memiliki akses untuk mengubah outlet ini.']);
+            }
+        }
+
+        if (isset($validatedData['delete_image']) && $validatedData['delete_image'][0] == $outlet->id) {
+            if ($outlet->image_path) $this->imageUploadService->deleteImage($outlet->image_path);
+            $validatedData['image_path'] = null;
+        }
 
         if ($request->hasFile('image')) {
             if ($outlet->image_path) {
@@ -100,18 +116,15 @@ class OutletManagementController extends Controller
         $outlet->update($validatedData);
 
         return redirect()
-            ->route('outlet.index')
+            ->back()
             ->with('success', 'Outlet ' . $outlet->name . ' berhasil diperbarui.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Outlet $outlet)
     {
-        // Retrieve the specific service instance
-        $outlet = Outlet::where('slug', $id)->firstOrFail();
-
         $directoryPath = public_path('uploads/' . $outlet->slug);
         if (File::exists($directoryPath)) {
             File::deleteDirectory($directoryPath);

@@ -39,6 +39,6 @@ class SetPasswordController extends Controller
 
         Auth::logout($user);
 
-        return redirect()->route('login');
+        return redirect()->route('login')->with('info', 'Kata sandi telah berhasil ditetapkan. Silakan masuk dengan kata sandi baru Anda.');
     }
 }

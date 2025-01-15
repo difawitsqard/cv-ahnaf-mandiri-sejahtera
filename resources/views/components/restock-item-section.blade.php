@@ -3,7 +3,7 @@
     <h5 class="mb-3">Restock</h5>
     <div class="row g-3">
         <div class="col-12 col-lg-7">
-            <table class="ms-lg-3 mb-3">
+            <table class="ms-lg-3">
                 <thead>
                     <tr>
                         <th style="width: 200px;"></th>
@@ -31,7 +31,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="col-12 col-lg-5 d-flex flex-column align-items-end">
+        <div class="col-12 col-xxl-5 mt-2 d-flex flex-column align-items-end">
             <div class="mb-2" id="text-message"></div>
             <input class="form-control mb-2" type="number" name="qty" id="qty" placeholder="Jumlah">
             <button type="button" class="btn btn-outline-primary" id="restock-submit">

@@ -17,8 +17,11 @@ class ExpensesExport implements FromCollection, WithMapping, WithHeadings, WithE
     protected $startDate;
     protected $endDate;
 
-    public function __construct($outlet, $startDate, $endDate)
+    protected $expenses;
+
+    public function __construct($expenses, $outlet, $startDate, $endDate)
     {
+        $this->expenses = $expenses;
         $this->outlet = $outlet;
         $this->startDate = Carbon::createFromFormat('d M Y', $startDate)->startOfDay();
         $this->endDate = Carbon::createFromFormat('d M Y', $endDate)->endOfDay();
@@ -29,17 +32,7 @@ class ExpensesExport implements FromCollection, WithMapping, WithHeadings, WithE
      */
     public function collection()
     {
-        $expenses = Expense::where('outlet_id', $this->outlet->id)
-            ->where('status', 'submitted')
-            ->whereBetween('date_out', [$this->startDate, $this->endDate])
-            ->with('items')
-            ->get();
-
-        if ($expenses->isEmpty()) {
-            throw new \Exception('Tidak ada data yang ditemukan untuk periode yang dipilih.');
-        }
-
-        return $expenses;
+        return $this->expenses;
     }
 
     public function headings(): array
