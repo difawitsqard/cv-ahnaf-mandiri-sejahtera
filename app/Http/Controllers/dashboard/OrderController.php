@@ -50,7 +50,7 @@ class OrderController extends Controller
 
         $orders->load('items.menu', 'user');
 
-        return view('dashboard.order.index',  compact('orders', 'outlet'));
+        return view('dashboard.order.index', compact('orders', 'outlet'));
     }
 
     public function create(Outlet $outlet)
@@ -80,11 +80,14 @@ class OrderController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json([
-                'status' => false,
-                'code' => 422,
-                'errors' => $validator->errors(),
-            ], 422);
+            return response()->json(
+                [
+                    'status' => false,
+                    'code' => 422,
+                    'errors' => $validator->errors(),
+                ],
+                422,
+            );
         }
 
         $validated = $validator->validated();
@@ -125,13 +128,13 @@ class OrderController extends Controller
         $subtotal = $total;
 
         // Menghitung diskon
-        $discount = $subtotal * $outlet->discount / 100;
+        $discount = ($subtotal * $outlet->discount) / 100;
 
         // Menghitung harga setelah diskon
         $total = $subtotal - $discount;
 
         // Menghitung pajak berdasarkan subtotal atau harga setelah diskon
-        $tax = $total * $outlet->tax / 100;
+        $tax = ($total * $outlet->tax) / 100;
 
         // Menghitung total akhir
         $total = $total + $tax;
@@ -179,7 +182,7 @@ class OrderController extends Controller
      */
     public function show($param1, $param2 = null)
     {
-        list($outlet, $id) = $this->processParameters($param1, $param2);
+        [$outlet, $id] = $this->processParameters($param1, $param2);
 
         if (auth()->user()->hasRole('staff')) {
             $order = Order::where('id', $id)
@@ -198,7 +201,7 @@ class OrderController extends Controller
 
     public function printThermal($param1, $param2 = null)
     {
-        list($outlet, $id) = $this->processParameters($param1, $param2);
+        [$outlet, $id] = $this->processParameters($param1, $param2);
 
         $order = Order::findOrFail($id);
         $order->load('items.menu', 'user');
@@ -209,7 +212,6 @@ class OrderController extends Controller
 
             // Menggunakan printer
             $printer = new Printer($connector);
-
 
             // Fungsi untuk rata kiri-kanan
             function textLeftRight($left, $right, $width = 32)
@@ -245,7 +247,7 @@ class OrderController extends Controller
 
             function fitText($text, $length = 4, $position = 'behind')
             {
-                $textLength = mb_strlen($text);  // Menghitung panjang teks
+                $textLength = mb_strlen($text); // Menghitung panjang teks
 
                 if ($textLength < $length) {
                     // Tambahkan spasi di belakang atau di depan sesuai dengan opsi
@@ -274,20 +276,20 @@ class OrderController extends Controller
 
             // Info Transaksi rata kiri
             $printer->setJustification(Printer::JUSTIFY_LEFT);
-            $printer->text(str_repeat("=", 32) . "\n");
-            $printer->text(textLeftRight("No Tagihan", "#" . $order->id) . "\n");
-            $printer->text(textLeftRight("Kasir", fitText($order->user->name, 10, "start")) . "\n");
+            $printer->text(str_repeat('=', 32) . "\n");
+            $printer->text(textLeftRight('No Tagihan', '#' . $order->id) . "\n");
+            $printer->text(textLeftRight('Kasir', fitText($order->user->name, 10, 'start')) . "\n");
             // Customer Name (if exists)
             if ($order->name) {
-                $printer->text(textLeftRight("Nama Order", $order->name) . "\n");
+                $printer->text(textLeftRight('Nama Order', $order->name) . "\n");
             }
             $printer->text(textLeftRight($order->created_at->format('d M Y'), $order->created_at->format('H:i')) . "\n");
 
-            $printer->text(str_repeat("-", 32) . "\n");
+            $printer->text(str_repeat('-', 32) . "\n");
 
             // Item Belanja
             foreach ($order->items as $item) {
-                $itemDescription = fitText($item->quantity, 4) . "" . $item->menu->name;
+                $itemDescription = fitText($item->quantity, 4) . '' . $item->menu->name;
                 $wrappedItemDescription = wrapText($itemDescription, 20); // Batasi lebar deskripsi item
                 $subtotal = $item->subtotal;
 
@@ -296,11 +298,11 @@ class OrderController extends Controller
                     if ($index === 0) {
                         $printer->text(textLeftRight($line, number_format($subtotal, 0, ',', '.')) . "\n");
                     } else {
-                        $printer->text(fitText("", 4) . $line . "\n");
+                        $printer->text(fitText('', 4) . $line . "\n");
                     }
                 }
             }
-            $printer->text(str_repeat("-", 32) . "\n");
+            $printer->text(str_repeat('-', 32) . "\n");
 
             $sub_total = $order->items->sum('subtotal');
             $total = $sub_total;
@@ -312,20 +314,20 @@ class OrderController extends Controller
             $total = $sub_total - $discount + $tax;
 
             // Total Information
-            $printer->text(textLeftRight("Subtotal " . $order->items->sum('quantity') . " Produk", fitText(formatRupiah($sub_total), 10, "front")) . "\n");
+            $printer->text(textLeftRight('Subtotal ' . $order->items->sum('quantity') . ' Produk', fitText(formatRupiah($sub_total), 10, 'front')) . "\n");
             if ($discount > 0) {
-                $printer->text(textLeftRight("Diskon", fitText("-" . formatRupiah($discount), 10, "front")) . "\n");
+                $printer->text(textLeftRight('Diskon', fitText('-' . formatRupiah($discount), 10, 'front')) . "\n");
             }
 
             if ($tax > 0) {
-                $printer->text(textLeftRight("Pajak", fitText(formatRupiah($tax), 10, "front")) . "\n");
+                $printer->text(textLeftRight('Pajak', fitText(formatRupiah($tax), 10, 'front')) . "\n");
             }
             $printer->setEmphasis(true);
-            $printer->text(textLeftRight("TOTAL", "Rp" . fitText(formatRupiah($order->total), 10, "front")) . "\n");
+            $printer->text(textLeftRight('TOTAL', 'Rp' . fitText(formatRupiah($order->total), 10, 'front')) . "\n");
             $printer->setEmphasis(false);
 
             // Pembayaran
-            $printer->text(str_repeat("-", 32) . "\n");
+            $printer->text(str_repeat('-', 32) . "\n");
 
             switch ($order->payment_method) {
                 case 'cash':
@@ -343,11 +345,11 @@ class OrderController extends Controller
                 default:
                     $paymentMethod = $order->payment_method;
             }
-            $printer->text(textLeftRight($paymentMethod, fitText(formatRupiah($order->total), 10, "front")) . "\n");
-            $printer->text(textLeftRight("Total Bayar", fitText(formatRupiah($order->paid), 10, "front")) . "\n");
-            $printer->text(textLeftRight("Kembalian", fitText(formatRupiah($order->change), 10, "front")) . "\n");
+            $printer->text(textLeftRight($paymentMethod, fitText(formatRupiah($order->total), 10, 'front')) . "\n");
+            $printer->text(textLeftRight('Total Bayar', fitText(formatRupiah($order->paid), 10, 'front')) . "\n");
+            $printer->text(textLeftRight('Kembalian', fitText(formatRupiah($order->change), 10, 'front')) . "\n");
 
-            $printer->text(str_repeat("=", 32) . "\n");
+            $printer->text(str_repeat('=', 32) . "\n");
 
             // $printer->barcode($order->id, Printer::BARCODE_CODE39);
 
@@ -366,7 +368,7 @@ class OrderController extends Controller
 
     public function cancel($param1, $param2 = null)
     {
-        list($outlet, $id) = $this->processParameters($param1, $param2);
+        [$outlet, $id] = $this->processParameters($param1, $param2);
 
         $order = Order::where('id', $id)
             ->where('outlet_id', $outlet->id)
@@ -380,10 +382,10 @@ class OrderController extends Controller
         LogBatch::startBatch();
 
         try {
-
             //get activity log by uuid
             $activity = Activity::where('batch_uuid', $order->batch_uuid)
-                ->where('event', 'deducted')->get();
+                ->where('event', 'deducted')
+                ->get();
 
             // kemablikan stock item
             foreach ($activity as $act) {
@@ -420,25 +422,31 @@ class OrderController extends Controller
 
             $nameFile = 'revenue-' . $outlet->slug . '-' . $startDate->format('dmY') . '-' . $endDate->format('dmY') . '-' . now()->format('YmdHis');
 
-            if ($validatedData['export_as'] == 'excel') {
-                return Excel::download(new OrderExport($outlet, $validatedData['start_date'], $validatedData['end_date']),  $nameFile . '.xlsx');
+            if (auth()->user()->hasRole('staff')) {
+                $orders = Order::where('outlet_id', $outlet->id)
+                    ->where('status', 'completed')
+                    ->where('user_id', auth()->id())
+                    ->whereBetween('created_at', [date('Y-m-d 00:00:00', strtotime($validatedData['start_date'])), date('Y-m-d 23:59:59', strtotime($validatedData['end_date']))])
+                    ->with('items')
+                    ->get();
+            } else {
+                $orders = Order::where('outlet_id', $outlet->id)
+                    ->where('status', 'completed')
+                    ->whereBetween('created_at', [date('Y-m-d 00:00:00', strtotime($validatedData['start_date'])), date('Y-m-d 23:59:59', strtotime($validatedData['end_date']))])
+                    ->with('items')
+                    ->get();
             }
-
-            $orders = Order::where('outlet_id', $outlet->id)
-                ->where('status', 'completed')
-                ->whereBetween('created_at', [
-                    date('Y-m-d 00:00:00', strtotime($validatedData['start_date'])),
-                    date('Y-m-d 23:59:59', strtotime($validatedData['end_date'])),
-                ])
-                ->with('items')
-                ->get();
 
             if ($orders->isEmpty()) {
                 throw new \Exception('Tidak ada data yang ditemukan untuk periode yang dipilih.');
             }
 
-            $pdf = PDF::loadView('dashboard.order.export-pdf', compact('outlet', 'orders', 'validatedData'));
-            return $pdf->download($nameFile  . '.pdf');
+            if ($validatedData['export_as'] == 'excel') {
+                return Excel::download(new OrderExport($orders, $outlet, $validatedData['start_date'], $validatedData['end_date']), $nameFile . '.xlsx');
+            } elseif ($validatedData['export_as'] == 'pdf') {
+                $pdf = PDF::loadView('dashboard.order.export-pdf', compact('outlet', 'orders', 'validatedData'));
+                return $pdf->download($nameFile . '.pdf');
+            }
         } catch (\Exception $e) {
             return redirect()->back()->withInput()->with('report-error', $e->getMessage());
         }

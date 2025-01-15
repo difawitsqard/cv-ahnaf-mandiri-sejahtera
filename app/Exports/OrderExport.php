@@ -16,9 +16,11 @@ class OrderExport implements FromCollection, WithMapping, WithHeadings, WithEven
     protected $outlet;
     protected $startDate;
     protected $endDate;
+    protected $orders;
 
-    public function __construct($outlet, $startDate, $endDate)
+    public function __construct($orders, $outlet, $startDate, $endDate)
     {
+        $this->orders = $orders;
         $this->outlet = $outlet;
         $this->startDate = Carbon::createFromFormat('d M Y', $startDate)->startOfDay();
         $this->endDate = Carbon::createFromFormat('d M Y', $endDate)->endOfDay();
@@ -29,17 +31,7 @@ class OrderExport implements FromCollection, WithMapping, WithHeadings, WithEven
      */
     public function collection()
     {
-        $orders = Order::where('outlet_id', $this->outlet->id)
-            ->where('status', 'completed')
-            ->whereBetween('created_at', [$this->startDate, $this->endDate])
-            ->with('items', 'user')
-            ->get();
-
-        if ($orders->isEmpty()) {
-            throw new \Exception('Tidak ada data yang ditemukan untuk periode yang dipilih.');
-        }
-
-        return $orders;
+        return $this->orders;
     }
 
     public function headings(): array
