@@ -55,8 +55,8 @@ class ExpenseManagementRequest extends FormRequest
             'date_out' => [
                 'required',
                 'date_format:d M Y H:i',
-                'after_or_equal:' . now()->subDays(3)->format('d M Y H:i'), // Bisa mundur hingga 3 hari ke belakang
-                'before_or_equal:' . now()->addDays(7)->format('d M Y H:i'), // Tidak bisa lebih dari 7 hari ke depan
+                'after_or_equal:' . now()->subDays(7)->format('d M Y H:i'), // Mundur hingga 7 hari ke belakang
+                'before_or_equal:' . now()->format('d M Y H:i'), // Maksimum hari ini
             ],
             'items' => 'required|array',
             'items.*.stock_item_id' => 'nullable|exists:stock_items,id',

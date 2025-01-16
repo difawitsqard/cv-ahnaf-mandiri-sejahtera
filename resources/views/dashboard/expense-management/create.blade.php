@@ -304,10 +304,10 @@
                 static: true,
                 enableTime: true,
                 dateFormat: "d M Y H:i",
-                defaultDate: new Date(),
+                defaultDate: {!! old('date_out') ? json_encode(date('d M Y H:i', strtotime(old('date_out')))) : 'new Date()' !!},
                 minuteIncrement: 1,
-                minDate: new Date().fp_incr(-3),
-                maxDate: new Date().fp_incr(7),
+                minDate: new Date().fp_incr(-7), // 7 hari ke belakang dari hari ini
+                maxDate: new Date(), // Hari ini
             });
 
             let imageUploaderInstance = new ImageUploader({
@@ -375,7 +375,7 @@
                             </div>`;
                 }
 
-                const imageUrl = $(option.element).data('image-url');
+                const imageUrl = $(option.element).data('image-url') || "";
                 const description = $(option.element).data('description');
                 const maxQty = $(option.element).data('max-qty');
                 const name = option.text;
@@ -400,7 +400,7 @@
                 }
 
                 // Opsi lainnya (dengan gambar)
-                const imageUrl = $(option.element).data('image-url');
+                const imageUrl = $(option.element).data('image-url') || "";
                 const name = option.text;
 
                 return `<div style="display: flex; align-items: center;">

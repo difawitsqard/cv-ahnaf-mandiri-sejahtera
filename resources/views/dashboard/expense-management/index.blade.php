@@ -132,7 +132,7 @@
                                                         href="{{ roleBasedRoute('expense.show', ['expense' => $expense->id, 'outlet' => $outlet->slug]) }}">
                                                         Detail
                                                     </a>
-                                                    @if ($expense->status == 'submitted' && $expense->updated_at->diffInHours(now()) < 12)
+                                                    @if ($expense->can_be_edited_or_canceled)
                                                         <a type="button" class="dropdown-item edit-button"
                                                             href="{{ roleBasedRoute('expense.edit', ['expense' => $expense->id, 'outlet' => $outlet->slug]) }}">
                                                             Edit

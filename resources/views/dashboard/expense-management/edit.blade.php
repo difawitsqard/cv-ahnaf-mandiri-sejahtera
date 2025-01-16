@@ -30,8 +30,8 @@
 @section('content')
     <x-page-title title="Pengeluaran" subtitle="Edit Pengeluaran" />
 
-    <form action="{{ roleBasedRoute('expense.update', ['outlet' => $outlet->slug, 'expense'=>$expense->id]) }}" method="POST"
-        enctype="multipart/form-data" id="form-expense" onSubmit="return false">
+    <form action="{{ roleBasedRoute('expense.update', ['outlet' => $outlet->slug, 'expense' => $expense->id]) }}"
+        method="POST" enctype="multipart/form-data" id="form-expense" onSubmit="return false">
 
         @csrf
         @method('POST')
@@ -88,20 +88,19 @@
                                 <div class="mb-3">
                                     <h6 class="mb-2">Nama Pengeluaran</h6>
                                     <input type="text" class="form-control" id="name" name="name"
-                                        value="{{ old('name') ?? 'Pengeluaran ' . date('d-m-y H:i') }}" placeholder="..."
-                                        required>
+                                        value="{{ old('name') ?? ($expense->name ?? '') }}" placeholder="..." required>
                                 </div>
                                 <div class="mb-3">
                                     <h6 class="mb-2">Deskripsi Pengeluaran</h6>
                                     <div class="quill-description quill-input form-control" data-placeholder="...">
-                                        {!! old('description') ?? ($menu->description ?? '') !!}
+                                        {!! old('description') ?? ($expense->description ?? '') !!}
                                     </div>
                                     <input type="hidden" name="description" id="description">
                                 </div>
                                 <div class="mb-3">
                                     <h6 class="mb-2">Tanggal Waktu<span class="text-danger">*</span></h6>
                                     <input type="text" class="form-control date-time w-100" id="date_out"
-                                        name="date_out" value="{{ old('date_out') ?? date('d M Y H:i') }}" required>
+                                        name="date_out" required>
                                 </div>
                             </div>
                         </div>
@@ -300,10 +299,14 @@
                 static: true,
                 enableTime: true,
                 dateFormat: "d M Y H:i",
-                defaultDate: new Date(),
+                defaultDate: @json(old('date_out')
+                        ? date('d M Y H:i', strtotime(old('date_out')))
+                        : ($expense->date_out
+                            ? date('d M Y H:i', strtotime($expense->date_out))
+                            : null)),
                 minuteIncrement: 1,
-                minDate: new Date().fp_incr(-3),
-                maxDate: new Date().fp_incr(7),
+                minDate: new Date().fp_incr(-7), // 7 hari ke belakang dari hari ini
+                maxDate: new Date(), // Hari ini
             });
 
             let imageUploaderInstance = new ImageUploader({
@@ -371,7 +374,7 @@
                             </div>`;
                 }
 
-                const imageUrl = $(option.element).data('image-url');
+                const imageUrl = $(option.element).data('image-url') || ""
                 const description = $(option.element).data('description');
                 const maxQty = $(option.element).data('max-qty');
                 const name = option.text;
@@ -396,7 +399,7 @@
                 }
 
                 // Opsi lainnya (dengan gambar)
-                const imageUrl = $(option.element).data('image-url');
+                const imageUrl = $(option.element).data('image-url') || ""
                 const name = option.text;
 
                 return `<div style="display: flex; align-items: center;">
@@ -483,14 +486,15 @@
                                     stock_item_id: item.stock_item_id,
                                     name: item.name,
                                     image: item.image_path ? item.image_url : null,
-                                    image_upload: item.image_path ? item.image_url : null,
+                                    image_upload: item.image_path ? item.image_url :
+                                        null,
                                     price: item.price,
                                     quantity: item.quantity,
                                     subtotal: item.subtotal,
                                     description: item.description
                                 });
 
-                                console.log(item.image_url);
+                                //console.log(item.image_url);
                             });
                             saveExpenseItem();
                             loadExpenseItem();

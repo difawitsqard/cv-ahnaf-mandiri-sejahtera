@@ -34,6 +34,28 @@ class Expense extends Model
         // Chain fluent methods for configuration options
     }
 
+    /**
+     * Cek apakah pesanan bisa di edit atau dibatalkan dan pengguna memiliki izin untuk mengedit dan membatalkan pesanan.
+     *
+     * @param User $user
+     * @return bool
+     */
+    public function canBeEditedOrCanceled($user)
+    {
+        if ($user->id ===  $this->user_id || $user->hasRole('superadmin')) {
+            if ($this->status != "submitted" || $this->updated_at->diffInHours(now()) > 12) {
+                return false;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public function getCanBeEditedOrCanceledAttribute()
+    {
+        return $this->canBeEditedOrCanceled(auth()->user());
+    }
+
     public function items()
     {
         return $this->hasMany(ExpenseItem::class);
