@@ -51,7 +51,7 @@
     })
 </script>
 
-@if ($errors->any() || session('success'))
+{{-- @if ($errors->any() || session('success'))
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const Toast = Swal.mixin({
@@ -90,6 +90,6 @@
             @endif
         });
     </script>
-@endif
+@endif --}}
 
 @stack('script')

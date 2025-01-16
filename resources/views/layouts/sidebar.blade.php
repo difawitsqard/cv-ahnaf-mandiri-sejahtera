@@ -140,14 +140,13 @@
                        <li class="menu-label">Menu Laporan</li>
                        <li>
                            <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#exportReportModal"
-                               data-bs-title="Laporan Pendapatan"
+                               data-bs-title="@hasrole('staff')Penjualan Saya @else Pendapatan @endhasrole"
                                data-bs-action="{{ roleBasedRoute('order.export', ['outlet' => $outletSlug]) }}">
                                <div class="parent-icon">
                                    <i class="material-icons-outlined">description</i>
                                </div>
-                               <div class="menu-title">Pendapatan @hasrole('staff')
-                                       Saya
-                                   @endhasrole
+                               <div class="menu-title">
+                                   @hasrole('staff')Penjualan Saya @else Pendapatan @endhasrole
                                </div>
                            </a>
                        </li>
