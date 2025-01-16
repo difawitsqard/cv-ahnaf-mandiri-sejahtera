@@ -27,10 +27,10 @@ class OutletManagementController extends Controller
         $perPage = is_numeric($request->perPage) ? $request->perPage : 9;
 
         if (!empty($request->search)) {
-            $Outlets = Outlet::filter()->orderBy('id', 'desc')->paginate($perPage);
+            $Outlets = Outlet::filter()->orderBy('id', 'asc')->paginate($perPage);
             $Outlets->appends(['search' => $request->search]);
         } else {
-            $Outlets = Outlet::orderBy('id', 'desc')->paginate($perPage);
+            $Outlets = Outlet::orderBy('id', 'asc')->paginate($perPage);
         }
         $Outlets->appends(['perPage' => $perPage]);
 
@@ -83,6 +83,14 @@ class OutletManagementController extends Controller
 
     public function edit(Outlet $outlet)
     {
+        if (!auth()->user()->hasRole('superadmin')) {
+            if ($outlet->id != auth()->user()->outlet_id) {
+                return redirect()
+                    ->back()
+                    ->withErrors(['error' => 'Anda tidak memiliki akses untuk mengubah outlet ini.']);
+            }
+        }
+
         return view('dashboard.outlet-management.edit', compact('outlet'));
     }
 
@@ -93,7 +101,7 @@ class OutletManagementController extends Controller
     {
         $validatedData = $request->validated();
 
-        if (auth()->user()->role != 'superadmin') {
+        if (!auth()->user()->hasRole('superadmin')) {
             if ($outlet->id != auth()->user()->outlet_id) {
                 return redirect()
                     ->back()
