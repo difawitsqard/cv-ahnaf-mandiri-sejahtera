@@ -18,6 +18,14 @@ class StockItemCategorySeeder extends Seeder
                 'name' => 'Etalase',
                 'is_static' => true,
             ],
+            [
+                'name' => 'Dapur',
+                'is_static' => false,
+            ],
+            [
+                'name' => 'Lainnya',
+                'is_static' => false,
+            ],
         ];
 
         foreach ($categories as $category) {
@@ -27,6 +35,6 @@ class StockItemCategorySeeder extends Seeder
             ]);
         }
 
-        StockItemCategory::factory(10)->create();
+        // StockItemCategory::factory(10)->create();
     }
 }

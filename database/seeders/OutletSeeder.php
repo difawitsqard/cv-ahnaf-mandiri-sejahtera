@@ -13,6 +13,24 @@ class OutletSeeder extends Seeder
      */
     public function run(): void
     {
-        Outlet::factory(10)->create();
+        $outlets = [
+            [
+                'name' => 'KitaSuka Fried Chiken',
+                'address' => 'Gedong Panjang',
+            ],
+            [
+                'name' => 'KitaSuka Fried Chiken',
+                'address' => 'Cibungur',
+            ],
+        ];
+
+        foreach ($outlets as $outlet) {
+            Outlet::create([
+                'name' => $outlet['name'],
+                'address' => $outlet['address'],
+            ]);
+        }
+
+        //Outlet::factory(10)->create();
     }
 }

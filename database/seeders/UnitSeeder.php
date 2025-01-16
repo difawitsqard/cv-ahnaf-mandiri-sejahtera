@@ -14,14 +14,14 @@ class UnitSeeder extends Seeder
     public function run(): void
     {
         $units = [
-            ['name' => 'Piece'],
+            ['name' => 'Buah'],
             ['name' => 'Kilogram'],
             ['name' => 'Gram'],
             ['name' => 'Liter'],
-            ['name' => 'Milliliter'],
-            ['name' => 'Box'],
-            ['name' => 'Packet'],
-            ['name' => 'Dozen'],
+            ['name' => 'Mililiter'],
+            ['name' => 'Kotak'],
+            ['name' => 'Paket'],
+            ['name' => 'Lusin'],
         ];
 
         DB::table('units')->insert($units);

@@ -188,7 +188,7 @@
                                             <div class="col-md-8 h-100">
                                                 <div class="card-body d-flex flex-column justify-content-between">
                                                     <div class="d-flex align-items-start justify-content-between">
-                                                        <h5 class="card-title">{{ $_outletRow['name'] }}</h5>
+                                                        <h5 class="card-title fw-bold">{{ $_outletRow['name'] }}</h5>
                                                         <div class="dropdown">
                                                             <a href="javascript:;"
                                                                 class="dropdown-toggle-nocaret options dropdown-toggle"

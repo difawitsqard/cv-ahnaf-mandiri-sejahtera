@@ -18,7 +18,7 @@ class StockItemCategoryFactory extends Factory
     {
         return [
             'name' => fake()->word,
-            'is_static' => fake()->boolean,
+            'is_static' => false,
         ];
     }
 }

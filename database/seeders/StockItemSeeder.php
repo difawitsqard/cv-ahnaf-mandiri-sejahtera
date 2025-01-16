@@ -15,10 +15,10 @@ class StockItemSeeder extends Seeder
      */
     public function run(): void
     {
-        StockItem::factory(30)->recycle([
-            StockItemCategory::all(),
-            Outlet::all(),
-            Unit::all(),
-        ])->create();
+        // StockItem::factory(30)->recycle([
+        //     StockItemCategory::all(),
+        //     Outlet::all(),
+        //     Unit::all(),
+        // ])->create();
     }
 }
