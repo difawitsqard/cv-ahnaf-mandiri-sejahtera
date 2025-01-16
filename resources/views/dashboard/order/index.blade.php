@@ -168,7 +168,7 @@
                 lengthChange: false,
                 lengthMenu: [10, 25, 50, 100, -1],
                 order: [
-                    [0, 'desc']
+                    [5, 'desc']
                 ]
             });
 

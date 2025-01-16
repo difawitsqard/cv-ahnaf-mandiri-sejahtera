@@ -102,79 +102,94 @@ class OrderController extends Controller
 
         LogBatch::startBatch();
 
-        foreach ($validated['cart'] as $item) {
-            $menu = $menus->get($item['id']);
-            if (!$menu) {
-                abort(404, "Menu with ID {$item['id']} not found.");
+        try {
+            foreach ($validated['cart'] as $item) {
+                $menu = $menus->get($item['id']);
+                if (!$menu) {
+                    return response()->json([
+                        'status' => false,
+                        'code' => 404,
+                        'message' => 'Menu not found.',
+                    ], 404);
+                }
+
+                $subtotal = $menu->price * $item['quantity'];
+                $total += $subtotal;
+
+                $menu->stockItems->each(function ($stockItem) use ($item, $outlet) {
+                    $quantity = $stockItem->pivot->quantity * $item['quantity'];
+                    StockItem::deductStock($stockItem->id, $outlet->id, $quantity);
+                });
+
+                $orderItems[] = [
+                    'menu_id' => $menu->id,
+                    'quantity' => $item['quantity'],
+                    'price' => $menu->price,
+                    'note' => $item['note'] ?? null,
+                    'subtotal' => $subtotal,
+                ];
             }
 
-            $subtotal = $menu->price * $item['quantity'];
-            $total += $subtotal;
+            $subtotal = $total;
 
-            $menu->stockItems->each(function ($stockItem) use ($item, $outlet) {
-                $quantity = $stockItem->pivot->quantity * $item['quantity'];
-                StockItem::deductStock($stockItem->id, $outlet->id, $quantity);
-            });
+            // Menghitung diskon
+            $discount = ($subtotal * $outlet->discount) / 100;
 
-            $orderItems[] = [
-                'menu_id' => $menu->id,
-                'quantity' => $item['quantity'],
-                'price' => $menu->price,
-                'note' => $item['note'] ?? null,
-                'subtotal' => $subtotal,
-            ];
+            // Menghitung harga setelah diskon
+            $total = $subtotal - $discount;
+
+            // Menghitung pajak berdasarkan subtotal atau harga setelah diskon
+            $tax = ($total * $outlet->tax) / 100;
+
+            // Menghitung total akhir
+            $total = $total + $tax;
+
+            $batchUuid = LogBatch::getUuid();
+
+            // Buat pesanan
+            $order = Order::create([
+                'name' => $validated['name'],
+                'outlet_id' => $outlet->id,
+                'sub_total' => $subtotal,
+                'payment_method' => $validated['payment_method'],
+                'paid' => $validated['paid'],
+                'change' => $validated['paid'] - $total,
+                'status' => 'completed',
+                'discount' => $outlet->discount,
+                'tax' => $outlet->tax,
+                'total' => $total,
+                'user_id' => auth()->id(),
+                'batch_uuid' => $batchUuid,
+            ]);
+
+            // Simpan item pesanan
+            $order->items()->createMany($orderItems);
+
+            // Cetak struk jika diminta
+            if ($validated['print_receipt']) {
+                session()->flash('print_receipt', $order->id);
+            }
+
+            return response()->json([
+                'status' => true,
+                'code' => 200,
+                'data' => [
+                    'order_id' => $order->id,
+                    'total' => $order->total,
+                ],
+            ]);
+        } catch (Exception $e) {
+
+            DB::rollBack();
+
+            return response()->json([
+                'status' => false,
+                'code' => 500,
+                'message' => $e->getMessage(),
+            ], 500);
         }
-
-        $subtotal = $total;
-
-        // Menghitung diskon
-        $discount = ($subtotal * $outlet->discount) / 100;
-
-        // Menghitung harga setelah diskon
-        $total = $subtotal - $discount;
-
-        // Menghitung pajak berdasarkan subtotal atau harga setelah diskon
-        $tax = ($total * $outlet->tax) / 100;
-
-        // Menghitung total akhir
-        $total = $total + $tax;
-
-        $batchUuid = LogBatch::getUuid();
-
-        // Buat pesanan
-        $order = Order::create([
-            'name' => $validated['name'],
-            'outlet_id' => $outlet->id,
-            'sub_total' => $subtotal,
-            'payment_method' => $validated['payment_method'],
-            'paid' => $validated['paid'],
-            'change' => $validated['paid'] - $total,
-            'status' => 'completed',
-            'discount' => $outlet->discount,
-            'tax' => $outlet->tax,
-            'total' => $total,
-            'user_id' => auth()->id(),
-            'batch_uuid' => $batchUuid,
-        ]);
 
         LogBatch::endBatch();
-
-        // Simpan item pesanan
-        $order->items()->createMany($orderItems);
-
-        // Cetak struk jika diminta
-        if ($validated['print_receipt']) {
-            session()->flash('print_receipt', $order->id);
-        }
-
-        return response()->json([
-            'status' => true,
-            'code' => 200,
-            'data' => [
-                'order_id' => $order->id,
-                'total' => $order->total,
-            ],
-        ]);
     }
 
     /**

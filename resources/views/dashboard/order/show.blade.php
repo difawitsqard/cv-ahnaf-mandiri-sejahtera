@@ -27,11 +27,19 @@
                                 <i class="bi bi-printer-fill me-2"></i>Print
                             </button>
                         </div>
-                        {{-- <div class="btn-group position-static">
-                            <button type="button" class="btn btn-outline-primary">
-                                <i class="bi bi-arrow-clockwise me-2"></i>Refund
-                            </button>
-                            <ul class="dropdown-menu">
+                        @if ($order->can_be_canceled)
+                        <div class="btn-group position-static">
+                            <form
+                                action="{{ roleBasedRoute('order.cancel', ['id' => $order->id, 'outlet' => $outlet->slug]) }}"
+                                method="POST" class="border-0">
+                                @csrf
+                                @method('PUT')
+                                <button type="submit" class="btn btn-outline-primary rounded-0">
+                                    <i class="bi bi-arrow-clockwise me-2"></i>Batalkan
+                                </button>
+                            </form>
+
+                            {{-- <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="javascript:;">Action</a></li>
                                 <li><a class="dropdown-item" href="javascript:;">Another action</a>
                                 </li>
@@ -40,8 +48,9 @@
                                 </li>
                                 <li><a class="dropdown-item" href="javascript:;">Something else
                                         here</a></li>
-                            </ul>
-                        </div> --}}
+                            </ul> --}}
+                        </div>
+                        @endif
                         <div class="btn-group position-static">
                             <a href="{{ roleBasedRoute('order.create', ['outlet' => $outlet->slug]) }}"
                                 class="btn btn-primary">
