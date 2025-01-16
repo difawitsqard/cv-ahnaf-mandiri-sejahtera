@@ -59,9 +59,9 @@
                         <div class="row">
                             <div class="col-12 col-md-auto">
                                 <div class="d-flex align-items-center gap-3">
-                                    <img src="https://ahnaf.com/build/images/default-avatar.jpg"
+                                    <img src="{{ asset('build/images/default-avatar.jpg') }}"
                                         class="rounded-circle bg-secondary p-1" width="60" height="60"
-                                        alt="user">
+                                        alt="{{ auth()->user()->name }}">
                                     <div class="">
                                         <p class="mb-0 fw-semibold">Selamat Datang</p>
                                         <h4 class="fw-semibold fs-4 mb-0">{{ auth()->user()->name }}</h4>
