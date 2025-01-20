@@ -28,10 +28,10 @@
 <script src="{{ URL::asset('build/plugins/perfect-scrollbar/js/perfect-scrollbar.js') }}"></script>
 <script src="{{ URL::asset('build/plugins/metismenu/metisMenu.min.js') }}"></script>
 <script src="{{ URL::asset('build/plugins/simplebar/js/simplebar.min.js') }}"></script>
-<script src="{{ URL::asset('build/js/main.js') }}?qq={{ md5(time()) }}"></script>
+<script src="{{ URL::asset('build/js/main.js') }}?v={{ __('v3') }}"></script>
 
 <!--costum js-->
-<script src="{{ URL::asset('build/js/costum.js') }}?qq={{ md5(time()) }}"></script>
+<script src="{{ URL::asset('build/js/costum.js') }}?v={{ __('v3') }}"></script>
 
 <script>
     $(function() {

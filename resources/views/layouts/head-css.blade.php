@@ -24,5 +24,5 @@
 <link href="{{ URL::asset('build/css/blue-theme.css') }}?v=2" rel="stylesheet">
 <link href="{{ URL::asset('build/css/semi-dark.css') }}" rel="stylesheet">
 <link href="{{ URL::asset('build/css/bordered-theme.css') }}" rel="stylesheet">
-<link href="{{ URL::asset('build/css/costum.css') }}?v={{ md5(time()) }}" rel="stylesheet">
+<link href="{{ URL::asset('build/css/costum.css') }}?v={{ __('v3') }}" rel="stylesheet">
 <link href="{{ URL::asset('build/css/responsive.css') }}" rel="stylesheet">
