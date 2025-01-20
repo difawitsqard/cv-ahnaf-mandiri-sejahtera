@@ -27,7 +27,7 @@ class AccountSettingsController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'email' => 'required|email',
+            'email' => 'required|email|unique:users,email,' . Auth::id(),
             'mobile_phone_number' => 'nullable',
             'address' => 'nullable',
         ]);

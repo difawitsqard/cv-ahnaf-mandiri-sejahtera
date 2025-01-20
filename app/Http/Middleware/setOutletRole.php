@@ -21,6 +21,11 @@ class setOutletRole
         $user = Auth::user();
         $outlet = null;
 
+        if ($user->disabled_account) {
+            Auth::logout();
+            return redirect()->route('login')->with('warning', 'Akuna Anda telah dinonaktifkan, karena alasan tertentu.');
+        }
+
         if ($user?->hasRole('superadmin') && !$request->route('outlet')) {
             return $next($request);
         }

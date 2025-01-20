@@ -3,48 +3,43 @@
     Verify Email
 @endsection
 @section('content')
-    <div class="section-authentication-cover">
-        <div class="">
-            <div class="row g-0">
-                <div
-                    class="col-12 col-xl-7 col-xxl-8 auth-cover-left align-items-center justify-content-center d-none d-xl-flex border-end bg-transparent">
-
-                    <div class="card rounded-0 mb-0 border-0 shadow-none bg-transparent bg-none">
-                        <div class="card-body">
-                            <img src="{{ URL::asset('build/images/auth/forgot-password1.png') }}"
-                                class="img-fluid auth-img-cover-login" width="550" alt="">
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="col-12 col-xl-5 col-xxl-4 auth-cover-right align-items-center justify-content-center">
-                    <div class="card rounded-0 m-3 mb-0 border-0 shadow-none bg-none">
+    <div class="auth-basic-wrapper d-flex align-items-center justify-content-center vh-100">
+        <div class="container my-5 my-lg-0">
+            <div class="row">
+                <div class="col-12 col-md-8 col-lg-6 col-xl-5 col-xxl-4 mx-auto">
+                    <div class="card rounded-4 mb-0">
                         <div class="card-body p-5">
-                            <img src="{{ URL::asset('build/images/logo1.png') }}" class="mb-4" width="145"
-                                alt="">
-                            <h4 class="fw-bold">Verify Your Email Address</h4>
-                            <p class="mb-0">Before proceeding, please check your email for a verification link!</p>
+                            <h4 class="fw-bold">Verifikasi Email</h4>
+                            <p class="mb-0">
+                                Kami telah mengirimkan email verifikasi ke <strong>{{ auth()->user()->email }}</strong>.
+                                Periksa email anda dan klik tautan verifikasi yang kami kirim.
+                            </p>
+
 
                             @if (session('resent'))
-                                <div class="alert alert-success" role="alert">
-                                    {{ __('A fresh verification link has been sent to your email address.') }}
+                                <div class="alert alert-success mt-3" role="alert">
+                                    {{ __('Tautan verifikasi baru telah dikirim ke alamat email Anda.') }}
                                 </div>
                             @endif
 
-                            <div class="form-body mt-4">
-                                <form method="POST" action="{{ route('verification.resend') }}" class="row g-3">
-                                    @csrf
-
-                                    <button type="submit"
-                                        class="btn btn-link p-0 m-0 align-baseline">{{ __('click here to request another') }}</button>
-                                </form>
+                            <div class="form-body mt-3">
+                                <div class="d-grid gap-2">
+                                    <form method="POST" action="{{ route('verification.resend') }}" class="row g-2">
+                                        @csrf
+                                        <button type="submit"
+                                            class="btn btn-grd btn-grd-royal">{{ __('Kirim Ulang Tautan Verifikasi') }}</button>
+                                        {{-- <a href="{{ route('login') }}" class="btn btn-grd btn-grd-voilet">Perbarui Email</a> --}}
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="col-12 text-center mt-3">Bukan email anda ? <a href="{{ route('login') }}">Ubah
+                                    email</a>
                             </div>
 
                         </div>
                     </div>
                 </div>
-            </div>
+            </div><!--end row-->
         </div>
     </div>
 @endsection

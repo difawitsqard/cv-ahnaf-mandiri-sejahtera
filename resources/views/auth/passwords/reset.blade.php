@@ -23,7 +23,7 @@
                                         <label class="form-label" for="email">Email <span
                                                 class="text-danger">*</span></label>
                                         <input id="email" type="email"
-                                            class="form-control @error('email') is-invalid @enderror" name="email"
+                                            class="form-control ignore @error('email') is-invalid @enderror" name="email"
                                             value="{{ $email ?? old('email') }}" readonly>
 
                                         @error('email')

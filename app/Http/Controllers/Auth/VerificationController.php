@@ -40,11 +40,20 @@ class VerificationController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest');
         $this->middleware('signed')->only('verify');
-        $this->middleware('throttle:6,1')->only('verify', 'resend');
+        $this->middleware('throttle:1,1')->only('resend');
+        $this->middleware('throttle:6,1')->only('verify');
     }
 
+    public function show(Request $request)
+    {
+        if ($request->user()->hasVerifiedEmail()) {
+            return redirect($this->redirectPath());
+            //  $this->redirectPath();
+        }
+
+        return view('auth.verify');
+    }
 
     public function verify(Request $request)
     {
@@ -62,19 +71,17 @@ class VerificationController extends Controller
         }
 
         // Validate the hash
-        if (! hash_equals((string) $request->route('id'), (string) $user->getKey())) {
+        if (!hash_equals((string) $request->route('id'), (string) $user->getKey())) {
             throw new AuthorizationException('Invalid verification link.');
         }
 
-        if (! hash_equals((string) $request->route('hash'), sha1($user->getEmailForVerification()))) {
+        if (!hash_equals((string) $request->route('hash'), sha1($user->getEmailForVerification()))) {
             throw new AuthorizationException('Invalid verification link.');
         }
 
         // Mark the email as verified and log the user in
         if ($user->markEmailAsVerified()) {
             event(new Verified($user));
-
-            // Log the user in after verification
             Auth::login($user);
         }
 

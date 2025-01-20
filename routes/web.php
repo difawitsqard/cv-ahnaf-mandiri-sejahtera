@@ -17,7 +17,6 @@ use App\Http\Controllers\dashboard\superadmin\CompanyInfoController;
 use App\Http\Controllers\dashboard\StockItemCategoryManagementController;
 
 Auth::routes(['verify' => true, 'register' => false]);
-
 Route::middleware(['auth', 'verified', 'check_password_set', 'set_outlet_role'])->group(function () {
   Route::get('/set-password', [SetPasswordController::class, 'setPasswordForm'])->name('set-password');
   Route::post('/set-password', [SetPasswordController::class, 'setPassword'])->name('set-password.set');
@@ -73,6 +72,9 @@ Route::middleware(['auth', 'verified', 'check_password_set', 'set_outlet_role'])
 
         // user management
         Route::resource('user', UserManagementController::class);
+        Route::get('user/{id}/fetch', [UserManagementController::class, 'fetch'])->name('user.fetch');
+        Route::put('user/disabled-enabled/{user}', [UserManagementController::class, 'disabledOrEnable'])->name('user.disabled-enabled');
+        Route::put('user/{id}/resend-verification', [UserManagementController::class, 'resend'])->name('user.resend-verification');
 
         // menu management
         Route::resource('menu', MenuManagementController::class);
@@ -111,6 +113,9 @@ Route::middleware(['auth', 'verified', 'check_password_set', 'set_outlet_role'])
 
         // user management
         Route::resource('user', UserManagementController::class);
+        Route::get('user/{id}/fetch', [UserManagementController::class, 'fetch'])->name('user.fetch');
+        Route::put('user/disabled-enabled/{user}', [UserManagementController::class, 'disabledOrEnable'])->name('user.disabled-enabled');
+        Route::put('user/{id}/resend-verification', [UserManagementController::class, 'resend'])->name('user.resend-verification');
 
         // menu management
         Route::resource('menu', MenuManagementController::class);

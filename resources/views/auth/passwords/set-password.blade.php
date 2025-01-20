@@ -11,19 +11,37 @@
                     <div class="card rounded-4 mb-0">
                         <div class="card-body p-5">
                             <h4 class="fw-bold">Hei, {{ $user->name }}</h4>
-                            <p class="mb-0">Untuk melanjutkan, silahkan buat kata sandi.</p>
+                            <p class="mb-0">Anda telah terdaftar di
+                                <strong>{{ getCompanyInfo()->name ?? config('app.name') }}</strong>, Untuk melanjutkan
+                                silahkan buat kata sandi.
+                            </p>
                             <div class="form-body mt-4">
                                 <form method="POST" class="row g-4"
                                     action="{{ route('set-password.set', ['user' => $user->id]) }}">
                                     @csrf
                                     @method('POST')
+
+                                    <div class="col-12">
+                                        <label class="form-label" for="email">Email <span
+                                                class="text-danger">*</span></label>
+                                        <input id="email" type="email"
+                                            class="form-control ignore @error('email') is-invalid @enderror" name="email"
+                                            value="{{ $user->email }}" readonly>
+
+                                        @error('email')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
                                     <div class="col-12">
                                         <label class="form-label" for="password">Kata Sandi</label>
                                         <div class="input-group show_hide_password">
                                             <input type="password"
                                                 class="form-control @error('password') is-invalid @enderror" name="password"
                                                 required placeholder="Masukan kata sandi">
-                                            <button type="button" class="input-group-text bg-transparent toggle-password"><i
+                                            <button type="button"
+                                                class="input-group-text bg-transparent toggle-password"><i
                                                     class="bi bi-eye-slash-fill"></i></button>
 
                                             @error('password')
