@@ -35,26 +35,26 @@
 
 
     <div class="row">
-        <div class="col-12 col-lg-3">
-            <div class="card">
+        <div class="col-12 col-xl-4 col-xxl-3">
+            <div class="card h-100">
                 <img src="{{ $stockItem->image_url }}" style="width: 100%; height: 179px; object-fit: cover;"
                     class="card-img-top" id="image-preview" alt="">
                 <div class="card-body">
-                    <h5 class="mb-3">{{ $stockItem->name }}</h5>
+                    <h5 class="mb-3 fw-bold">{{ $stockItem->name }}</h5>
                     <p>{!! $stockItem->description !!}</p>
                 </div>
             </div>
         </div>
 
-        <div class="col-12 col-lg-9">
+        <div class="col-12 col-xl-8 col-xxl-9">
 
-            <div class="card w-100">
+            <div class="card h-100">
                 <div class="card-body">
                     <h5 class="mb-3 fw-bold">Detail Data Item</h5>
                     <div class="product-table">
                         <table class="table table-striped">
                             <tr>
-                                <td width="120">ID</td>
+                                <td width="150">ID</td>
                                 <td width="10">:</td>
                                 <td>#{{ $stockItem->id }}</td>
                             </tr>
@@ -66,7 +66,7 @@
                             <tr>
                                 <td>Stok</td>
                                 <td>:</td>
-                                <td>{{ $stockItem->stock }}</td>
+                                <td>{{ $stockItem->stock }} {{ $stockItem->unit->name }}</td>
                             </tr>
                             <tr>
                                 <td>Stok Minimum</td>
@@ -77,6 +77,19 @@
                                 <td>Satuan</td>
                                 <td>:</td>
                                 <td>{{ $stockItem->unit->name }}</td>
+                            </tr>
+                            <tr>
+                                <td>Kategori</td>
+                                <td>:</td>
+                                <td>
+                                    @if ($stockItem['category']->is_static)
+                                        <span
+                                            class="lable-table bg-info-subtle text-info rounded border border-info-subtle font-text2 fw-bold">{{ $stockItem['category']->name }}</span>
+                                    @else
+                                        <span
+                                            class="lable-table bg-secondary-subtle text-secondary rounded border border-secondary-subtle font-text2 fw-bold">{{ $stockItem['category']->name }}</span>
+                                    @endif
+                                </td>
                             </tr>
                         </table>
                     </div>

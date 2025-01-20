@@ -138,14 +138,17 @@
                                                             Edit
                                                         </a>
                                                         <hr class="dropdown-divider">
-                                                        <form
+
+                                                        <li>
+                                                            <button type="button" class="dropdown-item text-danger"
+                                                                data-id="{{ $expense->id }}" data-msg="Ingin Membatalkan Pengeluaran <b>{{  $expense->name }}</b> ?" data-url="{{ roleBasedRoute('expense.cancel', ['id' => $expense->id, 'outlet' => $outlet->slug]) }}"
+                                                                onclick="confirmCanceled(this)" data-action="cancel">Batalkan</button>
+                                                        </li>
+                                                        <form id="action-form-{{ $expense['id'] }}"
                                                             action="{{ roleBasedRoute('expense.cancel', ['id' => $expense->id, 'outlet' => $outlet->slug]) }}"
-                                                            method="POST">
+                                                            method="POST" style="display: none;">
                                                             @csrf
                                                             @method('PUT')
-                                                            <button type="submit" class="dropdown-item text-danger">
-                                                                Batalkan
-                                                            </button>
                                                         </form>
                                                     @endif
                                                 </li>
@@ -193,5 +196,33 @@
                 table.search($(this).val()).draw();
             });
         });
+
+        
+        function confirmCanceled(button) {
+            const uniqueId = button.getAttribute('data-id');
+            const msg = button.getAttribute('data-msg');
+            const url = button.getAttribute('data-url');
+            const action = button.getAttribute('data-action');
+
+            const form = document.getElementById('action-form-' + uniqueId);
+
+            form.action = url;
+            // form.querySelector('input[name="_method"]').value = action == 'delete' ? 'DELETE' : 'PUT';
+
+            Swal.fire({
+                title: 'Apa kamu yakin?',
+                html: `${msg}`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#0d6efd',
+                cancelButtonColor: '#fc185a',
+                confirmButtonText: 'Ya !',
+                cancelButtonText: 'Batal',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            })
+        }
     </script>
 @endpush

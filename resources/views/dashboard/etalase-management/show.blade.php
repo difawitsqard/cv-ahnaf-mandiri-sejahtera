@@ -37,7 +37,7 @@
 
 
     <div class="row">
-        <div class="col-12 col-lg-3">
+        <div class="col-12 col-xl-4 col-xxl-3">
             <div class="card h-100">
                 <img src="{{ $stockItem->image_url }}" style="width: 100%; height: 179px; object-fit: cover;"
                     class="card-img-top" id="image-preview" alt="">
@@ -48,7 +48,7 @@
             </div>
         </div>
 
-        <div class="col-12 col-lg-9">
+        <div class="col-12 col-xl-8 col-xxl-9">
 
             <div class="card h-100">
                 <div class="card-body">
