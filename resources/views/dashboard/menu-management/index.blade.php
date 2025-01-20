@@ -94,7 +94,7 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <td>{{ Str::limit(strip_tags($menu['description']), 32) }}</td>
+                                    <td>{!! Str::limit(strip_tags($menu['description']), 32) !!}</td>
                                     <td>{{ formatRupiah($menu['price']) }}</td>
                                     <td>{{ $menu->ordered_quantity }}x</td>
                                     <td>

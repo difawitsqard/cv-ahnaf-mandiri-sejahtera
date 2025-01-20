@@ -112,7 +112,7 @@
                                                         <h5 class="card-title fw-bold">{{ $menu['name'] }}</h5>
                                                         <p class="card-text fw-lighter" style="min-height: 42px;">
                                                             <small>
-                                                                {{ str()->limit(strip_tags($menu['description']), 50, '...') }}
+                                                                {!! str()->limit(strip_tags($menu['description']), 50, '...') !!}
                                                             </small>
                                                         </p>
                                                         <h6 class="fw-bold menu-price">
