@@ -88,7 +88,7 @@
                 <div class="bs-stepper-content">
                     <form onSubmit="return false">
                         <div id="test-l-1" role="tabpanel" class="bs-stepper-pane" aria-labelledby="stepper1trigger1">
-                            <div class="row row-cols-1 row-cols-xl-3">
+                            <div class="row row-cols-1 row-cols-xl-2 row-cols-xxl-3">
                                 @foreach ($menus as $menu)
                                     <div class="col d-flex align-items-stretch" data-menu-id="{{ $menu->id }}"
                                         data-max-order="{{ $menu->max_order_quantity }}">
