@@ -8,7 +8,7 @@ use App\Models\StockItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Exports\ExpensesExport;
-use Barryvdh\DomPDF\Facade\PDF;
+use Barryvdh\DomPDF\Facade\Pdf as PDF;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Services\ImageUploadService;
