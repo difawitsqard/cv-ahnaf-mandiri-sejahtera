@@ -91,7 +91,7 @@
                                                     alt="">
                                             </div>
                                             <div class="product-info">
-                                                <span class="product-title">{{ $stockItem['name'] }}</span>
+                                                <a class="" href="{{ roleBasedRoute('stock-item.show', ['outlet' => $outlet->slug, 'id' => $stockItem->id]) }}">{{ $stockItem['name'] }}</a>
                                                 <p class="mb-0 product-category no-export"><b>{{ $stockItem['stock'] }}</b>
                                                     {{ $stockItem['unit']->name }}</p>
                                             </div>
@@ -131,12 +131,12 @@
                                                         Restock
                                                     </button>
                                                 </li>
-                                                {{-- <li>
+                                                <li>
                                                     <a type="button" class="dropdown-item"
-                                                        href="{{ roleBasedRoute('stock-item.show', ['outlet' => $outlet->slug, 'stock_item' => $stockItem->id]) }}">
+                                                        href="{{ roleBasedRoute('stock-item.show', ['outlet' => $outlet->slug, 'id' => $stockItem->id]) }}">
                                                         Detail
                                                     </a>
-                                                </li> --}}
+                                                </li>
                                                
                                             </ul>
                                         </div>

@@ -361,21 +361,16 @@ class ExpenseManagementController extends Controller
             $expense->update(['status' => 'canceled']);
 
             DB::commit();
-            session()->flash('success', $expense['name'] . ' berhasil dibatalkan.');
 
-            return response()->json([
-                'status' => true,
-                'code' => 200,
-                'data' => $expense,
-            ], 200);
+            return back()->with('success', $expense['name'] . ' berhasil dibatalkan.');
         } catch (\Exception $e) {
             DB::rollBack();
 
-            return response()->json([
-                'status' => false,
-                'code' => 500,
-                'message' => $e->getMessage(),
-            ], 500);
+            return back()->with('error', $e->getMessage());
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return back()->withErrors($e->getMessage());
         }
         LogBatch::endBatch();
     }

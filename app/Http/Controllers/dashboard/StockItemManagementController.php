@@ -147,8 +147,18 @@ class StockItemManagementController extends Controller
         $stockItem = StockItem::where('id', $id)
             ->where('outlet_id', $outlet->id)
             ->firstOrFail();
-        $stockItem->load('unit', 'outlet');
 
+        if (auth()->user()?->hasRole('staff')) {
+            if ($stockItem->category_id != 1) {
+                return abort(403);
+            }
+        }
+
+        $stockItem->load('unit', 'category', 'outlet');
+
+        if (auth()->user()?->hasRole('staff')) {
+            return view('dashboard.etalase-management.show', compact('stockItem', 'outlet'));
+        }
         return view('dashboard.stock-item-management.show', compact('stockItem', 'outlet'));
     }
 
@@ -251,6 +261,21 @@ class StockItemManagementController extends Controller
         $request->validate([
             'qty' => 'required|numeric',
         ]);
+
+        if (auth()->user()?->hasRole('staff')) {
+
+            $stockItem = StockItem::where('id', $id)
+                ->where('category_id', 1)
+                ->firstOrFail();
+
+            if (!$stockItem) {
+                return response()->json([
+                    'status' => false,
+                    'code' => 404,
+                    'message' => 'Item tidak ditemukan.',
+                ]);
+            }
+        }
 
         $stockItem = StockItem::restock($id, $outlet->id, $request->qty);
 

@@ -157,6 +157,7 @@ Route::middleware(['auth', 'check_password_set', 'set_outlet_role'])->group(func
 
           // etalase 
           Route::get('etalase', [StockItemManagementController::class, 'index'])->name('stock-item.index');
+          Route::get('etalase/{id}', [StockItemManagementController::class, 'show'])->name('stock-item.show');
           Route::get('etalase/{id}/fetch', [StockItemManagementController::class, 'fetch'])->name('stock-item.fetch');
           Route::put('etalase/{id}/restock', [StockItemManagementController::class, 'restock'])->name('stock-item.restock');
         });
