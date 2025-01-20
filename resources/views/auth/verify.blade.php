@@ -22,6 +22,12 @@
                                 </div>
                             @endif
 
+                            @error('error')
+                                <div class="alert alert-danger mt-3" role="alert">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+
                             <div class="form-body mt-3">
                                 <div class="d-grid gap-2">
                                     <form method="POST" action="{{ route('verification.resend') }}" class="row g-2">
@@ -32,7 +38,7 @@
                                     </form>
                                 </div>
                             </div>
-                            <div class="col-12 text-center mt-3">Bukan email anda ? <a href="{{ route('login') }}">Ubah
+                            <div class="col-12 text-center mt-3">Bukan email anda ? <a href="{{ route('email.change') }}">Ubah
                                     email</a>
                             </div>
 
