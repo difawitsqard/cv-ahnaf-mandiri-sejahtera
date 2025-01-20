@@ -296,6 +296,10 @@
                 localStorage.setItem('cart', JSON.stringify(cart));
             }
 
+            $nextButton.on('click', function(event) {
+                event.preventDefault();
+            });
+
             function loadCart() {
                 const savedCart = localStorage.getItem('cart');
                 if (savedCart) {
