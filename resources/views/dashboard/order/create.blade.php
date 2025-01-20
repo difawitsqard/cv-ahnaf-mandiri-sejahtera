@@ -104,7 +104,7 @@
                                                     <div class="p-0 align-self-center h-100">
                                                         <img src="{{ $menu->menuImages->first()->image_url ?? asset('build/images/placeholder-image.webp') }}"
                                                             style="width: 100px; height: 100%; object-fit: cover;"
-                                                            class="w-100 rounded-start-4" alt="{{ $menu['name'] }}">
+                                                            class="w-100 rounded-start-4 bg-white" alt="{{ $menu['name'] }}">
                                                     </div>
                                                 </div>
                                                 <div class="col-8 h-100">

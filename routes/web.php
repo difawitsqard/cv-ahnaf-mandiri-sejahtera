@@ -154,6 +154,11 @@ Route::middleware(['auth', 'check_password_set', 'set_outlet_role'])->group(func
           Route::put('expense/{id}/cancel', [ExpenseManagementController::class, 'cancel'])->name('expense.cancel');
           Route::post('expense/export', [ExpenseManagementController::class, 'export'])->name('expense.export');
           Route::resource('expense', ExpenseManagementController::class)->except(['destroy']);
+
+          // etalase 
+          Route::get('etalase', [StockItemManagementController::class, 'index'])->name('stock-item.index');
+          Route::get('etalase/{id}/fetch', [StockItemManagementController::class, 'fetch'])->name('stock-item.fetch');
+          Route::put('etalase/{id}/restock', [StockItemManagementController::class, 'restock'])->name('stock-item.restock');
         });
     });
   });

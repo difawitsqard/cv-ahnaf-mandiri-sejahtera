@@ -127,35 +127,31 @@
 
                     textMessageElement.textContent = '';
 
-                    fetch(`{{ roleBasedRoute('stock-item.index', ['outlet' => $outlet->slug]) }}/${itemId}/restock`, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                            },
-                            body: JSON.stringify({
-                                _method: 'PUT',
-                                qty: qty
-                            })
-                        })
-                        .then(response => response.json())
-                        .then(data => {
+                    $.ajax({
+                        url: `{{ roleBasedRoute('stock-item.index', ['outlet' => $outlet->slug]) }}/${itemId}/restock`,
+                        type: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        data: {
+                            _method: 'PUT',
+                            qty: qty
+                        },
+                        success: function(data) {
                             if (data.status) {
-                                // textMessageElement.textContent = data.message ? data.message : '';
                                 restockSection.querySelector('#qty').value = '';
-                                // loadStockData();
-
-                                location.reload();
+                                loadStockData();
                             } else {
                                 console.error('Error:', 'Terjadi kesalahan saat merestock item.');
                                 setFieldsReadOnly(false);
                             }
                             restockSubmitButton.disabled = false;
-                        })
-                        .catch(error => {
+                        },
+                        error: function(error) {
                             console.error('Error:', error);
                             restockSubmitButton.disabled = false;
-                        });
+                        }
+                    });
                 });
 
                 loadStockData(); // Load initial data

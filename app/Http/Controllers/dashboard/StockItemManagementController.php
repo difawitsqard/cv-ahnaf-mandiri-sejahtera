@@ -56,6 +56,35 @@ class StockItemManagementController extends Controller
         // }
         // $stockItems->appends(['perPage' => $perPage]);
 
+        if (auth()->user()?->hasRole('staff')) {
+            return $this->indexStaff($outlet);
+        } else if (auth()->user()?->hasRole(['admin', 'superadmin'])) {
+            return $this->indexAdminSuperadmin($outlet);
+        } else {
+            return abort(403);
+        }
+    }
+
+    private function indexStaff(Outlet $outlet)
+    {
+        $stockItems = StockItem::where('outlet_id', $outlet->id)
+            ->where('category_id', 1)
+            ->with(['outlet', 'unit', 'category'])
+            ->get()
+            ->map(function ($stockItem) {
+                $stockItem['alert_stock'] = $stockItem['stock'] < $stockItem['min_stock'] ? 1 : 0;
+                return $stockItem;
+            })
+            ->sortBy(function ($stockItem) {
+                return $stockItem['stock'] < $stockItem['min_stock'] ? 0 : 1;
+            })
+            ->values();
+
+        return view('dashboard.etalase-management.index', compact('stockItems', 'outlet'));
+    }
+
+    private function indexAdminSuperadmin(Outlet $outlet)
+    {
         $stockItems = StockItem::where('outlet_id', $outlet->id)
             ->with(['outlet', 'unit', 'category'])
             ->get()
@@ -71,6 +100,7 @@ class StockItemManagementController extends Controller
 
         return view('dashboard.stock-item-management.index', compact('stockItems', 'units', 'outlet'));
     }
+
 
     /**
      * Store a newly created resource in storage.

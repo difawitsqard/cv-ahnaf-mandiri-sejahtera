@@ -63,6 +63,12 @@ class StockItem extends Model
             ->where('outlet_id', $outletId)
             ->firstOrFail();
 
+        if (auth()->user()?->hasRole('staff')) {
+            if ($stockItem->category_id != 1) {
+                throw new \Exception("You are not allowed to restock this item");
+            }
+        }
+
         $oldStock = $stockItem->stock;
         $stockItem->stock += $quantity;
         $stockItem->total_stock = $quantity > 0 ? $stockItem->total_stock + $quantity : $stockItem->total_stock;

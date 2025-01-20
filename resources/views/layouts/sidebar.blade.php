@@ -114,6 +114,17 @@
                            </li>
                        @endhasrole
 
+                       @hasrole('staff')
+                           <li>
+                               <a href="{{ roleBasedRoute('stock-item.index', ['outlet' => $outletSlug]) }}">
+                                   <div class="parent-icon">
+                                       <i class="material-icons-outlined">article</i>
+                                   </div>
+                                   <div class="menu-title" title="Stok Etalase">Stok Etalase</div>
+                               </a>
+                           </li>
+                       @endhasrole
+
                        <li>
                            <a href="#" class="has-arrow">
                                <div class="parent-icon">
@@ -146,7 +157,11 @@
                                    <i class="material-icons-outlined">description</i>
                                </div>
                                <div class="menu-title">
-                                   @hasrole('staff')Penjualan Saya @else Pendapatan @endhasrole
+                                   @hasrole('staff')
+                                       Penjualan Saya
+                                   @else
+                                       Pendapatan
+                                   @endhasrole
                                </div>
                            </a>
                        </li>
