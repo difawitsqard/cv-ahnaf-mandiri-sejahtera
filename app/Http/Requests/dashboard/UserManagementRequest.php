@@ -21,11 +21,19 @@ class UserManagementRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+
+        $rules = [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required',  'string', 'email', 'max:255'],
+            'email' => ['required', 'email', 'unique:users,email,' . $this->route('user')],
             'mobile_phone_number' => ['nullable', 'string', 'max:255'],
             'role' => ['required', 'string', 'exists:roles,id'],
+            'outlet_id' => ['nullable', 'string', 'exists:outlets,id'],
         ];
+
+        // if ($this->isMethod('post')) {
+
+        // }
+
+        return $rules;
     }
 }
