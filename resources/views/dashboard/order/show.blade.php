@@ -200,6 +200,7 @@
                                     <p class="fw-semi-bold">
                                         @php
                                             $tax = ($total * $order->tax) / 100;
+                                            $discount = $discount ?? 0;
                                             $total = $sub_total - $discount + $tax;
                                         @endphp
                                         <span class="tax-value">{{ formatRupiah($tax) }}</span>

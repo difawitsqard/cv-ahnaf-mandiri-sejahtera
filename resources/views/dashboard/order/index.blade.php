@@ -24,7 +24,8 @@
                 </div>
                 <div class="ms-auto">
                     <a class="btn btn-primary px-4 add-button"
-                        href="{{ roleBasedRoute('order.create', ['outlet' => $outlet->slug]) }}"><i class="bi bi-plus-lg me-2"></i>Pesanan Baru</a>
+                        href="{{ roleBasedRoute('order.create', ['outlet' => $outlet->slug]) }}"><i
+                            class="bi bi-plus-lg me-2"></i>Pesanan Baru</a>
                 </div>
             </div>
         </div>
@@ -37,6 +38,20 @@
 
     @if ($errors->any())
         <x-alert-message type="danger" :messages="$errors->all()" />
+    @endif
+
+    @if (!$errors->any() && !session('success'))
+        <div class="alert alert-info border-0 bg-grd-info alert-dismissible fade show msg-etalase">
+            <div class="d-flex align-items-center">
+                <div class="ms-3">
+                    <h5 class="mb-0 text-white fw-bold">Informasi</h5>
+                    <div class="text-white">
+                        Pesanan tidak dapat dibatalkan jika sudah lebih dari 2 jam sejak pesanan dibuat.
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
     @endif
 
     <div class="card">
@@ -130,15 +145,17 @@
                                                 </li>
                                                 @if ($order->can_be_canceled)
                                                     <hr class="dropdown-divider">
-                                                    <form
-                                                        action="{{ roleBasedRoute('order.cancel', ['id' => $order->id, 'outlet' => $outlet->slug]) }}"
-                                                        method="POST">
-                                                        @csrf
-                                                        @method('PUT')
-                                                        <button type="submit" class="dropdown-item text-danger">
-                                                            Batalkan
-                                                        </button>
-                                                    </form>
+                                                    <li>
+                                                        <form
+                                                            action="{{ roleBasedRoute('order.cancel', ['id' => $order->id, 'outlet' => $outlet->slug]) }}"
+                                                            method="POST">
+                                                            @csrf
+                                                            @method('PUT')
+                                                            <button type="submit" class="dropdown-item text-danger">
+                                                                Batalkan
+                                                            </button>
+                                                        </form>
+                                                    </li>
                                                 @endif
                                             </ul>
                                         </div>
