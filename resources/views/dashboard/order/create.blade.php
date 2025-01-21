@@ -90,8 +90,8 @@
                         <div id="test-l-1" role="tabpanel" class="bs-stepper-pane" aria-labelledby="stepper1trigger1">
                             <div class="row row-cols-1 row-cols-xl-2 row-cols-xxl-3">
                                 @foreach ($menus as $menu)
-                                    <div class="col d-flex align-items-stretch" data-menu-id="{{ $menu->id }}"
-                                        data-max-order="{{ $menu->max_order_quantity }}">
+                                    <div class="col d-flex align-items-stretch detail-menu"
+                                        data-menu-id="{{ $menu->id }}" data-max-order="{{ $menu->max_order_quantity }}">
                                         <div class="card rounded-4 flex-grow-1 position-relative {{ $menu->max_order_quantity < 1 ? 'disabled' : '' }}"
                                             style="cursor: pointer; transition: background-color 0.3s ease;">
                                             @if ($menu->max_order_quantity < 1)
@@ -104,7 +104,8 @@
                                                     <div class="p-0 align-self-center h-100">
                                                         <img src="{{ $menu->menuImages->first()->image_url ?? asset('build/images/placeholder-image.webp') }}"
                                                             style="width: 100px; height: 100%; object-fit: cover;"
-                                                            class="w-100 rounded-start-4 bg-white" alt="{{ $menu['name'] }}">
+                                                            class="w-100 rounded-start-4 bg-white"
+                                                            alt="{{ $menu['name'] }}">
                                                     </div>
                                                 </div>
                                                 <div class="col-8 h-100">
@@ -118,8 +119,9 @@
                                                         <h6 class="fw-bold menu-price">
                                                             {{ $menu['price'] == 0 ? 'Gratis' : formatRupiah($menu['price']) }}
                                                         </h6>
-                                                        <div class="mt-auto d-flex align-items-center justify-content-end">
-                                                             <button type="button"
+                                                        <div
+                                                            class="mt-auto d-flex align-items-center justify-content-end btn-container">
+                                                            <button type="button"
                                                                 class="btn btn-primary btn-circle raised d-flex gap-2 rounded-circle wh-48 add-button mt-2"
                                                                 {{ $menu->max_order_quantity < 1 ? 'disabled' : '' }}>
                                                                 <i class="bi bi-plus-lg"></i>
@@ -273,6 +275,60 @@
     </div>
     </div>
 @endsection
+
+
+@push('modals')
+    <div class="modal fade" id="detailMenuModal">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header border-bottom-0 py-2">
+                    <h5 class="modal-title">Detail Menu</h5>
+                    <a href="javascript:;" class="primaery-menu-close" data-bs-dismiss="modal">
+                        <i class="material-icons-outlined">close</i>
+                    </a>
+                </div>
+                <div class="modal-body pt-0">
+                    <div class="card w-100 mb-0 shadow-none">
+                        <div class="card-header border-0 p-3 row">
+
+                            <div class="col-12 col-lg-4 mb-3">
+                                <div id="carouselMenuControls" class="carousel slide" data-bs-ride="carousel">
+                                    <div class="carousel-inner image-menu-css rounded-4">
+
+                                    </div>
+                                    <a class="carousel-control-prev" href="#carouselMenuControls" role="button"
+                                        data-bs-slide="prev"> <span class="carousel-control-prev-icon"
+                                            aria-hidden="true"></span>
+                                        <span class="visually-hidden">Previous</span>
+                                    </a>
+                                    <a class="carousel-control-next" href="#carouselMenuControls" role="button"
+                                        data-bs-slide="next"> <span class="carousel-control-next-icon"
+                                            aria-hidden="true"></span>
+                                        <span class="visually-hidden">Next</span>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-lg-8 d-flex flex-column justify-content-between mb-2">
+                                <div>
+                                    <h4 class="fw-bold menu-title mb-2"></h4>
+                                    <div class="overflow-auto menu-desc"
+                                        style="max-height: 150px; scrollbar-width: none; -ms-overflow-style: none;">
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center mt-auto">
+                                    <h5 class="fw-bold menu-status"></h5>
+                                    <h5 class="fw-bold menu-price"></h5>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endpush
 
 @push('script')
     <script src="{{ URL::asset('build/plugins/bs-stepper/js/bs-stepper.min.js') }}"></script>
@@ -630,6 +686,73 @@
             });
 
             loadCart();
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const Modal = document.querySelector('#detailMenuModal');
+            const menuTitle = Modal.querySelector('.menu-title');
+            const menuDesc = Modal.querySelector('.menu-desc');
+            const menuPrice = Modal.querySelector('.menu-price');
+            const menuImage = Modal.querySelector('.image-menu-css');
+            const menuStatus = Modal.querySelector('.menu-status');
+
+            function clearModal() {
+                menuTitle.textContent = '';
+                menuDesc.innerHTML = '';
+                menuPrice.textContent = '';
+                menuImage.innerHTML = '';
+            }
+
+            document.querySelectorAll('.detail-menu').forEach(item => {
+                item.addEventListener('click', function(event) {
+
+                    if (event.target.closest('button') || event.target.closest('.card.disabled'))
+                        return;
+
+                    var menuId = item.getAttribute('data-menu-id');
+                    clearModal();
+                    $.ajax({
+                        url: `{{ roleBasedRoute('menu.fetch', ['outlet' => $outlet->slug, 'id' => ':id']) }}`
+                            .replace(':id', menuId),
+                        method: 'GET',
+                        success: function(response) {
+                            menuTitle.textContent = response.data.name;
+                            menuDesc.innerHTML = response.data.description;
+                            menuPrice.textContent =
+                                `Rp. ${formatRupiahText(response.data.price)}`;
+
+                            let menuImages = response.data.menu_images.length ? response
+                                .data.menu_images : [{
+                                    'image_url': '{{ asset('build/images/placeholder-image.webp') }}'
+                                }];
+
+                            menuStatus.innerHTML =
+                                `<span class="lable-table p-2 bg-${response.data.max_order_quantity < 1 ? 'danger' : 'success'}-subtle text-${response.data.max_order_quantity < 1 ? 'danger' : 'success'} rounded border border-${response.data.max_order_quantity < 1 ? 'danger' : 'success'}-subtle font-text2 fw-bold">${response.data.max_order_quantity < 1 ? 'Habis' : 'Tersedia'}</span>`;
+
+                            menuImages.forEach((image, index) => {
+                                var div = document.createElement('div');
+                                div.classList.add('carousel-item');
+                                div.innerHTML = `
+                                    <img src="${image.image_url}" class="d-block w-100 bg-white" style="min-height: 285px; object-fit: cover;" alt="${response.data.name}-${index}">
+                                `;
+
+                                if (index === 0) {
+                                    div.classList.add('active');
+                                }
+
+                                menuImage.appendChild(div);
+                            });
+
+                            setTimeout(function() {
+                                $('#detailMenuModal').modal('show');
+                            }, 100);
+                        },
+                        error: function(error) {
+                            console.error(error);
+                        }
+                    });
+                });
+            });
         });
     </script>
 @endpush
