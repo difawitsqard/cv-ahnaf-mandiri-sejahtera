@@ -157,6 +157,9 @@ Route::middleware(['auth', 'check_password_set', 'set_outlet_role'])->group(func
           Route::post('expense/export', [ExpenseManagementController::class, 'export'])->name('expense.export');
           Route::resource('expense', ExpenseManagementController::class)->except(['destroy']);
 
+          // menu
+          Route::get('menu/{id}/fetch', [MenuManagementController::class, 'fetch'])->name('menu.fetch');
+
           // etalase 
           Route::get('etalase', [StockItemManagementController::class, 'index'])->name('stock-item.index');
           Route::get('etalase/{id}', [StockItemManagementController::class, 'show'])->name('stock-item.show');
