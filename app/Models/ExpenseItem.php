@@ -39,6 +39,11 @@ class ExpenseItem extends Model
         return $this->belongsTo(Expense::class, 'expense_id', 'id');
     }
 
+    public function stockItem()
+    {
+        return $this->belongsTo(StockItem::class, 'stock_item_id', 'id');
+    }
+
     public function getImageUrlAttribute()
     {
         if ($this->image_path) {

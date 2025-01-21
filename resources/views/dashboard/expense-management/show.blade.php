@@ -148,7 +148,7 @@
                                                     <td>
                                                         <div class="d-flex align-items-center gap-3">
                                                             <div class="product-box">
-                                                                <img src="{{ $item->image_url ?? asset('build/images/placeholder-image.webp') }}"
+                                                                <img src="{{ $item->image_path ? $item->image_url : ($item->stockItem->image_path ?  $item->stockItem->image_url :  asset('build/images/placeholder-image.webp')) }}"
                                                                     style="width: 70px; height: 53px; object-fit: cover;"
                                                                     class="rounded-3" alt="{{ $item->name }}">
                                                             </div>

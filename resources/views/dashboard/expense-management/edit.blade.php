@@ -200,6 +200,7 @@
                                         <option value="{{ $stockItem->id }}"
                                             data-image-url="{{ $stockItem->image_url }}"
                                             data-description="{{ $stockItem->stock }} {{ $stockItem->unit->name }}"
+                                            data-unit="{{ $stockItem->unit->name }}"
                                             data-price="{{ $stockItem->price }}" data-max-qty="{{ $stockItem->stock }}"
                                             {{ $stockItem->stock < 1 ? 'disabled' : '' }}>
                                             {{ $stockItem->name }}
@@ -213,7 +214,7 @@
                                     placeholder="" value="0" required>
                             </div>
                             <div class="col-12 col-lg-6 mb-3">
-                                <h6 class="mb-2">Jumlah <span class="text-danger">*</span></h6>
+                                <h6 class="mb-2">Jumlah <strong class="label-unit"></strong> <span class="text-danger">*</span></h6>
 
                                 <div class="input-group w-auto qty-control">
                                     <button class="btn btn-inverse-secondary border decrement-button"><i
@@ -289,6 +290,8 @@
             const modalItemDescription = modalItem.find('[name="description_item"]');
             const modalItemImage = modalItem.find('[name="image"]');
             const modalItemStockId = modalItem.find('[name="stock_item_id"]');
+            const modalItemUnit = modalItem.find('.label-unit');
+
 
             const expenseKey = 'expenseDataItemEdit';
 
@@ -422,6 +425,7 @@
 
                     modalItemSubtotal.val('0');
                     modalItemQuantity.removeAttr('max');
+                    modalItemUnit.text('');
                     return;
                 } else {
                     if (parseInt($(this).find(':selected').data('max-qty')) < parseInt(modalItemQuantity
@@ -429,6 +433,7 @@
                         modalItemQuantity.val($(this).find(':selected').data('max-qty'));
                     }
                     modalItemQuantity.attr('max', $(this).find(':selected').data('max-qty'));
+                    modalItemUnit.text('/ ' + $(this).find(':selected').data('unit'));
                 }
 
                 $('#nama-item').hide();
@@ -470,7 +475,6 @@
                 modalItem.find('#nama-item').show();
                 modalItemName.val('');
                 modalItem.find('[name="image"]').val('');
-                expenseDescription.root.innerHTML = '';
                 expenseItemDescription.root.innerHTML = '';
             });
 
@@ -485,9 +489,8 @@
                                     id: item.id,
                                     stock_item_id: item.stock_item_id,
                                     name: item.name,
-                                    image: item.image_path ? item.image_url : null,
-                                    image_upload: item.image_path ? item.image_url :
-                                        null,
+                                    image: item.image_path ? item.image_url : (item.stock_item.image_path ? item.stock_item.image_url : null),
+                                    image_upload: item.image_path ? item.image_url : null,
                                     price: item.price,
                                     quantity: item.quantity,
                                     subtotal: item.subtotal,

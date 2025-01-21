@@ -154,7 +154,7 @@ class ExpenseManagementController extends Controller
                 ->where('outlet_id', $outlet->id)
                 ->firstOrFail();
         }
-        $Expense->load('items', 'user');
+        $Expense->load('items', 'user', 'items.stockItem');
 
         return view('dashboard.expense-management.show', compact('Expense', 'outlet'));
     }
@@ -174,7 +174,7 @@ class ExpenseManagementController extends Controller
                 ->firstOrFail();
         }
 
-        $Expense->load('items', 'user');
+        $Expense->load('items', 'user', 'items.stockItem');
 
         if ($Expense) {
             return response()->json([

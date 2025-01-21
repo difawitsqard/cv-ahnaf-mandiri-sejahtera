@@ -122,7 +122,7 @@ class StockItemManagementController extends Controller
         }
 
         // set price to 0 if the category etalase
-        $validatedData['price'] = $category->id == 1 ? $validatedData['price'] : 0;
+        $validatedData['price'] = $category->id != 1 ? $validatedData['price'] : 0;
 
         $stockItems = StockItem::create($validatedData);
 

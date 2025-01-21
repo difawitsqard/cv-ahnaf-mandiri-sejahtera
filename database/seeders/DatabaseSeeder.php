@@ -26,8 +26,8 @@ class DatabaseSeeder extends Seeder
         ]);
 
         CompanyInfo::factory()->create([
-            'name' => 'CV.Ahnaf Mandiri Sejahtera',
-            'short_name' => 'CV.Ahnaf',
+            'name' => 'CV Ahnaf Mandiri Sejahtera',
+            'short_name' => 'CV Ahnaf',
         ]);
 
         // User::factory()->create([
