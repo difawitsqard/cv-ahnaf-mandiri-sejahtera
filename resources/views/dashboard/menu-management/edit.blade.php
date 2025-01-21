@@ -60,10 +60,32 @@
             <x-alert-message type="danger" :messages="$errors->all()" />
         @endif
 
+        @if (!$errors->any() && !session('success'))
+            <div class="alert alert-info border-0 bg-grd-info alert-dismissible fade show msg-etalase">
+                <div class="d-flex align-items-center">
+                    <div class="ms-3">
+                        <h5 class="mb-0 text-white fw-bold">Informasi</h5>
+                        <div class="text-white">
+                            <ul class="mb-1">
+                                <li>Menu yang <b>terkait</b> dengan <strong>Item Etalase</strong> memiliki ketersediaan yang
+                                    dipengaruhi oleh stok item di etalase.</li>
+                                <li>Menu yang <b>tidak terkait</b> dengan <strong>Item Etalase</strong> Memiliki
+                                    Ketersediaan
+                                    Tidak Terbatas.</li>
+                                <li><b>Item Etalase</b> yang terkait akan <b>otomatis mengurangi stok</b> setiap ada
+                                    pembelian.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
         <div class="row">
 
             <div class="col-12 col-lg-7">
-                <div class="card">
+                <div class="card h-100">
                     <div class="card-body">
                         <div class="row">
                             <div class="col-12 col-xl-7 col-xxl-5">
@@ -152,8 +174,8 @@
                 </div>
             </div>
 
-            <div class="col-12 col-lg-5">
-                <div class="card">
+            <div class="col-12 col-lg-5 mt-3 mt-lg-0">
+                <div class="card h-100">
                     <div class="card-body">
                         <div class="d-flex align-items-start justify-content-between pb-2">
                             <div class="">
@@ -229,7 +251,6 @@
 
 <!-- Modal -->
 @push('modals')
-
 @endpush
 
 @push('script')

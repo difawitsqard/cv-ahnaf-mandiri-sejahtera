@@ -85,7 +85,8 @@ Route::middleware(['auth', 'check_password_set', 'set_outlet_role'])->group(func
           Route::put('user/{id}/resend-verification', [UserManagementController::class, 'resend'])->name('user.resend-verification');
 
           // menu management
-          Route::resource('menu', MenuManagementController::class);
+          Route::resource('menu', MenuManagementController::class)->except(['show']);
+          Route::get('menu/{id}/fetch', [MenuManagementController::class, 'fetch'])->name('menu.fetch');
 
           Route::get('outlet-settings', [OutletManagementController::class, 'edit'])->name('outlet.edit');
         });
@@ -126,7 +127,8 @@ Route::middleware(['auth', 'check_password_set', 'set_outlet_role'])->group(func
           Route::put('user/{id}/resend-verification', [UserManagementController::class, 'resend'])->name('user.resend-verification');
 
           // menu management
-          Route::resource('menu', MenuManagementController::class);
+          Route::resource('menu', MenuManagementController::class)->except(['show']);
+          Route::get('menu/{id}/fetch', [MenuManagementController::class, 'fetch'])->name('menu.fetch');
 
           Route::get('outlet-settings', [OutletManagementController::class, 'edit'])->name('outlet.edit');
           Route::put('outlet-settings', [OutletManagementController::class, 'update'])->name('outlet.update');

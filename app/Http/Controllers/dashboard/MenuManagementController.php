@@ -91,12 +91,31 @@ class MenuManagementController extends Controller
             ->with('success', 'Menu ' . $menu->name . ' berhasil ditambahkan.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function fetch($param1, $param2 = null)
     {
-        //
+        list($outlet, $id) = $this->processParameters($param1, $param2);
+
+        $menu = Menu::where('id', $id)
+            ->where('outlet_id', $outlet->id)
+            ->firstOrFail();
+
+        $menu->load('menuImages', 'stockItems', 'stockItems.unit');
+
+        if ($menu) {
+            return response()->json([
+                'status' => true,
+                'code' => 200,
+                'data' => $menu,
+            ]);
+        } else {
+            return response()->json(
+                [
+                    'status' => false,
+                    'code' => 404,
+                ],
+                404,
+            );
+        }
     }
 
     public function edit($param1, $param2 = null)
