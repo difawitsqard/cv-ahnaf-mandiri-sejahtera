@@ -668,16 +668,25 @@
                                 }
                             },
                             error: function(xhr, status, error) {
+                                
+                                
+                                let errorMessages = 'Terjadi kesalahan saat membuat pesanan.';
+
                                 if (xhr.responseJSON.errors) {
-                                    let errorMessages = Object.values(xhr.responseJSON
-                                        .errors)[0];
+                                    errorMessages = Object.values(xhr.responseJSON.errors)[0];
+                                } else {
+                                    if (xhr.responseJSON.message) {
+                                        errorMessages = xhr.responseJSON.message;
+                                    }
+                                }
+
                                     Swal.fire({
                                         title: 'Upps!',
                                         confirmButtonColor: '#0d6efd',
                                         html: errorMessages,
                                         icon: 'error',
                                     });
-                                }
+
                                 console.error(error);
                             }
                         });

@@ -112,7 +112,7 @@ class UserManagementController extends Controller
 
             DB::commit();
 
-            return redirect()->back()->with('success', "Pengguna {$user->name} berhasil dibuat, kami telah mengirimkan email verifikasi ke {$user->email}");
+            return redirect()->back()->with('success', "Pengguna {$user->name} berhasil dibuat, kami telah mengirimkan email verifikasi ke {$user->email}. Periksa spam pada email, jika tidak ada di kotak masuk.");
         } catch (Exception $e) {
             DB::rollBack();
 
@@ -198,7 +198,7 @@ class UserManagementController extends Controller
 
             if (!$user->email_verified_at && ($oldEmail  != $validatedData['email'])) {
                 $user->notify(new CustomRegistrationNotification());
-                $msg = "Pengguna {$user->name} berhasil diperbarui, kami telah mengirimkan email verifikasi ke {$user->email}";
+                $msg = "Pengguna {$user->name} berhasil diperbarui, kami telah mengirimkan email verifikasi ke {$user->email}. Periksa spam pada email, jika tidak ada di kotak masuk.";
             } else {
                 $msg = "Pengguna {$user->name} berhasil diperbarui.";
             }

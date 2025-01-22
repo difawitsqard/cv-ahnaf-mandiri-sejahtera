@@ -94,7 +94,33 @@ class OrderController extends Controller
 
         // Ambil data menu langsung dari database
         $menuIds = collect($validated['cart'])->pluck('id');
-        $menus = Menu::whereIn('id', $menuIds)->get()->keyBy('id');
+        $menus = Menu::whereIn('id', $menuIds)->with('stockItems')->get()->keyBy('id');
+
+        // Grouping berdsasrkan stock item yang sama and totaling pivot_quantity to check if the stock is sufficient
+        $stockItems = [];
+
+        foreach ($validated['cart'] as $item) {
+            $menu = $menus->get($item['id']);
+            $menu->stockItems->each(function ($stockItem) use ($item, &$stockItems) {
+                $quantity = $stockItem->pivot->quantity * $item['quantity'];
+                if (!isset($stockItems[$stockItem->id])) {
+                    $stockItems[$stockItem->id] = 0;
+                }
+                $stockItems[$stockItem->id] += $quantity;
+            });
+        }
+
+        // Check if the stock is sufficient
+        foreach ($stockItems as $stockItemId => $quantity) {
+            $stockItem = StockItem::find($stockItemId);
+            if ($stockItem->stock < $quantity) {
+                return response()->json([
+                    'status' => false,
+                    'code' => 422,
+                    'message' => 'Dibutuhkan ' . $quantity . ' ' . $stockItem->unit->name . ' ' . $stockItem->name . ' untuk memproses pesanan ini, stok yang tersedia hanya ' . $stockItem->stock . ' ' . $stockItem->unit->name . '.',
+                ], 422);
+            }
+        }
 
         // Hitung total harga dan persiapkan data untuk order items
         $total = 0;
