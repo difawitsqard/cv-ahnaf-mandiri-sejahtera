@@ -27,11 +27,13 @@
                         <p class="mb-0">{{ $outlet->address }}</p>
                     </div>
                 </div>
-                <div class="ms-auto">
-                    <a class="btn btn-primary px-4 add-button"
-                        href="{{ roleBasedRoute('menu.create', ['outlet' => $outlet->slug]) }}"><i
-                            class="bi bi-plus-lg me-2"></i>Menu baru</a>
-                </div>
+                 @unlessrole('staff')
+                    <div class="ms-auto">
+                        <a class="btn btn-primary px-4 add-button"
+                            href="{{ roleBasedRoute('menu.create', ['outlet' => $outlet->slug]) }}"><i
+                                class="bi bi-plus-lg me-2"></i>Menu baru</a>
+                    </div>
+                @endunlessrole
             </div>
         </div>
     </div>
@@ -158,24 +160,26 @@
                                                         Detail
                                                     </button>
                                                 </li>
-                                                <li>
-                                                    <a type="button" class="dropdown-item edit-button"
-                                                        href="{{ roleBasedRoute('menu.edit', ['outlet' => $outlet->slug, 'menu' => $menu->id]) }}">
-                                                        Edit
-                                                    </a>
-                                                </li>
-                                                <hr class="dropdown-divider">
-                                                <li>
-                                                    <form id="delete-form-{{ $menu['id'] }}"
-                                                        action="{{ roleBasedRoute('menu.destroy', ['outlet' => $outlet->slug, 'menu' => $menu->id]) }}"
-                                                        method="POST" style="display: none;">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                    </form>
-                                                    <button type="button" class="dropdown-item text-danger"
-                                                        data-id="{{ $menu['id'] }}" data-msg="{{ $menu['name'] }}"
-                                                        onclick="confirmDelete(this)">Hapus</button>
-                                                </li>
+                                                 @unlessrole('staff')
+                                                    <li>
+                                                        <a type="button" class="dropdown-item edit-button"
+                                                            href="{{ roleBasedRoute('menu.edit', ['outlet' => $outlet->slug, 'menu' => $menu->id]) }}">
+                                                            Edit
+                                                        </a>
+                                                    </li>
+                                                    <hr class="dropdown-divider">
+                                                    <li>
+                                                        <form id="delete-form-{{ $menu['id'] }}"
+                                                            action="{{ roleBasedRoute('menu.destroy', ['outlet' => $outlet->slug, 'menu' => $menu->id]) }}"
+                                                            method="POST" style="display: none;">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                        </form>
+                                                        <button type="button" class="dropdown-item text-danger"
+                                                            data-id="{{ $menu['id'] }}" data-msg="{{ $menu['name'] }}"
+                                                            onclick="confirmDelete(this)">Hapus</button>
+                                                    </li>
+                                                @endunlessrole
                                             </ul>
                                         </div>
                                     </td>
@@ -346,33 +350,33 @@
                                 ${response.data.stock_items.length ? response.data.stock_items.map(stockItem => {
                                     const statusLinkItem = stockItem.stock > stockItem.pivot.quantity ? ['success', 'Terpenuhi'] : ['danger', 'Tidak Terpenuhi'];
                                     return `
-                                                <tr role="row" style="border: none;">
-                                                <td class="align-middle" style="border: none;">
-                                                    <div class="d-flex align-items-center gap-3">
-                                                    <div class="product-box">
-                                                        <img src="${stockItem.image_url}" style="width: 50px; height: 40px; object-fit: cover;" class="rounded-3" alt="${stockItem.name}">
-                                                    </div>
-                                                    <div class="product-info">
-                                                        <b class="product-title">${stockItem.name}</b>
-                                                        <p class="mb-0 product-category no-export">
-                                                        <b>${stockItem.stock}</b> ${stockItem.unit.name}
-                                                        </p>
-                                                    </div>
-                                                    </div>
-                                                </td>
-                                                <td class="align-middle" style="border: none;">
-                                                    <div class="product-info">
-                                                    <b class="product-title">Dibutuhkan</b>
-                                                    <p class="mb-0 product-category no-export">
-                                                        <b>${stockItem.pivot.quantity}</b> ${stockItem.unit.name}
-                                                    </p>
-                                                    </div>    
-                                                </td>
-                                                <td class="align-middle text-end" style="border: none;">
-                                                    <span class="lable-table me-3 p-2 bg-${statusLinkItem[0]}-subtle text-${statusLinkItem[0]} rounded border border-${statusLinkItem[0]}-subtle font-text2 fw-bold">${statusLinkItem[1]}</span>
-                                                </td>
-                                                </tr>
-                                            `;
+                                                        <tr role="row" style="border: none;">
+                                                        <td class="align-middle" style="border: none;">
+                                                            <div class="d-flex align-items-center gap-3">
+                                                            <div class="product-box">
+                                                                <img src="${stockItem.image_url}" style="width: 50px; height: 40px; object-fit: cover;" class="rounded-3" alt="${stockItem.name}">
+                                                            </div>
+                                                            <div class="product-info">
+                                                                <b class="product-title">${stockItem.name}</b>
+                                                                <p class="mb-0 product-category no-export">
+                                                                <b>${stockItem.stock}</b> ${stockItem.unit.name}
+                                                                </p>
+                                                            </div>
+                                                            </div>
+                                                        </td>
+                                                        <td class="align-middle" style="border: none;">
+                                                            <div class="product-info">
+                                                            <b class="product-title">Dibutuhkan</b>
+                                                            <p class="mb-0 product-category no-export">
+                                                                <b>${stockItem.pivot.quantity}</b> ${stockItem.unit.name}
+                                                            </p>
+                                                            </div>    
+                                                        </td>
+                                                        <td class="align-middle text-end" style="border: none;">
+                                                            <span class="lable-table me-3 p-2 bg-${statusLinkItem[0]}-subtle text-${statusLinkItem[0]} rounded border border-${statusLinkItem[0]}-subtle font-text2 fw-bold">${statusLinkItem[1]}</span>
+                                                        </td>
+                                                        </tr>
+                                                    `;
                         }).join('') : '<tr><td colspan="3" style="border: none;" class="text-center">Tidak ada item yang terkait</td></tr>'}</tbody>`;
                                 menuLink.appendChild(table);
                             }
@@ -391,24 +395,26 @@
             });
         });
 
-        function confirmDelete(button) {
-            const menuId = button.getAttribute('data-id');
-            const menuMsg = button.getAttribute('data-msg');
+         @unlessrole('staff')
+            function confirmDelete(button) {
+                const menuId = button.getAttribute('data-id');
+                const menuMsg = button.getAttribute('data-msg');
 
-            Swal.fire({
-                title: 'Apa kamu yakin?',
-                html: `Ingin menghapus Menu <b>${menuMsg}</b>`,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#0d6efd',
-                cancelButtonColor: '#fc185a',
-                confirmButtonText: 'Ya, hapus!',
-                cancelButtonText: 'Batal',
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    document.getElementById('delete-form-' + menuId).submit();
-                }
-            })
-        }
+                Swal.fire({
+                    title: 'Apa kamu yakin?',
+                    html: `Ingin menghapus Menu <b>${menuMsg}</b>`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#0d6efd',
+                    cancelButtonColor: '#fc185a',
+                    confirmButtonText: 'Ya, hapus!',
+                    cancelButtonText: 'Batal',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        document.getElementById('delete-form-' + menuId).submit();
+                    }
+                })
+            }
+        @endunlessrole
     </script>
 @endpush

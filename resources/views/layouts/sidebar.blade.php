@@ -116,6 +116,14 @@
 
                        @hasrole('staff')
                            <li>
+                               <a href="{{ roleBasedRoute('menu.index', ['outlet' => $outletSlug]) }}">
+                                   <div class="parent-icon">
+                                       <i class="material-icons-outlined">library_books</i>
+                                   </div>
+                                   <div class="menu-title" title="Stok Etalase">Daftar Menu</div>
+                               </a>
+                           </li>
+                           <li>
                                <a href="{{ roleBasedRoute('stock-item.index', ['outlet' => $outletSlug]) }}">
                                    <div class="parent-icon">
                                        <i class="material-icons-outlined">article</i>

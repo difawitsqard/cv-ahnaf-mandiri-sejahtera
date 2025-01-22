@@ -158,6 +158,7 @@ Route::middleware(['auth', 'check_password_set', 'set_outlet_role'])->group(func
           Route::resource('expense', ExpenseManagementController::class)->except(['destroy']);
 
           // menu
+          Route::resource('menu', MenuManagementController::class)->only(['index']);
           Route::get('menu/{id}/fetch', [MenuManagementController::class, 'fetch'])->name('menu.fetch');
 
           // etalase 
