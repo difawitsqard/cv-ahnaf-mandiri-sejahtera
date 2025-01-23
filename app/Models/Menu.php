@@ -61,6 +61,7 @@ class Menu extends Model
     // buatkan atribut baru seberapa banyak dipesan
     public function getOrderedQuantityAttribute()
     {
-        return $this->orders->sum('pivot.quantity');
+        //return $this->orders->sum('pivot.quantity');
+        return $this->orders()->sum('quantity');
     }
 }
