@@ -86,14 +86,15 @@ class UserManagementController extends Controller
         $validatedData = $request->validated();
 
         $role = Role::findOrFail($validatedData['role']);
+
         if (!auth()->user()->hasRole('superadmin') && $role->name != 'staff') {
             return redirect()->back()->withErrors(['error' => 'Anda tidak memiliki akses untuk membuat pengguna dengan role ' . $role->name]);
         }
 
-        if ($role->name == 'superadmin') {
-            $validatedData['outlet_id'] = null;
-        }
+        // Jika role superadmin, maka outlet_id harus null
+        if ($role->name == 'superadmin') $validatedData['outlet_id'] = null;
 
+        // Jika bukan superadmin, maka outlet_id harus sesuai dengan outlet yang sedang login
         if (!auth()->user()->hasRole('superadmin')) $validatedData['outlet_id'] = $outlet->id;
 
 

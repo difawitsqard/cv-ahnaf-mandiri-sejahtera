@@ -201,14 +201,21 @@
                                                 </li>
                                                 <hr class="dropdown-divider">
                                                 <li>
-                                                    <button type="button" class="dropdown-item text-{{ !$user->disabled_account ? 'danger' : 'primary' }}"
-                                                        data-id="{{ $user['id'] }}" data-msg="Ingin {{ !$user->disabled_account ? 'Menonaktifkan' : 'Mengaktifkan' }} Pengguna <b>{{ $user['name'] }}</b> ?" data-url="{{ roleBasedRoute('user.disabled-enabled', ['outlet' => $outlet->slug, 'user' => $user->id]) }}"
-                                                        onclick="confirmDeleteDisabled(this)" data-action="disabled_enabled">{{ !$user->disabled_account ? 'Nonaktifkan' : 'Aktifkan' }}</button>
+                                                    <button type="button"
+                                                        class="dropdown-item text-{{ !$user->disabled_account ? 'danger' : 'primary' }}"
+                                                        data-id="{{ $user['id'] }}"
+                                                        data-msg="Ingin {{ !$user->disabled_account ? 'Menonaktifkan' : 'Mengaktifkan' }} Pengguna <b>{{ $user['name'] }}</b> ?"
+                                                        data-url="{{ roleBasedRoute('user.disabled-enabled', ['outlet' => $outlet->slug, 'user' => $user->id]) }}"
+                                                        onclick="confirmDeleteDisabled(this)"
+                                                        data-action="disabled_enabled">{{ !$user->disabled_account ? 'Nonaktifkan' : 'Aktifkan' }}</button>
                                                 </li>
                                                 <li>
                                                     <button type="button" class="dropdown-item text-danger"
-                                                        data-id="{{ $user['id'] }}" data-msg="Ingin menghapus Pengguna <b>{{ $user['name'] }}</b> ?" data-url="{{ roleBasedRoute('user.destroy', ['outlet' => $outlet->slug, 'user' => $user->id]) }}"
-                                                        onclick="confirmDeleteDisabled(this)" data-action="delete">Hapus</button>
+                                                        data-id="{{ $user['id'] }}"
+                                                        data-msg="Ingin menghapus Pengguna <b>{{ $user['name'] }}</b> ?"
+                                                        data-url="{{ roleBasedRoute('user.destroy', ['outlet' => $outlet->slug, 'user' => $user->id]) }}"
+                                                        onclick="confirmDeleteDisabled(this)"
+                                                        data-action="delete">Hapus</button>
                                                 </li>
                                                 <form id="action-form-{{ $user['id'] }}"
                                                     action="{{ roleBasedRoute('user.destroy', ['outlet' => $outlet->slug, 'user' => $user->id]) }}"
@@ -262,7 +269,7 @@
                                             <option value="{{ $rowOutlet->id }}"
                                                 data-image-url="{{ $rowOutlet->image_url }}"
                                                 data-address="{{ $rowOutlet->address }}{{ $rowOutlet->phone_number ? ', ' . $rowOutlet->phone_number : '' }}"
-                                                {{ old('outlet_id') == $rowOutlet->id ? 'selected' : '' }}>
+                                                {{ old('outlet_id') == $rowOutlet->id || $outlet->id == $rowOutlet->id ? 'selected' : '' }}>
                                                 {{ $rowOutlet->name }}
                                             </option>
                                         @endforeach
@@ -446,6 +453,10 @@
                 `<i class="bi bi-x-circle-fill text-danger"></i>`,
             ];
 
+            @hasrole('superadmin')
+                let outletIdElement = document.getElementById('outlet_id');
+            @endhasrole
+
             document.querySelectorAll('.add-button').forEach(function(button) {
                 button.addEventListener('click', function() {
                     submitButton.style.display = 'block';
@@ -459,7 +470,6 @@
 
             @hasrole('superadmin')
                 var triggerOutletSelect = function(id) {
-                    let outletIdElement = document.getElementById('outlet_id');
                     outletIdElement.value = id;
 
                     let event = new Event('change');
@@ -467,8 +477,6 @@
                 };
 
                 var disabledSelectOutlet = function(value) {
-                    let outletIdElement = document.getElementById('outlet_id');
-
                     if (value) {
                         outletIdElement.disabled = false;
                         outletIdElement.closest('.col-12').classList.remove('d-none');
@@ -487,6 +495,8 @@
                     } else {
                         disabledSelectOutlet(true);
                     }
+
+                    outletIdElement.dispatchEvent(new Event('change'));
                 @endhasrole
             });
 
