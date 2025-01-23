@@ -49,6 +49,7 @@ class UserManagementController extends Controller
 
         if ($currentUser->hasRole('superadmin')) {
             $users = User::where('outlet_id', $outlet->id)
+                ->orWhere('outlet_id', null)
                 ->orWhereHas('roles', function ($query) {
                     $query->where('name', 'superadmin');
                 });

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-bs-theme="semi-dark">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-bs-theme="bodered-theme">
 
 <head>
     <meta charset="utf-8">
