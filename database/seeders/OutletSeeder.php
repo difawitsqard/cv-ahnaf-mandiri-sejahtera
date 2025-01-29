@@ -15,12 +15,8 @@ class OutletSeeder extends Seeder
     {
         $outlets = [
             [
-                'name' => 'KitaSuka Fried Chiken',
+                'name' => 'KitaSuka Fried Chicken',
                 'address' => 'Gedong Panjang',
-            ],
-            [
-                'name' => 'KitaSuka Fried Chiken',
-                'address' => 'Cibungur',
             ],
         ];
 
