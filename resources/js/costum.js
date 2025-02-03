@@ -186,15 +186,24 @@ $(function () {
                 this.startPace();
             });
 
-            // // Event listener untuk mendeteksi ketika halaman selesai dimuat
-            // window.addEventListener("load", () => {
-            //     this.stopPace();
-            // });
+            window.addEventListener("pageshow", (event) => {
+                if (event.persisted) {
+                    //console.log("Page was restored from cache");
+                    this.stopPace();
+                }
+            });
 
-            // // Event listener untuk mendeteksi ketika DOM selesai diurai
-            // document.addEventListener("DOMContentLoaded", () => {
-            //     this.stopPace();
-            // });
+            // Event listener untuk mendeteksi ketika halaman selesai dimuat
+            window.addEventListener("load", () => {
+                //console.log("Window load event fired");
+                this.stopPace();
+            });
+
+            // Event listener untuk mendeteksi ketika DOM selesai diurai
+            document.addEventListener("DOMContentLoaded", () => {
+                //console.log("DOMContentLoaded event fired");
+                this.stopPace();
+            });
 
             $("form").on("submit", function (event) {
                 if ($("body").attr("data-pace") === "true") {
