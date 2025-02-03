@@ -351,6 +351,38 @@
                 });
             });
 
+            $("form").on('submit', function(e) {
+                var $form = $(this);
+
+                // Iterate over all checkboxes in the table
+                table.$('input[type="checkbox"]').each(function() {
+                    // If checkbox doesn't exist in DOM
+                    if (!$.contains(document, this)) {
+                        // If checkbox is checked
+                        if (this.checked) {
+                            // Create a hidden element for the checkbox
+                            $form.append(
+                                $('<input>')
+                                .attr('type', 'hidden')
+                                .attr('name', this.name)
+                                .val(this.value)
+                            );
+
+                            // Create a hidden element for the corresponding quantity
+                            var quantityInput = $(this).closest('tr').find('[name="quantity[]"]');
+                            if (quantityInput.length) {
+                                $form.append(
+                                    $('<input>')
+                                    .attr('type', 'hidden')
+                                    .attr('name', quantityInput.attr('name'))
+                                    .val(quantityInput.val())
+                                );
+                            }
+                        }
+                    }
+                });
+            });
+
             // Handle individual row checkbox
             $(document).on('change', '.row-checkbox', function() {
                 var isChecked = $(this).is(':checked');

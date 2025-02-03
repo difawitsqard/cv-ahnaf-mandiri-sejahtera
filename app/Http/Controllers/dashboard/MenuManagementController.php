@@ -218,7 +218,7 @@ class MenuManagementController extends Controller
 
         return redirect()
             ->to(roleBasedRoute('menu.index', ['outlet' => $outlet->slug]))
-            ->with('success', 'Menu updated successfully');
+            ->with('success', 'Menu ' . $menu->name . ' berhasil diperbarui.');
     }
 
     /**
