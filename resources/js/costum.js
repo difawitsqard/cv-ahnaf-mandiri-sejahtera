@@ -181,6 +181,21 @@ $(function () {
                     });
             });
 
+            // Event listener untuk mendeteksi ketika tab sedang memuat atau berpindah halaman
+            window.addEventListener("beforeunload", () => {
+                this.startPace();
+            });
+
+            // // Event listener untuk mendeteksi ketika halaman selesai dimuat
+            // window.addEventListener("load", () => {
+            //     this.stopPace();
+            // });
+
+            // // Event listener untuk mendeteksi ketika DOM selesai diurai
+            // document.addEventListener("DOMContentLoaded", () => {
+            //     this.stopPace();
+            // });
+
             $("form").on("submit", function (event) {
                 if ($("body").attr("data-pace") === "true") {
                     if ($(this).attr("download") !== "true") {
@@ -200,10 +215,24 @@ $(function () {
             });
         }
 
+        startPace() {
+            self.setAlwaysRun(true);
+            toggleElements(false);
+            Pace.restart();
+        }
+
+        stopPace() {
+            Pace.stop();
+            $(".preloader").fadeOut(300, function () {
+                toggleElements(true);
+            });
+        }
+
         setAlwaysRun(alwaysRun) {
             this.alwaysRun = alwaysRun;
         }
     }
 
+    // window.paceManager = new PaceManager();
     const paceManager = new PaceManager();
 });

@@ -35,9 +35,6 @@
     <form action="{{ roleBasedRoute('expense.store', ['outlet' => $outlet->slug]) }}" method="POST"
         enctype="multipart/form-data" id="form-expense" onSubmit="return false">
 
-        @csrf
-        @method('POST')
-
         <div class="card rounded-4 mb-3">
             <div class="card-body">
                 <div
