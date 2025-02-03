@@ -67,8 +67,10 @@
                     <div class="text-white">
                         <ul class="mb-1">
                             <li>Item dengan kategori <strong>Etalase</strong> dapat ditautkan ke menu.</li>
-                            <li>Item dengan kategori <strong>Etalase</strong> tidak memiliki harga, tentukan harga di menu.</li>
-                            <li>Item yang ditautkan ke menu bisa lebih dari satu dan stoknya akan otomatis berkurang saat menu tersebut dibeli.</li>
+                            <li>Item dengan kategori <strong>Etalase</strong> tidak memiliki harga, tentukan harga di menu.
+                            </li>
+                            <li>Item yang ditautkan ke menu bisa lebih dari satu dan stoknya akan otomatis berkurang saat
+                                menu tersebut dibeli.</li>
                         </ul>
                     </div>
                 </div>
@@ -122,7 +124,7 @@
                                     <div class="col-12 col-lg-6">
                                         <h6 class="mb-2">Stok Awal</h6>
                                         <input class="form-control" type="number" id="stock" name="stock"
-                                            placeholder="Jumlah Stok Awal" value="{{ old('stock') }}" required>
+                                            placeholder="Jumlah Stok Awal" value="{{ old('stock') }}">
                                     </div>
                                     <div class="col-12 col-lg-6">
                                         <x-unit-select :selectedUnit="old('unit_id')" />
@@ -220,7 +222,9 @@
                     msgboxEtalase.addClass('d-none');
                 }
             });
-            
+
+            $("select[name='category_id']").trigger('change');
+
         });
     </script>
     {{-- <script>

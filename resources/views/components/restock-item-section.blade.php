@@ -76,10 +76,10 @@
                 function loadStockData() {
                     setFieldsReadOnly(true);
                     textMessageElement.textContent = '';
-                    const url = `{{ roleBasedRoute('stock-item.index', ['outlet' => $outlet->slug]) }}/${itemId}/fetch`;
+                    const url = `{{ roleBasedRoute('stock-item.index', ['outlet' => $outlet->slug]) }}/:id/fetch`.replace(':id', itemId);
 
                     if (!outletId || !itemId) {
-                        console.error('Error:', 'Outlet ID atau Item ID tidak ditemukan.');
+                        //console.error('Error:', 'Outlet ID atau Item ID tidak ditemukan.');
                         setFieldsReadOnly(false);
                         return;
                     }
@@ -118,6 +118,8 @@
 
                     const qty = qtyInput.value;
 
+                    if ( !itemId) return;
+
                     if (!qty) {
                         textMessageElement.textContent = 'Masukkan jumlah yang valid !';
                         setFieldsReadOnly(false);
@@ -128,7 +130,7 @@
                     textMessageElement.textContent = '';
 
                     $.ajax({
-                        url: `{{ roleBasedRoute('stock-item.index', ['outlet' => $outlet->slug]) }}/${itemId}/restock`,
+                        url: `{{ roleBasedRoute('stock-item.index', ['outlet' => $outlet->slug]) }}/:id/restock`.replace(':id', itemId),
                         type: 'POST',
                         headers: {
                             'X-CSRF-TOKEN': '{{ csrf_token() }}'
@@ -148,7 +150,7 @@
                             restockSubmitButton.disabled = false;
                         },
                         error: function(error) {
-                            console.error('Error:', error);
+                            //console.error('Error:', error);
                             restockSubmitButton.disabled = false;
                         }
                     });

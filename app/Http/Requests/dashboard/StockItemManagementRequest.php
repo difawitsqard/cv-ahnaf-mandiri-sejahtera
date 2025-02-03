@@ -18,6 +18,7 @@ class StockItemManagementRequest extends FormRequest
     {
         $this->merge([
             'price' => $this->price ? str_replace('.', '', $this->price) : 0,
+            'stock' => $this->stock ?? 0,
             'min_stock' =>  $this->min_stock ?? 0,
         ]);
     }
@@ -34,6 +35,7 @@ class StockItemManagementRequest extends FormRequest
             'description' => 'nullable|string|max:255',
             'unit_id' => 'required',
             'category_id' => 'required',
+            'stock' => 'nullable|numeric',
             'min_stock' => 'nullable|numeric',
             'price' => 'required|numeric',
         ];
