@@ -627,7 +627,15 @@
                                             function(data) {
                                                 if (/Android|iPhone|iPad|iPod/i
                                                     .test(navigator.userAgent)) {
+                                                    window.PaceManager
+                                                        .preventUnload = true;
                                                     window.location.href = data;
+
+                                                    setTimeout(function() {
+                                                        window.PaceManager
+                                                            .preventUnload =
+                                                            false;
+                                                    }, 1000);
                                                 } else {
                                                     var socket = new WebSocket(
                                                         "ws://127.0.0.1:40213/");
@@ -668,24 +676,26 @@
                                 }
                             },
                             error: function(xhr, status, error) {
-                                
-                                
-                                let errorMessages = 'Terjadi kesalahan saat membuat pesanan.';
+
+
+                                let errorMessages =
+                                    'Terjadi kesalahan saat membuat pesanan.';
 
                                 if (xhr.responseJSON.errors) {
-                                    errorMessages = Object.values(xhr.responseJSON.errors)[0];
+                                    errorMessages = Object.values(xhr.responseJSON
+                                        .errors)[0];
                                 } else {
                                     if (xhr.responseJSON.message) {
                                         errorMessages = xhr.responseJSON.message;
                                     }
                                 }
 
-                                    Swal.fire({
-                                        title: 'Upps!',
-                                        confirmButtonColor: '#0d6efd',
-                                        html: errorMessages,
-                                        icon: 'error',
-                                    });
+                                Swal.fire({
+                                    title: 'Upps!',
+                                    confirmButtonColor: '#0d6efd',
+                                    html: errorMessages,
+                                    icon: 'error',
+                                });
 
                                 console.error(error);
                             }

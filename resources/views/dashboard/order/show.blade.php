@@ -329,8 +329,14 @@
 
             // Function to print on Android
             function mobile_print(data) {
+                window.PaceManager.preventUnload = true;
+
                 window.location.href = data;
                 showFeedback('Selesai', 'Cetak resi selesai.', 'success');
+
+                setTimeout(() => {
+                    window.PaceManager.preventUnload = false;
+                }, 1000);
             }
 
             function receiptPrint(url) {

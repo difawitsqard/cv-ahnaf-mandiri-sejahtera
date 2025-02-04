@@ -149,6 +149,7 @@ $(function () {
     class PaceManager {
         constructor() {
             this.alwaysRun = false;
+            this.preventUnload = false;
             this.initPaceEvents();
         }
 
@@ -183,7 +184,9 @@ $(function () {
 
             // Event listener untuk mendeteksi ketika tab sedang memuat atau berpindah halaman
             window.addEventListener("beforeunload", () => {
-                this.startPace();
+                if (!this.preventUnload) {
+                    this.startPace();
+                }
             });
 
             window.addEventListener("pageshow", (event) => {
@@ -242,6 +245,6 @@ $(function () {
         }
     }
 
-    // window.paceManager = new PaceManager();
-    const paceManager = new PaceManager();
+    //const PaceManager = new PaceManager();
+    window.PaceManager = new PaceManager();
 });
