@@ -31,7 +31,7 @@
 <script src="{{ URL::asset('build/js/main.js') }}?v={{ __('v3') }}"></script>
 
 <!--costum js-->
-<script src="{{ URL::asset('build/js/costum.js') }}?v={{ __('v6') }}"></script>
+<script src="{{ URL::asset('build/js/costum.js') }}?v={{ __('v7') }}"></script>
 
 <script>
     $(function() {

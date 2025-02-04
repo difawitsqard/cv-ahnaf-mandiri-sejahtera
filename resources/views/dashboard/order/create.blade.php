@@ -627,15 +627,7 @@
                                             function(data) {
                                                 if (/Android|iPhone|iPad|iPod/i
                                                     .test(navigator.userAgent)) {
-                                                    window.PaceManager
-                                                        .preventUnload = true;
-                                                    window.location.href = data;
-
-                                                    setTimeout(function() {
-                                                        window.PaceManager
-                                                            .preventUnload =
-                                                            false;
-                                                    }, 1000);
+                                                        window.PaceManager.navigatePreventUnload(data);
                                                 } else {
                                                     var socket = new WebSocket(
                                                         "ws://127.0.0.1:40213/");

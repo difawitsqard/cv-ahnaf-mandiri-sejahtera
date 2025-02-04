@@ -182,10 +182,19 @@ $(function () {
                     });
             });
 
+            document.addEventListener("click", (event) => {
+                const target = event.target.closest("[download='true']");
+                this.preventUnload = !!target;
+            });
+
             // Event listener untuk mendeteksi ketika tab sedang memuat atau berpindah halaman
             window.addEventListener("beforeunload", () => {
                 if (!this.preventUnload) {
+                    // console.log("Page is unloading");
                     this.startPace();
+                } else {
+                    // console.log("Download button clicked");
+                    this.preventUnload = false;
                 }
             });
 
@@ -242,6 +251,12 @@ $(function () {
 
         setAlwaysRun(alwaysRun) {
             this.alwaysRun = alwaysRun;
+        }
+
+        // navigate prevent unload and navigate to url
+        navigatePreventUnload(url) {
+            this.preventUnload = true;
+            window.location.href = url;
         }
     }
 
