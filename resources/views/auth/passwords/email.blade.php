@@ -13,18 +13,26 @@
                             <h4 class="fw-bold">Lupa Kata Sandi ?</h4>
                             <p class="mb-3">Masukkan email Anda untuk mengatur ulang kata sandi.</p>
 
-                            @if (session('success') || session('info') || session('warning') || $errors->any())
-                                <x-alert-message :type="session('success')
-                                    ? 'success'
-                                    : (session('info')
-                                        ? 'info'
-                                        : (session('warning')
-                                            ? 'warning'
-                                            : 'danger'))" :messages="session('success') ??
-                                    (session('info') ?? (session('warning') ?? $errors->all()))" />
+                            @if (session('status'))
+                                <div class="alert alert-success mt-3" role="alert">
+                                    {{ __('Tautan untuk mengatur ulang kata sandi telah dikirim ke email Anda.') }}
+                                </div>
                             @endif
 
-                            <div class="form-body mt-4">
+                            {{-- @if (session('success') || session('status') || session('info') || session('warning') || $errors->any())
+                               
+                            @php
+                                $alertType = session('success') ? 'success' : (session('info') || session('status') ? 'info' : (session('warning') ? 'warning' : 'danger'));
+                                $message = session('success') ?? session('status') ?? session('info') ?? session('warning') ?? $errors->first();
+                            @endphp
+                            <div class="alert alert-{{ $alertType }} alert-dismissible bg-{{ $alertType }} border-0 mb-2 fade show">
+                                <div class="text-white">{{ $message }}</div>
+                                <button aria-label="Close" class="btn-close" data-bs-dismiss="alert" type="button"></button>
+                            </div>
+                               
+                            @endif --}}
+
+                            <div class="form-body">
                                 <form method="POST" class="row g-4" action="{{ route('password.email') }}">
                                     @csrf
                                     @method('POST')
@@ -34,7 +42,7 @@
                                         <input id="email" type="email"
                                             class="form-control @error('email') is-invalid @enderror" name="email"
                                             value="{{ old('email') }}" required autocomplete="email" autofocus
-                                            placeholder="Masukan email anda">
+                                            placeholder="Masukan email anda.">
 
                                         @error('email')
                                             <span class="invalid-feedback" role="alert">
