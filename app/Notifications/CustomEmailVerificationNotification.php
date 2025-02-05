@@ -4,7 +4,6 @@ namespace App\Notifications;
 
 use Illuminate\Auth\Notifications\VerifyEmail as BaseVerifyEmail;
 use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Support\Facades\Auth;
 
 class CustomEmailVerificationNotification extends BaseVerifyEmail
 {
@@ -19,11 +18,11 @@ class CustomEmailVerificationNotification extends BaseVerifyEmail
         //     ->view('emails.custom-verification', ['url' => $url, 'notifiable' => $notifiable]);
 
         return (new MailMessage())
-            ->from(config('mail.from.address'), config('mail.from.name'))
+            ->from(config('mail.from.address'), getCompanyInfo()->name ?? config('mail.from.name'))
             ->subject('Verifikasi Alamat Email Anda')
             ->greeting('Halo, ' . $notifiable->name . '!')
             ->line('Silakan verifikasi alamat email Anda dengan mengklik tombol di bawah ini.')
             ->action('Verifikasi Alamat Email', $url)
-            ->salutation('Salam Hormat, ' . auth()->user()->name);
+            ->salutation("Terima kasih");
     }
 }
