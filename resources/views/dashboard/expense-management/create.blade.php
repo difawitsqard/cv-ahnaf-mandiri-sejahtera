@@ -493,8 +493,8 @@
 
                     if (item.stock_item_id) {
                         //console.log(item.stock_item_id);
-                        const option = modalItem.find(
-                            `[name="stock_item_id"] option[value="${item.stock_item_id}"]`);
+                        // const option = modalItem.find(`[name="stock_item_id"] option[value="${item.stock_item_id}"]`);
+                        const option = modalItemStockId.find(`option[value="${item.stock_item_id}"]`);
 
                         if (option.length === 0) {
                             item.stock_item_id = null;

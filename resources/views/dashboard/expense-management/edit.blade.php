@@ -377,7 +377,7 @@
                             </div>`;
                 }
 
-                const imageUrl = $(option.element).data('image-url') || ""
+                const imageUrl = $(option.element).data('image-url') || "";
                 const description = $(option.element).data('description');
                 const maxQty = $(option.element).data('max-qty');
                 const name = option.text;
@@ -402,7 +402,7 @@
                 }
 
                 // Opsi lainnya (dengan gambar)
-                const imageUrl = $(option.element).data('image-url') || ""
+                const imageUrl = $(option.element).data('image-url') || "";
                 const name = option.text;
 
                 return `<div style="display: flex; align-items: center;">
@@ -524,8 +524,7 @@
                     }
 
                     if (item.stock_item_id) {
-                        const option = modalItem.find(
-                            `[name="stock_item_id"] option[value="${item.stock_item_id}"]`);
+                        const option = modalItemStockId.find(`option[value="${item.stock_item_id}"]`);
 
                         if (option.length === 0) {
                             item.stock_item_id = null;
