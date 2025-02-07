@@ -83,6 +83,7 @@
                     <table class="table align-middle" id="table-order">
                         <thead class="bg-light">
                             <tr>
+                                <th class="no-export">No</th>
                                 <th>ID Pesanan</th>
                                 <th>Oleh</th>
                                 <th>Total Produk</th>
@@ -95,6 +96,7 @@
                         <tbody>
                             @foreach ($orders as $order)
                                 <tr>
+                                    <td class="no-export">{{ $loop->iteration }}</td>
                                     <td>
                                         <a
                                             href="{{ roleBasedRoute('order.show', ['outlet' => $outlet->slug, 'order' => $order->id]) }}">#{{ $order->id }}</a>
@@ -185,7 +187,14 @@
                 lengthChange: false,
                 lengthMenu: [10, 25, 50, 100, -1],
                 order: [
-                    [5, 'desc']
+                    [0, 'asc']
+                ],
+                columnDefs: [
+                    {
+                        targets: 0,
+                        visible: false,
+                        searchable: false
+                    }
                 ]
             });
 

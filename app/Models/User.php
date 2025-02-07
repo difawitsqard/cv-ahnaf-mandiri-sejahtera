@@ -90,6 +90,10 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function canBeEditedOrDeleted($user)
     {
+        if ($user->id === $this->id) {
+            return false;
+        }
+
         if ($user->hasRole('superadmin') || ($user->hasRole('admin') && $user->outlet_id === $this->outlet_id && $this->hasRole('staff'))) {
             return true;
         }

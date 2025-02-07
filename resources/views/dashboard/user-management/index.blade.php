@@ -83,6 +83,7 @@
                             <th>Nomor Hp</th>
                             <th>Role</th>
                             <th>Verify</th>
+                            <th>Tgl Bergabung</th>
                             <th>Status</th>
                             <th class="no-export">Aksi</th>
                         </tr>
@@ -96,7 +97,7 @@
                                         <img src="{{ URL::asset('build/images/default-avatar.jpg') }}"
                                             alt="{{ $user->name }}" width="36px" height="36px"
                                             class="rounded-circle shadow-sm" style="object-fit: cover;">
-                                        <b class="d-none d-md-block ps-2">{{ $user->name }}</b>
+                                        <b class="d-none d-md-block ps-2">{{ $user->name }} </b> {!! $user->id == auth()->id() ? '&nbsp;(You)' : '' !!}
                                     </div>
                                 </td>
                                 <td>
@@ -140,6 +141,9 @@
                                     @else
                                         <i class="bi bi-x-circle-fill text-danger fs-4"></i>
                                     @endif
+                                </td>
+                                <td>
+                                    {{ $user->created_at->format('d M Y h:i') }}
                                 </td>
                                 <td>
 
@@ -195,9 +199,7 @@
                                                     </li>
                                                 @endif --}}
                                                 <li>
-                                                    <button class="dropdown-item edit-button" data-bs-toggle="modal"
-                                                        data-bs-target="#MyModal" data-id="{{ $user->id }}">Edit
-                                                    </button>
+                                                    <button class="dropdown-item edit-button" data-id="{{ $user->id }}">Edit</button>
                                                 </li>
                                                 <hr class="dropdown-divider">
                                                 <li>
@@ -568,10 +570,11 @@
                     Modal.querySelector('#MyModalLabel').textContent = isEdit ? 'Edit Pengguna' :
                         'Detail';
 
-                    fetch(`{{ roleBasedRoute('user.fetch', ['outlet' => $outlet->slug, 'id' => ':id']) }}`
-                            .replace(':id', itemId))
-                        .then(response => response.json())
-                        .then(response => {
+                    $.ajax({
+                        url: `{{ roleBasedRoute('user.fetch', ['outlet' => $outlet->slug, 'id' => ':id']) }}`.replace(':id', itemId),
+                        method: 'GET',
+                        dataType: 'json',
+                        success: function(response) {
                             if (response.status) {
                                 nameInput.value = response.data.name;
                                 roleInput.value = response.data.roles[0].id;
@@ -586,23 +589,29 @@
                                 @endhasrole
 
                                 if (!response.data.email_verified_at) {
-                                    submitButton.insertAdjacentElement('beforebegin',
-                                        createResendButton(itemId));
-                                    emailInput.closest('.input-group').querySelector(
-                                        '.input-group-text').innerHTML = iconEmail[2];
+                                    submitButton.insertAdjacentElement('beforebegin', createResendButton(itemId));
+                                    emailInput.closest('.input-group').querySelector('.input-group-text').innerHTML = iconEmail[2];
                                 } else {
                                     emailInput.setAttribute('readonly', true);
-                                    emailInput.closest('.input-group').querySelector(
-                                        '.input-group-text').innerHTML = iconEmail[1];
+                                    emailInput.closest('.input-group').querySelector('.input-group-text').innerHTML = iconEmail[1];
                                 }
 
                                 if (isEdit) {
 
                                 }
+
+                                // Show modal
+                                setTimeout(() => {
+                                    $('#MyModal').modal('show');
+                                }, 100);
                             } else {
                                 console.error('Error:', 'Gagal memuat data.');
                             }
-                        });
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('AJAX Error:', error);
+                        }
+                    });
 
                 });
             });

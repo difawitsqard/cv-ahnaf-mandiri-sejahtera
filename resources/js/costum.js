@@ -1,6 +1,10 @@
 "use strict";
 
 function formatRupiahText(value) {
+    if (value == null || value === undefined) {
+        console.error("No value provided for formatRupiahText");
+        return "0";
+    }
     value = value.toString().replace(/\D/g, ""); // Hanya angka
     return new Intl.NumberFormat("id-ID").format(value); // Format ke Rupiah
 }

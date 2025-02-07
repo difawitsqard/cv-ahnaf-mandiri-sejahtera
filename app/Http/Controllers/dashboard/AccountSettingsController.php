@@ -48,7 +48,7 @@ class AccountSettingsController extends Controller
         $user->save();
 
         session()->flash('form-name', 'account-info');
-        return redirect()->back()->with('success', 'Account details updated successfully.');
+        return redirect()->back()->with('success', 'Detail akun berhasil diperbarui.');
     }
 
     public function changePassword(Request $request)

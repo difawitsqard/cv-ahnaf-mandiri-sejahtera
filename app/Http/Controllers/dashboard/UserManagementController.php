@@ -65,7 +65,7 @@ class UserManagementController extends Controller
                     ->limit(1);
             });
 
-        $users = $users->where('id', '!=', $currentUser->id)->get();
+        $users = $users->get();
 
         $roles = [];
         $outlets = [];

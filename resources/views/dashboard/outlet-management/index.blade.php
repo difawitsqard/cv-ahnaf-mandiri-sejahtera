@@ -202,7 +202,6 @@
                                                                         href="{{ route('outlet.dashboard', ['outlet' => $_outletRow->slug]) }}">Dashboard</a>
                                                                 </li>
                                                                 <li><button class="dropdown-item edit-button"
-                                                                        data-bs-toggle="modal" data-bs-target="#MyModal"
                                                                         data-add-url="{{ route('outlet.store') }}"
                                                                         data-id="{{ $_outletRow->slug }}">Edit</button>
                                                                 </li>
@@ -396,9 +395,11 @@
                     Modal.querySelector('#MyModalLabel').textContent = isEdit ? 'Edit Outlet' :
                         'Detail';
 
-                    fetch(`/outlet/${itemId}/fetch`)
-                        .then(response => response.json())
-                        .then(response => {
+                    $.ajax({
+                        url: `/outlet/${itemId}/fetch`,
+                        method: 'GET',
+                        dataType: 'json',
+                        success: function(response) {
                             if (response.status) {
                                 nameInput.value = response.data.name;
                                 addressTextarea.value = response.data.address;
@@ -417,10 +418,18 @@
 
                                     imageUploaderInstance.updateImagePreview();
                                 }
+                                setTimeout(() => {
+                                    $("#MyModal").modal('show');
+                                }, 100);
+
                             } else {
                                 console.error('Error:', 'Gagal memuat data.');
                             }
-                        });
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('AJAX Error:', error);
+                        }
+                    });
 
                 });
             });

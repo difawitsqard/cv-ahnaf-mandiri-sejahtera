@@ -43,9 +43,12 @@ class OrderController extends Controller
         if (auth()->user()->hasRole('staff')) {
             $orders = Order::where('outlet_id', $outlet->id)
                 ->where('user_id', auth()->id())
+                ->orderBy('created_at', 'desc')
                 ->get();
         } else {
-            $orders = Order::where('outlet_id', $outlet->id)->get();
+            $orders = Order::where('outlet_id', $outlet->id)
+                ->orderBy('created_at', 'desc')
+                ->get();
         }
 
         $orders->load('items.menu', 'user');
