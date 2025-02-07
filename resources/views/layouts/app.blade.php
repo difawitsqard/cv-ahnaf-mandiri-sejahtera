@@ -146,6 +146,7 @@
                                         Simpan PDF
                                     </button>
                                 </div>
+                            </div>
                         </form>
                         @push('script')
                             <script>
