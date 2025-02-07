@@ -10,7 +10,6 @@
     "require": {
         "php": "^8.2",
         "barryvdh/laravel-dompdf": "^3.0",
-        "fahlisaputra/laravel-minify": "^1.1",
         "laravel/framework": "^11.9",
         "laravel/tinker": "^2.9",
         "laravel/ui": "^4.5",
@@ -18,7 +17,8 @@
         "mike42/escpos-php": "^4.0",
         "spatie/laravel-activitylog": "^4.9",
         "spatie/laravel-permission": "^6.9",
-        "symfony/http-foundation": "7.1.7"
+        "symfony/http-foundation": "7.1.7",
+        "voku/html-min": "^4.5"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.14",

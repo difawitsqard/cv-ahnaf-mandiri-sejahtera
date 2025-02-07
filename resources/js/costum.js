@@ -181,7 +181,7 @@ $(function () {
             Pace.on("done", function () {
                 // console.log("Pace done fired");
                 if (!self.alwaysRun)
-                    $(".preloader").fadeOut(300, function () {
+                    $(".preloader").fadeOut(200, function () {
                         toggleElements(true);
                     });
             });
@@ -248,7 +248,7 @@ $(function () {
 
         stopPace() {
             Pace.stop();
-            $(".preloader").fadeOut(300, function () {
+            $(".preloader").fadeOut(200, function () {
                 toggleElements(true);
             });
         }

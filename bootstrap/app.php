@@ -21,9 +21,10 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
         // $middleware->append(\App\Http\Middleware\MinifyHtml::class);
         $middleware->web(append: [
-            \Fahlisaputra\Minify\Middleware\MinifyHtml::class,
-            \Fahlisaputra\Minify\Middleware\MinifyCss::class,
-            \Fahlisaputra\Minify\Middleware\MinifyJavascript::class,
+            \App\Http\Middleware\MinifyHtml::class
+            // \Fahlisaputra\Minify\Middleware\MinifyHtml::class,
+            // \Fahlisaputra\Minify\Middleware\MinifyCss::class,
+            // \Fahlisaputra\Minify\Middleware\MinifyJavascript::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
