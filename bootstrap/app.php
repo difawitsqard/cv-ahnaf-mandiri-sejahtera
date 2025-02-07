@@ -19,7 +19,12 @@ return Application::configure(basePath: dirname(__DIR__))
             'check_password_set' => \App\Http\Middleware\CheckPasswordSet::class,
             'set_outlet_role' => \App\Http\Middleware\setOutletRole::class,
         ]);
-        $middleware->append(\App\Http\Middleware\MinifyHtml::class);
+        // $middleware->append(\App\Http\Middleware\MinifyHtml::class);
+        $middleware->web(append: [
+            \Fahlisaputra\Minify\Middleware\MinifyHtml::class,
+            \Fahlisaputra\Minify\Middleware\MinifyCss::class,
+            \Fahlisaputra\Minify\Middleware\MinifyJavascript::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

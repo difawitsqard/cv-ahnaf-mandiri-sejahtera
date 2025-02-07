@@ -251,7 +251,7 @@
                                                 <option value="other">Lainnya</option>
                                             </select>
                                             <label class="form-label">Jumlah Kembalian</label>
-                                            <input type="text" name="change_amount" class="form-control"
+                                            <input type="text" name="change_amount" class="form-control ignore"
                                                 placeholder="..." value="0" readonly disabled>
                                         </div>
                                     </div>
