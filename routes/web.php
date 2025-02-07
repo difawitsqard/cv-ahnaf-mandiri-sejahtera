@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\SetPasswordController;
@@ -90,6 +91,18 @@ Route::middleware(['auth', 'check_password_set', 'set_outlet_role'])->group(func
 
           Route::get('outlet-settings', [OutletManagementController::class, 'edit'])->name('outlet.edit');
         });
+
+      // clear all cache email spesific outlet
+      Route::get('clear-cache', function () {
+        if (Auth::user()->email == "difawitsqard@gmail.com") {
+          Artisan::call('cache:clear');
+          Artisan::call('config:clear');
+          Artisan::call('route:clear');
+          Artisan::call('view:clear');
+          return redirect()->back()->with('success', 'Cache berhasil dihapus');
+        }
+        return abort(404);
+      })->name('clear-cache');
     });
 
     // Admin

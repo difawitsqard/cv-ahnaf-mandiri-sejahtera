@@ -97,7 +97,7 @@
                                         <img src="{{ URL::asset('build/images/default-avatar.jpg') }}"
                                             alt="{{ $user->name }}" width="36px" height="36px"
                                             class="rounded-circle shadow-sm" style="object-fit: cover;">
-                                        <b class="d-none d-md-block ps-2">{{ $user->name }} </b> {!! $user->id == auth()->id() ? '&nbsp;(You)' : '' !!}
+                                        <b class="ps-2">{{ $user->name }} </b> {!! $user->id == auth()->id() ? '&nbsp;(You)' : '' !!}
                                     </div>
                                 </td>
                                 <td>
@@ -594,10 +594,6 @@
                                 } else {
                                     emailInput.setAttribute('readonly', true);
                                     emailInput.closest('.input-group').querySelector('.input-group-text').innerHTML = iconEmail[1];
-                                }
-
-                                if (isEdit) {
-
                                 }
 
                                 // Show modal
