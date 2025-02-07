@@ -264,7 +264,7 @@
     <script src="{{ URL::asset('build/plugins/datatable/js/dataTables.bootstrap5.min.js') }}"></script>
 
     <script>
-        var ps = new PerfectScrollbar(".link-item-scroll")
+        var ps = new PerfectScrollbar(".link-item-scroll");
 
         $(document).ready(function() {
             var table = $('#table-menu').DataTable({
